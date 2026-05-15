@@ -1,0 +1,39 @@
+{
+  "todo-tree.general.tags": [
+    "TODO",
+    "FIXME",
+    "BLOCKED",
+    "HACK"
+  ],
+  "todo-tree.tree.showCountsInTree": true,
+  "todo-tree.highlights.defaultHighlight": {
+    "type": "text",
+    "opacity": 35
+  },
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {
+      "icon": "check",
+      "foreground": "#1f2328",
+      "background": "#fff8c5",
+      "iconColour": "#d4a72c"
+    },
+    "FIXME": {
+      "icon": "bug",
+      "foreground": "#ffffff",
+      "background": "#cf222e",
+      "iconColour": "#cf222e"
+    },
+    "BLOCKED": {
+      "icon": "stop",
+      "foreground": "#ffffff",
+      "background": "#8250df",
+      "iconColour": "#8250df"
+    },
+    "HACK": {
+      "icon": "tools",
+      "foreground": "#ffffff",
+      "background": "#bf8700",
+      "iconColour": "#bf8700"
+    }
+  }
+}

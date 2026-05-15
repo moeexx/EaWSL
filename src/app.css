@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+
+  --color-shell-50: #f7fbff;
+  --color-shell-100: #eef4fa;
+  --color-shell-150: #e7eef7;
+  --color-shell-200: #d7e1ec;
+  --color-shell-300: #bcc9d8;
+  --color-shell-400: #8090a4;
+  --color-shell-500: #5d6d82;
+  --color-shell-600: #415165;
+  --color-shell-700: #2b3a4c;
+  --color-shell-800: #182434;
+  --color-shell-900: #101a27;
+  --color-shell-950: #09111c;
+
+  --color-accent-50: #eef7ff;
+  --color-accent-100: #d8ebff;
+  --color-accent-200: #bddfff;
+  --color-accent-300: #85c4ff;
+  --color-accent-400: #4fa5f7;
+  --color-accent-500: #2f8be7;
+  --color-accent-600: #207be5;
+  --color-accent-700: #1560c4;
+}
+
+@layer base {
+  html {
+    @apply h-full bg-shell-100 text-shell-950;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-[radial-gradient(circle_at_top,#ffffff_0%,#f2f7fc_38%,#dfe9f4_100%)] text-shell-950 antialiased overscroll-none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
+}
+
+@layer components {
+  .page-stack {
+    @apply grid content-start gap-2.5 xl:gap-3;
+  }
+
+  .panel-surface {
+    @apply rounded-[8px] border-[0.5px] border-white/70 bg-white/[0.86] backdrop-blur-xl;
+  }
+
+  .ui-info-card {
+    @apply rounded-[8px] border-[0.5px] border-shell-200/80 bg-white/[0.82] p-3 backdrop-blur-sm;
+  }
+
+  .ui-info-card > strong {
+    @apply text-[18px] leading-[1.15];
+  }
+
+  .ui-info-card > p,
+  .ui-info-card p {
+    @apply text-[13px] leading-5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ui-empty-state {
+    @apply rounded-[8px] border-[0.5px] border-shell-200/80 bg-gradient-to-br from-white to-shell-50 p-3;
+  }
+
+  .ui-empty-state p {
+    @apply text-[13px] leading-5;
+  }
+
+  .ui-chip {
+    @apply inline-flex items-center rounded-[8px] border-[0.5px] px-2.5 py-0.5 text-[11px] font-semibold tracking-[0.08em];
+  }
+
+  .ui-chip-neutral {
+    @apply inline-flex items-center rounded-[8px] border-[0.5px] border-shell-200 bg-shell-50 px-2.5 py-0.5 text-[11px] font-semibold tracking-[0.08em] text-shell-600;
+  }
+
+  .ui-dock-surface {
+    @apply relative border-t-[0.5px] border-emerald-200/70 bg-[linear-gradient(180deg,rgba(232,245,239,0.98),rgba(214,236,225,0.99))] backdrop-blur-xl;
+  }
+
+  .ui-dock-panel {
+    @apply rounded-t-[8px] border-x-[0.5px] border-t-[0.5px] border-emerald-200/80 bg-[linear-gradient(180deg,rgba(247,252,249,0.98),rgba(229,244,236,0.98))] backdrop-blur-xl;
+  }
+
+  .eyebrow-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-shell-400;
+  }
+
+  .ui-scrollbar {
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(93, 109, 130, 0.34) transparent;
+  }
+
+  .ui-scrollbar:hover,
+  .ui-scrollbar:focus-within {
+    scrollbar-color: rgba(65, 81, 101, 0.48) transparent;
+  }
+
+  .ui-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .ui-scrollbar::-webkit-scrollbar-track {
+    margin-block: 6px;
+    background: transparent;
+  }
+
+  .ui-scrollbar::-webkit-scrollbar-thumb {
+    min-height: 32px;
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+    background-color: rgba(93, 109, 130, 0.28);
+  }
+
+  .ui-scrollbar:hover::-webkit-scrollbar-thumb,
+  .ui-scrollbar:focus-within::-webkit-scrollbar-thumb {
+    background-color: rgba(65, 81, 101, 0.42);
+  }
+
+  .ui-scrollbar::-webkit-scrollbar-thumb:active {
+    background-color: rgba(32, 123, 229, 0.5);
+  }
+
+  .ui-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

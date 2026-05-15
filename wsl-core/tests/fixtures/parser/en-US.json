@@ -1,0 +1,28 @@
+{
+  "locale": "en-US",
+  "version": [
+    {
+      "name": "english_version_labels",
+      "source": "synthetic",
+      "output_lines": [
+        "WSL version: 2.6.3.0",
+        "Kernel version: 6.6.87.2-1",
+        "WSLg version: 1.0.71",
+        "MSRDC version: 1.2.6353",
+        "Direct3D version: 1.611.1-81528511",
+        "DXCore version: 10.0.26100.1",
+        "Experimental version: preview",
+        "Windows version: 10.0.26200.8039"
+      ],
+      "expected": {
+        "wsl": "2.6.3.0",
+        "kernel": "6.6.87.2-1",
+        "wslg": "1.0.71",
+        "msrdc": "1.2.6353",
+        "direct3d": "1.611.1-81528511",
+        "dxcore": "10.0.26100.1",
+        "windows": "10.0.26200.8039"
+      }
+    }
+  ]
+}
