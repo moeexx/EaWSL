@@ -31,11 +31,18 @@ fn register_handlers(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<taur
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     register_handlers(tauri::Builder::default())
+        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.unminimize();
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+        }))
         .plugin(tauri_plugin_dialog::init())
-        .setup(|app| {
+        .setup(|_app| {
             #[cfg(debug_assertions)]
             {
-                if let Some(window) = app.get_webview_window("main") {
+                if let Some(window) = _app.get_webview_window("main") {
                     window.open_devtools();
                 }
             }
