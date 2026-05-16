@@ -51,7 +51,7 @@ impl Default for BackgroundRefreshSettings {
 }
 
 #[derive(Debug)]
-enum SettingsWriteError {
+enum SettingsError {
     EmptyDefaultInstallLocation,
     InvalidBackgroundRefreshInterval { value: u16 },
     EmptyBackgroundRefreshTargets,
@@ -60,7 +60,7 @@ enum SettingsWriteError {
     Write { path: PathBuf, source: io::Error },
 }
 
-impl fmt::Display for SettingsWriteError {
+impl fmt::Display for SettingsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::EmptyDefaultInstallLocation => {
@@ -153,35 +153,29 @@ fn read_app_settings_blocking(path: &Path, default_install_location: &str) -> Ap
         return default_app_settings(default_install_location);
     };
 
-    serde_json::from_str(&raw).unwrap_or_else(|_| default_app_settings(default_install_location))
+    let Ok(settings) = serde_json::from_str::<AppSettings>(&raw) else {
+        return default_app_settings(default_install_location);
+    };
+
+    normalize_app_settings(settings)
+        .unwrap_or_else(|_| default_app_settings(default_install_location))
 }
 
 fn write_app_settings_blocking(
     path: &Path,
     settings: AppSettings,
-) -> Result<AppSettings, SettingsWriteError> {
-    let trimmed_location = settings.default_install_location.trim();
+) -> Result<AppSettings, SettingsError> {
+    let normalized_settings = normalize_app_settings(settings)?;
 
-    if trimmed_location.is_empty() {
-        return Err(SettingsWriteError::EmptyDefaultInstallLocation);
-    }
+    let raw =
+        serde_json::to_string_pretty(&normalized_settings).map_err(SettingsError::Serialize)?;
 
-    let background_refresh = normalize_background_refresh(settings.background_refresh)?;
-
-    let normalized_settings = AppSettings {
-        default_install_location: trimmed_location.to_string(),
-        background_refresh,
-    };
-
-    let raw = serde_json::to_string_pretty(&normalized_settings)
-        .map_err(SettingsWriteError::Serialize)?;
-
-    filesystem::write_text_creating_parent(path, &raw).map_err(SettingsWriteError::from)?;
+    filesystem::write_text_creating_parent(path, &raw).map_err(SettingsError::from)?;
 
     Ok(normalized_settings)
 }
 
-impl From<WriteTextError> for SettingsWriteError {
+impl From<WriteTextError> for SettingsError {
     fn from(error: WriteTextError) -> Self {
         match error {
             WriteTextError::CreateDirectory { path, source } => {
@@ -194,11 +188,11 @@ impl From<WriteTextError> for SettingsWriteError {
 
 fn normalize_background_refresh(
     settings: BackgroundRefreshSettings,
-) -> Result<BackgroundRefreshSettings, SettingsWriteError> {
+) -> Result<BackgroundRefreshSettings, SettingsError> {
     if settings.interval_minutes < MIN_BACKGROUND_REFRESH_INTERVAL_MINUTES
         || settings.interval_minutes > MAX_BACKGROUND_REFRESH_INTERVAL_MINUTES
     {
-        return Err(SettingsWriteError::InvalidBackgroundRefreshInterval {
+        return Err(SettingsError::InvalidBackgroundRefreshInterval {
             value: settings.interval_minutes,
         });
     }
@@ -210,12 +204,25 @@ fn normalize_background_refresh(
         .collect::<Vec<_>>();
 
     if targets.is_empty() {
-        return Err(SettingsWriteError::EmptyBackgroundRefreshTargets);
+        return Err(SettingsError::EmptyBackgroundRefreshTargets);
     }
 
     Ok(BackgroundRefreshSettings {
         interval_minutes: settings.interval_minutes,
         targets,
+    })
+}
+
+fn normalize_app_settings(settings: AppSettings) -> Result<AppSettings, SettingsError> {
+    let default_install_location = settings.default_install_location.trim();
+
+    if default_install_location.is_empty() {
+        return Err(SettingsError::EmptyDefaultInstallLocation);
+    }
+
+    Ok(AppSettings {
+        default_install_location: default_install_location.to_string(),
+        background_refresh: normalize_background_refresh(settings.background_refresh)?,
     })
 }
 
@@ -230,7 +237,10 @@ fn ordered_background_refresh_targets() -> &'static [BackgroundRefreshTarget] {
 
 #[cfg(test)]
 mod tests {
-    use std::{fs, path::PathBuf};
+    use std::{
+        fs,
+        path::{Path, PathBuf},
+    };
 
     use super::{
         default_app_settings, read_app_settings_blocking, write_app_settings_blocking, AppSettings,
@@ -240,6 +250,12 @@ mod tests {
 
     fn unique_test_path(name: &str) -> PathBuf {
         unique_temp_path("settings", "test").join(name)
+    }
+
+    fn write_raw_settings(path: &Path, raw: &str) {
+        let parent = path.parent().expect("test path should have parent");
+        fs::create_dir_all(parent).expect("test directory should be created");
+        fs::write(path, raw).expect("raw settings should be written");
     }
 
     #[test]
@@ -313,6 +329,67 @@ mod tests {
             default_app_settings(default_install_location)
         );
         fs::remove_dir_all(damaged_parent).expect("test directory should be removed");
+    }
+
+    #[test]
+    fn read_settings_falls_back_for_invalid_values() {
+        let default_install_location = "D:\\DefaultWSL";
+        let cases = [
+            (
+                "invalid-interval-settings.json",
+                r#"{"defaultInstallLocation":"D:\\WSL","backgroundRefresh":{"intervalMinutes":0,"targets":["distros"]}}"#,
+            ),
+            (
+                "empty-targets-settings.json",
+                r#"{"defaultInstallLocation":"D:\\WSL","backgroundRefresh":{"intervalMinutes":15,"targets":[]}}"#,
+            ),
+            (
+                "blank-location-settings.json",
+                r#"{"defaultInstallLocation":"   ","backgroundRefresh":{"intervalMinutes":15,"targets":["distros"]}}"#,
+            ),
+            (
+                "missing-field-settings.json",
+                r#"{"defaultInstallLocation":"D:\\WSL"}"#,
+            ),
+        ];
+
+        for (name, raw) in cases {
+            let path = unique_test_path(name);
+            write_raw_settings(&path, raw);
+
+            assert_eq!(
+                read_app_settings_blocking(&path, default_install_location),
+                default_app_settings(default_install_location)
+            );
+
+            let parent = path.parent().expect("test path should have parent");
+            fs::remove_dir_all(parent).expect("test directory should be removed");
+        }
+    }
+
+    #[test]
+    fn read_settings_normalizes_valid_values() {
+        let path = unique_test_path("normalized-settings.json");
+        write_raw_settings(
+            &path,
+            r#"{"defaultInstallLocation":"  D:\\WSL  ","backgroundRefresh":{"intervalMinutes":10,"targets":["onlineDistros","distros","distros","wslVersion"]}}"#,
+        );
+
+        let read = read_app_settings_blocking(&path, "D:\\DefaultWSL");
+
+        assert_eq!(read.default_install_location, r"D:\WSL");
+        assert_eq!(read.background_refresh.interval_minutes, 10);
+        assert_eq!(
+            read.background_refresh.targets,
+            vec![
+                BackgroundRefreshTarget::Distros,
+                BackgroundRefreshTarget::WslVersion,
+                BackgroundRefreshTarget::OnlineDistros,
+            ]
+        );
+
+        let parent = path.parent().expect("test path should have parent");
+        fs::remove_dir_all(parent).expect("test directory should be removed");
     }
 
     #[test]

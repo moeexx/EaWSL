@@ -12,6 +12,8 @@ fn register_handlers(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<taur
         commands::system::overview::get_system_overview,
         commands::settings::get_app_settings,
         commands::settings::save_app_settings,
+        commands::long_tasks::get_long_tasks,
+        commands::long_tasks::save_long_tasks,
         commands::wsl::query::get_wsl_version,
         commands::wsl::query::list_distros,
         commands::wsl::query::list_online_distros,

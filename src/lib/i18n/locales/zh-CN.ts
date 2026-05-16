@@ -336,6 +336,11 @@ export const zhCN = {
     progress: {
       completed: "任务已完成",
       failed: "任务失败",
+      interrupted: "任务已中断",
+    },
+    errors: {
+      interrupted:
+        "应用在该任务完成前重载或关闭，原 WSL 命令无法恢复。",
     },
     status: {
       completed: "已完成",

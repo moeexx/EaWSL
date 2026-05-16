@@ -1,8 +1,9 @@
 use eawsl_tauri::commands::{
     self, AppSettings, BackgroundRefreshSettings, BackgroundRefreshTarget, DistroProgressEvent,
     ExportDistroRequest, FileSystemPathProbe, ImportDistroInPlaceRequest, ImportDistroRequest,
-    InstallDistroRequest, InstallOptionsPayload, PathVolumeSpace, SystemOverview,
-    SystemOverviewScope, TransferProgressEvent, TransferProgressPhase, TransferProgressValue,
+    InstallDistroRequest, InstallOptionsPayload, PathVolumeSpace, PersistedLongTask,
+    SystemOverview, SystemOverviewScope, TransferProgressEvent, TransferProgressPhase,
+    TransferProgressValue,
 };
 use wsl_core::{ExportFormat, ProgressState};
 
@@ -75,6 +76,19 @@ fn command_public_surface_type_checks() {
             ],
         },
     };
+    let _ = PersistedLongTask {
+        request_id: "req-task".to_string(),
+        distro: "Ubuntu".to_string(),
+        operation: "export".to_string(),
+        status: "completed".to_string(),
+        phase: Some("Exporting".to_string()),
+        percent: Some(100.0),
+        started_at: "2026-05-16T00:00:00.000Z".to_string(),
+        ended_at: Some("2026-05-16T00:01:00.000Z".to_string()),
+        error: None,
+        location: Some("D:/exports/ubuntu.tar".to_string()),
+        interrupted: false,
+    };
 
     let _ = commands::get_file_size;
     let _ = commands::probe_file_system_path;
@@ -82,6 +96,8 @@ fn command_public_surface_type_checks() {
     let _ = commands::get_system_overview;
     let _ = commands::get_app_settings;
     let _ = commands::save_app_settings;
+    let _ = commands::get_long_tasks;
+    let _ = commands::save_long_tasks;
     let _ = commands::get_wsl_version;
     let _ = commands::list_distros;
     let _ = commands::list_online_distros;

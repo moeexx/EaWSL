@@ -1,3 +1,4 @@
+pub(crate) mod long_tasks;
 pub(crate) mod settings;
 pub(crate) mod shared;
 pub(crate) mod system;
@@ -8,6 +9,7 @@ pub(crate) mod wsl;
 pub use crate::bridge::progress::{
     DistroProgressEvent, TransferProgressEvent, TransferProgressPhase, TransferProgressValue,
 };
+pub use long_tasks::{get_long_tasks, save_long_tasks, PersistedLongTask};
 pub use settings::{
     get_app_settings, save_app_settings, AppSettings, BackgroundRefreshSettings,
     BackgroundRefreshTarget,

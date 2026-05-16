@@ -9,6 +9,7 @@
     getStatusBadgeClass,
     getStatusLabel,
     getTaskCardClass,
+    getTaskErrorMessage,
     getTaskMetaItems,
   } from "../task-status";
   import type { LongTask } from "../state";
@@ -20,6 +21,7 @@
   let { task }: Props = $props();
   const copy = $derived($i18nState.copy.longTasks);
   const progressPercentLabel = $derived(getProgressPercentLabel(task));
+  const taskErrorMessage = $derived(getTaskErrorMessage(task, copy));
 </script>
 
 <li class={getTaskCardClass(task)}>
@@ -104,11 +106,11 @@
     </div>
   </div>
 
-  {#if task.status === "failed" && task.error}
+  {#if task.status === "failed" && taskErrorMessage}
     <div
       class="rounded-[7px] border-[0.5px] border-rose-200/80 bg-rose-50/80 px-3 py-2 text-[12.5px] font-medium leading-5 text-rose-700"
     >
-      {task.error}
+      {taskErrorMessage}
     </div>
   {/if}
 </li>

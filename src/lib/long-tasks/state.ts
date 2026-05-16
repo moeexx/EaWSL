@@ -8,6 +8,11 @@ import {
   type ProgressValue,
 } from "$lib/tauri/wsl";
 import { hasTauriBridge } from "$lib/shared/runtime";
+import {
+  getLongTasks,
+  saveLongTasks,
+  type PersistedLongTask,
+} from "$lib/tauri/long-tasks";
 
 export type LongTaskStatus = "started" | "running" | "completed" | "failed";
 export type LongTaskOperation =
@@ -27,6 +32,7 @@ export interface LongTask {
   endedAt: Date | null;
   error: string | null;
   location: string | null;
+  interrupted: boolean;
 }
 
 export interface StartTaskInput {
@@ -49,6 +55,8 @@ const store = writable<LongTaskState>({
 let listening = false;
 let disposed = false;
 let unlistenPromises: Array<Promise<() => void>> = [];
+let hydratePromise: Promise<void> | null = null;
+let persistQueue: Promise<void> = Promise.resolve();
 
 export const longTaskState = {
   subscribe: store.subscribe,
@@ -57,14 +65,44 @@ export const longTaskState = {
 function syncActiveFlag(tasks: LongTask[]): LongTaskState {
   return {
     tasks,
-    hasActiveLongTask: tasks.some((task) => task.status === "started" || task.status === "running"),
+    hasActiveLongTask: tasks.some(
+      (task) => task.status === "started" || task.status === "running",
+    ),
   };
 }
 
-function updateTask(requestId: string, updater: (task: LongTask) => LongTask): void {
-  store.update((state) =>
-    syncActiveFlag(state.tasks.map((task) => (task.requestId === requestId ? updater(task) : task))),
+function updateTasks(updater: (tasks: LongTask[]) => LongTask[]): LongTask[] {
+  let nextTasks: LongTask[] = [];
+  store.update((state) => {
+    nextTasks = updater(state.tasks);
+    return syncActiveFlag(nextTasks);
+  });
+  return nextTasks;
+}
+
+async function updateTaskAndSave(
+  requestId: string,
+  updater: (task: LongTask) => LongTask,
+): Promise<void> {
+  await ensureLongTasksHydrated();
+  const tasks = updateTasks((currentTasks) =>
+    currentTasks.map((task) =>
+      task.requestId === requestId ? updater(task) : task,
+    ),
   );
+  await persistLongTasks(tasks);
+}
+
+function updateTaskBestEffort(
+  requestId: string,
+  updater: (task: LongTask) => LongTask,
+): void {
+  const tasks = updateTasks((currentTasks) =>
+    currentTasks.map((task) =>
+      task.requestId === requestId ? updater(task) : task,
+    ),
+  );
+  persistLongTasksBestEffort(tasks);
 }
 
 function extractProgressState(value: ProgressValue): ProgressState | null {
@@ -75,41 +113,44 @@ function extractProgressPercent(value: ProgressValue): number | null {
   return "Percent" in value ? value.Percent : null;
 }
 
-export function startTask(input: StartTaskInput): void {
-  store.update((state) =>
-    syncActiveFlag([
-      {
-        requestId: input.requestId,
-        distro: input.distro,
-        operation: input.operation,
-        status: "started",
-        phase: null,
-        percent: null,
-        startedAt: new Date(),
-        endedAt: null,
-        error: null,
-        location: input.location,
-      },
-      ...state.tasks,
-    ]),
-  );
+export async function startTask(input: StartTaskInput): Promise<void> {
+  await ensureLongTasksHydrated();
+  const tasks = updateTasks((currentTasks) => [
+    {
+      requestId: input.requestId,
+      distro: input.distro,
+      operation: input.operation,
+      status: "started",
+      phase: null,
+      percent: null,
+      startedAt: new Date(),
+      endedAt: null,
+      error: null,
+      location: input.location,
+      interrupted: false,
+    },
+    ...currentTasks,
+  ]);
+  await persistLongTasks(tasks);
 }
 
-export function failTask(requestId: string, error: string): void {
-  updateTask(requestId, (task) => ({
+export async function failTask(requestId: string, error: string): Promise<void> {
+  await updateTaskAndSave(requestId, (task) => ({
     ...task,
     status: "failed",
     endedAt: task.endedAt ?? new Date(),
     error,
+    interrupted: false,
   }));
 }
 
-export function completeTask(requestId: string): void {
-  updateTask(requestId, (task) => ({
+export async function completeTask(requestId: string): Promise<void> {
+  await updateTaskAndSave(requestId, (task) => ({
     ...task,
     status: "completed",
     endedAt: task.endedAt ?? new Date(),
     error: null,
+    interrupted: false,
   }));
 }
 
@@ -119,11 +160,12 @@ export function applyLongTaskProgress(
   const progressState = extractProgressState(payload.progress.value);
   const progressPercent = extractProgressPercent(payload.progress.value);
 
-  updateTask(payload.requestId, (task) => {
+  updateTaskBestEffort(payload.requestId, (task) => {
     const phaseChanged = task.phase !== payload.progress.phase;
     const nextTask: LongTask = {
       ...task,
       phase: payload.progress.phase,
+      interrupted: false,
     };
 
     if (progressPercent !== null) {
@@ -152,6 +194,7 @@ export function startLongTaskFeed(): void {
     return;
   }
 
+  void ensureLongTasksHydrated().catch(() => undefined);
   listening = true;
   disposed = false;
   unlistenPromises = [
@@ -178,4 +221,133 @@ export function stopLongTaskFeed(): void {
   }
 
   unlistenPromises = [];
+}
+
+async function ensureLongTasksHydrated(): Promise<void> {
+  if (!hasTauriBridge()) {
+    return;
+  }
+
+  hydratePromise ??= hydrateLongTasks().catch((error) => {
+    hydratePromise = null;
+    throw error;
+  });
+  return hydratePromise;
+}
+
+async function hydrateLongTasks(): Promise<void> {
+  const persistedTasks = await getLongTasks();
+  const hadActiveTasks = persistedTasks.some(
+    (task) => task.status === "started" || task.status === "running",
+  );
+  const tasks = persistedTasks.map(mapPersistedTask);
+
+  store.set(syncActiveFlag(tasks));
+
+  if (hadActiveTasks) {
+    await persistLongTasks(tasks);
+  }
+}
+
+function mapPersistedTask(task: PersistedLongTask): LongTask {
+  const startedAt = parsePersistedDate(task.startedAt);
+  const endedAt = task.endedAt === null ? null : parsePersistedDate(task.endedAt);
+  const active = task.status === "started" || task.status === "running";
+
+  return {
+    requestId: task.requestId,
+    distro: task.distro,
+    operation: mapPersistedOperation(task.operation),
+    status: active ? "failed" : mapPersistedStatus(task.status),
+    phase: mapPersistedPhase(task.phase),
+    percent: typeof task.percent === "number" ? task.percent : null,
+    startedAt,
+    endedAt: active ? new Date() : endedAt,
+    error: active ? null : task.error,
+    location: task.location,
+    interrupted: active || task.interrupted,
+  };
+}
+
+function mapPersistedOperation(operation: string): LongTaskOperation {
+  if (
+    operation === "install" ||
+    operation === "importArchive" ||
+    operation === "importVhd" ||
+    operation === "export"
+  ) {
+    return operation;
+  }
+
+  return "export";
+}
+
+function mapPersistedStatus(status: string): LongTaskStatus {
+  if (
+    status === "started" ||
+    status === "running" ||
+    status === "completed" ||
+    status === "failed"
+  ) {
+    return status;
+  }
+
+  return "failed";
+}
+
+function mapPersistedPhase(phase: string | null): LongTask["phase"] {
+  if (
+    phase === "Copying" ||
+    phase === "Downloading" ||
+    phase === "Installing" ||
+    phase === "Importing" ||
+    phase === "Exporting"
+  ) {
+    return phase;
+  }
+
+  return null;
+}
+
+function parsePersistedDate(value: string): Date {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? new Date() : date;
+}
+
+function toPersistedTask(task: LongTask): PersistedLongTask {
+  return {
+    requestId: task.requestId,
+    distro: task.distro,
+    operation: task.operation,
+    status: task.status,
+    phase: task.phase,
+    percent: task.percent,
+    startedAt: task.startedAt.toISOString(),
+    endedAt: task.endedAt?.toISOString() ?? null,
+    error: task.error,
+    location: task.location,
+    interrupted: task.interrupted,
+  };
+}
+
+function persistLongTasks(tasks: LongTask[]): Promise<void> {
+  if (!hasTauriBridge()) {
+    return Promise.resolve();
+  }
+
+  persistQueue = persistQueue
+    .catch(() => undefined)
+    .then(() => saveLongTasks(tasks.map(toPersistedTask)));
+  return persistQueue;
+}
+
+function persistLongTasksBestEffort(tasks: LongTask[]): void {
+  if (!hasTauriBridge()) {
+    return;
+  }
+
+  persistQueue = persistQueue
+    .catch(() => undefined)
+    .then(() => saveLongTasks(tasks.map(toPersistedTask)))
+    .catch(() => undefined);
 }

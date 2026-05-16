@@ -71,16 +71,17 @@ export async function submitAcquireTask(
   if (!(await guardAcquireTaskTargetDirectory(input))) return false;
 
   const requestId = createRequestId();
-  startTask({
-    requestId,
-    distro: input.displayName,
-    operation: input.operation,
-    location: getAcquireTaskLocation(input),
-  });
-
+  let taskStarted = false;
   try {
+    await startTask({
+      requestId,
+      distro: input.displayName,
+      operation: input.operation,
+      location: getAcquireTaskLocation(input),
+    });
+    taskStarted = true;
     await runAcquireTaskCommand(requestId, input);
-    completeTask(requestId);
+    await completeTask(requestId);
     await syncAcquireTaskResult(input.displayName, input.operation);
     refreshAcquireTaskSideData(input.operation);
     return true;
@@ -88,7 +89,9 @@ export async function submitAcquireTask(
     const message = toErrorMessage(error);
     const copy = getCopy();
     const noun = getAcquireTaskNoun(input.operation, copy);
-    failTask(requestId, message);
+    if (taskStarted) {
+      await failTask(requestId, message).catch(() => undefined);
+    }
     pushToast({
       tone: "error",
       title: copy.longTasks.acquireTasks.failedTitle(noun),

@@ -98,6 +98,10 @@ export function getProgressStageLabel(
   task: LongTask,
   copy: LongTasksCopy,
 ): string {
+  if (task.interrupted) {
+    return copy.progress.interrupted;
+  }
+
   if (task.status === "completed") {
     return copy.progress.completed;
   }
@@ -107,6 +111,17 @@ export function getProgressStageLabel(
   }
 
   return getPhaseLabel(task, copy);
+}
+
+export function getTaskErrorMessage(
+  task: LongTask,
+  copy: LongTasksCopy,
+): string | null {
+  if (task.interrupted) {
+    return copy.errors.interrupted;
+  }
+
+  return task.error;
 }
 
 export function getOperationLabel(task: LongTask, copy: LongTasksCopy): string {

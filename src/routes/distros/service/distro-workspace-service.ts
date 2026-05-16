@@ -145,21 +145,22 @@ async function submitExportTask(input: SubmitExportTaskInput): Promise<boolean> 
 
   const requestId = createRequestId();
   const noun = copy.common.export;
-  startTask({
-    requestId,
-    distro: input.distro,
-    operation: "export",
-    location: input.file,
-  });
-
+  let taskStarted = false;
   try {
+    await startTask({
+      requestId,
+      distro: input.distro,
+      operation: "export",
+      location: input.file,
+    });
+    taskStarted = true;
     await exportDistro({
       requestId,
       distro: input.distro,
       file: input.file,
       format: input.format,
     });
-    completeTask(requestId);
+    await completeTask(requestId);
     pushToast({
       tone: "success",
       title: copy.longTasks.exportTasks.completedTitle,
@@ -168,7 +169,9 @@ async function submitExportTask(input: SubmitExportTaskInput): Promise<boolean> 
     return true;
   } catch (error) {
     const message = toErrorMessage(error);
-    failTask(requestId, message);
+    if (taskStarted) {
+      await failTask(requestId, message).catch(() => undefined);
+    }
     pushToast({
       tone: "error",
       title: copy.longTasks.exportTasks.failedTitle(noun),

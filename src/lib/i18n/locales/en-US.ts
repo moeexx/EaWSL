@@ -357,6 +357,11 @@ export const enUS = {
     progress: {
       completed: "Task completed",
       failed: "Task failed",
+      interrupted: "Task interrupted",
+    },
+    errors: {
+      interrupted:
+        "The app was reloaded or closed before this task finished. The original WSL command cannot be resumed.",
     },
     status: {
       completed: "Completed",
