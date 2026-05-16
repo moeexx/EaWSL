@@ -4,6 +4,9 @@ use tokio::{
     process::{Child, Command},
 };
 
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
 #[derive(Debug)]
 pub(crate) struct CommandOutput {
     pub status_code: Option<i32>,
@@ -61,6 +64,7 @@ where
     FStderr: FnMut(&[u8]) + Send,
 {
     let mut command = Command::new("wsl.exe");
+    hide_child_console_window(&mut command);
     command.args(args);
     command.kill_on_drop(true);
     command.stdout(Stdio::piped());
@@ -151,6 +155,14 @@ where
 
     Ok(bytes)
 }
+
+#[cfg(windows)]
+fn hide_child_console_window(command: &mut Command) {
+    command.creation_flags(CREATE_NO_WINDOW);
+}
+
+#[cfg(not(windows))]
+fn hide_child_console_window(_command: &mut Command) {}
 
 #[cfg(test)]
 mod tests {

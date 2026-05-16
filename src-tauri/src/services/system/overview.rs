@@ -13,6 +13,8 @@ const HOST_COMMAND_TIMEOUT_MESSAGE: &str =
 const HOST_QUERY_TIMEOUT_MS: u64 = 4_000;
 const SYSTEM_OVERVIEW_CONTEXT: &str = "system_overview";
 const SYSTEM_OVERVIEW_SCRIPT: &str = include_str!("overview.ps1");
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
@@ -143,6 +145,7 @@ async fn run_system_overview_script(
     scope: SystemOverviewScope,
 ) -> Result<Vec<u8>, SystemOverviewQueryError> {
     let mut command = Command::new("powershell.exe");
+    hide_child_console_window(&mut command);
     command
         .args([
             "-NoProfile",
@@ -196,6 +199,14 @@ async fn run_system_overview_script(
 
     Ok(stdout_bytes)
 }
+
+#[cfg(windows)]
+fn hide_child_console_window(command: &mut Command) {
+    command.creation_flags(CREATE_NO_WINDOW);
+}
+
+#[cfg(not(windows))]
+fn hide_child_console_window(_command: &mut Command) {}
 
 async fn cleanup_child(child: &mut Child) -> std::io::Result<()> {
     match child.kill().await {
