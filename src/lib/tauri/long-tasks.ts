@@ -13,6 +13,7 @@ export interface PersistedLongTask {
   endedAt: string | null;
   error: string | null;
   location: string | null;
+  logoSrc: string;
   interrupted: boolean;
 }
 

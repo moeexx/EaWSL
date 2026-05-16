@@ -72,6 +72,7 @@ export interface DistroExportMenuView {
 
 export interface DistroRowView {
   name: string;
+  logoSrc: string;
   panelId: string;
   state: DistroStateBadge;
   isDefault: boolean;
@@ -138,6 +139,7 @@ export interface DistroWorkspaceCallbacks {
     distroName: string,
     file: string,
     format: ExportFormat,
+    logoSrc: string,
   ) => Promise<boolean>;
   toggleExpanded: (distroName: string) => Promise<void>;
 }

@@ -50,6 +50,7 @@ interface SubmitExportTaskInput {
   distro: string;
   file: string;
   format: ExportFormat;
+  logoSrc: string;
 }
 
 export interface DistroWorkspaceService {
@@ -152,6 +153,7 @@ async function submitExportTask(input: SubmitExportTaskInput): Promise<boolean> 
       distro: input.distro,
       operation: "export",
       location: input.file,
+      logoSrc: input.logoSrc,
     });
     taskStarted = true;
     await exportDistro({

@@ -15,11 +15,6 @@ export interface TaskStats {
   totalCount: number;
 }
 
-const distroLogoByName: Record<string, string> = {
-  debian: "/distro-logos/debian.svg",
-  ubuntu: "/distro-logos/ubuntu.svg",
-};
-
 export function isTaskActive(task: LongTask): boolean {
   return task.status === "started" || task.status === "running";
 }
@@ -60,10 +55,6 @@ export function getStatusLabel(
   }
 
   return copy.status.running;
-}
-
-export function getDistroLogoSrc(distro: string): string {
-  return distroLogoByName[distro.toLowerCase()] ?? "/distro-logos/generic.svg";
 }
 
 export function getProgressPercent(task: LongTask): number {

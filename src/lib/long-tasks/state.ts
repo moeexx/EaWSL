@@ -32,6 +32,7 @@ export interface LongTask {
   endedAt: Date | null;
   error: string | null;
   location: string | null;
+  logoSrc: string;
   interrupted: boolean;
 }
 
@@ -40,6 +41,7 @@ export interface StartTaskInput {
   distro: string;
   operation: LongTaskOperation;
   location: string | null;
+  logoSrc: string;
 }
 
 interface LongTaskState {
@@ -127,6 +129,7 @@ export async function startTask(input: StartTaskInput): Promise<void> {
       endedAt: null,
       error: null,
       location: input.location,
+      logoSrc: input.logoSrc,
       interrupted: false,
     },
     ...currentTasks,
@@ -265,6 +268,7 @@ function mapPersistedTask(task: PersistedLongTask): LongTask {
     endedAt: active ? new Date() : endedAt,
     error: active ? null : task.error,
     location: task.location,
+    logoSrc: task.logoSrc,
     interrupted: active || task.interrupted,
   };
 }
@@ -326,6 +330,7 @@ function toPersistedTask(task: LongTask): PersistedLongTask {
     endedAt: task.endedAt?.toISOString() ?? null,
     error: task.error,
     location: task.location,
+    logoSrc: task.logoSrc,
     interrupted: task.interrupted,
   };
 }

@@ -1,6 +1,10 @@
 import { get } from "svelte/store";
 
 import { checkDistroTargetDirectoryAvailable } from "$lib/shared/distro-targets";
+import {
+  GENERIC_DISTRO_LOGO_SRC,
+  getDistroLogoSrc,
+} from "$lib/shared/distro-logos";
 import { findDistroByName } from "$lib/shared/distros";
 import {
   getQueryErrorMessage,
@@ -78,6 +82,7 @@ export async function submitAcquireTask(
       distro: input.displayName,
       operation: input.operation,
       location: getAcquireTaskLocation(input),
+      logoSrc: getAcquireTaskLogoSrc(input),
     });
     taskStarted = true;
     await runAcquireTaskCommand(requestId, input);
@@ -248,6 +253,12 @@ function getAcquireTaskLocation(input: SubmitAcquireTaskInput): string | null {
   }
 
   return input.targetDirectory ?? input.sourceVhdx;
+}
+
+function getAcquireTaskLogoSrc(input: SubmitAcquireTaskInput): string {
+  return input.operation === "install"
+    ? getDistroLogoSrc(input.distro)
+    : GENERIC_DISTRO_LOGO_SRC;
 }
 
 function getPreflightTargetDirectory(

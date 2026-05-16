@@ -74,6 +74,7 @@ export interface DistroWorkspaceActions {
     distroName: string,
     file: string,
     format: ExportFormat,
+    logoSrc: string,
   ) => Promise<boolean>;
 }
 
@@ -436,11 +437,13 @@ export function createDistroWorkspaceActions(
     distroName: string,
     file: string,
     format: ExportFormat,
+    logoSrc: string,
   ): Promise<boolean> {
     return service.submitExportTask({
       distro: distroName,
       file,
       format,
+      logoSrc,
     });
   }
 

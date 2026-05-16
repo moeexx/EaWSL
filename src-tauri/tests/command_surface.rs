@@ -87,6 +87,7 @@ fn command_public_surface_type_checks() {
         ended_at: Some("2026-05-16T00:01:00.000Z".to_string()),
         error: None,
         location: Some("D:/exports/ubuntu.tar".to_string()),
+        logo_src: "/distro-logos/ubuntu.ico".to_string(),
         interrupted: false,
     };
 

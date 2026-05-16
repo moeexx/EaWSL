@@ -20,6 +20,7 @@ pub struct PersistedLongTask {
     pub ended_at: Option<String>,
     pub error: Option<String>,
     pub location: Option<String>,
+    pub logo_src: String,
     #[serde(default)]
     pub interrupted: bool,
 }
@@ -117,6 +118,7 @@ mod tests {
             ended_at: Some("2026-05-16T00:01:00.000Z".to_string()),
             error: None,
             location: Some("D:/exports/ubuntu.tar".to_string()),
+            logo_src: "/distro-logos/ubuntu.ico".to_string(),
             interrupted: false,
         }];
 

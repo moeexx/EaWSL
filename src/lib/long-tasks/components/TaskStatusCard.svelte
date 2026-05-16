@@ -2,7 +2,6 @@
   import { i18nState } from "$lib/i18n";
 
   import {
-    getDistroLogoSrc,
     getOperationLabel,
     getProgressPercentLabel,
     getProgressStageLabel,
@@ -30,7 +29,7 @@
       <img
         alt={copy.card.logoAlt(task.distro)}
         class="h-11 w-11 shrink-0 rounded-[10px] border-[0.5px] border-shell-200 bg-shell-50 object-contain p-1.5"
-        src={getDistroLogoSrc(task.distro)}
+        src={task.logoSrc}
       />
 
       <div class="min-w-0 flex-1">

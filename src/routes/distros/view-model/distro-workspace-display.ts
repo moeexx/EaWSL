@@ -2,6 +2,7 @@ import {
   hasHiddenRowActions,
   sortUiActionHiddenDistrosLast,
 } from "$lib/shared/distros";
+import { getDistroLogoSrc } from "$lib/shared/distro-logos";
 import type { VhdSizeCacheState, VhdSizeEntry } from "$lib/probes/distro-vhd-size";
 import {
   getQueryErrorMessage,
@@ -171,6 +172,7 @@ function buildDistroRowView(
 
   return {
     name: distro.name,
+    logoSrc: getDistroLogoSrc(distro.flavor),
     panelId: getDistroPanelId(distro.name),
     state: getStateBadge(distro.state, input.copy),
     isDefault: distro.is_default,

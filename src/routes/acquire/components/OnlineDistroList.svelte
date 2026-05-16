@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Boxes from "@lucide/svelte/icons/boxes";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { i18nState } from "$lib/i18n";
   import Button from "$lib/ui/Button.svelte";
@@ -23,7 +22,7 @@
         {#each model.onlineDistros as distro (distro.name)}
           {@const selected = model.selectedDistroName === distro.name}
           <Button ariaPressed={selected} variant="secondary" className={cardClass(selected)} onclick={() => model.callbacks.selectDistro(distro.name)}>
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] border border-shell-200 bg-shell-50 text-shell-600"><Boxes size={16} strokeWidth={1.9} /></div>
+            <img alt="" class="h-9 w-9 shrink-0 rounded-[9px] border border-shell-200 bg-shell-50 object-contain p-1.5" src={distro.logoSrc} />
             <div class="min-w-0 flex-1"><strong class="block truncate text-[14px] font-semibold text-shell-950">{distro.friendly_name}</strong><p class="mt-0.5 truncate text-[12px] leading-4 text-shell-500">{distro.name}</p></div>
             {#if selected}<span aria-hidden="true" class="absolute bottom-2 right-0 top-2 w-1 rounded-l-full bg-accent-700"></span>{/if}
           </Button>

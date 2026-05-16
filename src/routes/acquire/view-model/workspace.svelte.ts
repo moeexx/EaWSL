@@ -6,6 +6,7 @@ import { getCopy, i18nState } from "$lib/i18n";
 import { longTaskState, submitAcquireTask } from "$lib/long-tasks";
 import { queryCache, refreshAcquireWorkspace, type QueryCacheState } from "$lib/query-cache";
 import { isDistroNameUsed } from "$lib/shared/distro-targets";
+import { getDistroLogoSrc } from "$lib/shared/distro-logos";
 import { hasTauriBridge } from "$lib/shared/runtime";
 import { getWindowsParentPath } from "$lib/shared/windows-path";
 import { DEFAULT_INSTALL_LOCATION, getDefaultInstallLocation } from "$lib/tauri/settings";
@@ -52,8 +53,19 @@ export function createAcquireWorkspaceViewModel() {
   let disposed = false;
 
   const onlineDistros = $derived(queryState.onlineDistros.data ?? []);
+  const onlineDistroViews = $derived(
+    onlineDistros.map((distro) => ({
+      ...distro,
+      logoSrc: getDistroLogoSrc(distro.name),
+    })),
+  );
   const installedDistros = $derived(queryState.distros.data ?? []);
   const selectedDistro = $derived(findOnlineDistro(onlineDistros, selectedDistroName));
+  const selectedDistroView = $derived(
+    selectedDistro === null
+      ? null
+      : { ...selectedDistro, logoSrc: getDistroLogoSrc(selectedDistro.name) },
+  );
   const detectedImportKind = $derived(detectImportKind(importDraft.file));
   const importNoun = $derived(detectedImportKind === "archive" ? copy.acquire.importNouns.archive : detectedImportKind === "vhdx" ? copy.acquire.importNouns.vhdx : copy.acquire.importNouns.generic);
   const nameProbePending = $derived(queryState.distros.data === null && queryState.distros.activity === "loading");
@@ -197,8 +209,8 @@ export function createAcquireWorkspaceViewModel() {
   }));
 
   return {
-    get queryState() { return queryState; }, get onlineDistros() { return onlineDistros; }, get onlineState() { return getOnlineListState(queryState.onlineDistros); },
-    get selectedDistro() { return selectedDistro; }, get selectedDistroName() { return selectedDistroName; }, get draft() { return draft; },
+    get queryState() { return queryState; }, get onlineDistros() { return onlineDistroViews; }, get onlineState() { return getOnlineListState(queryState.onlineDistros); },
+    get selectedDistro() { return selectedDistroView; }, get selectedDistroName() { return selectedDistroName; }, get draft() { return draft; },
     get importDraft() { return importDraft; }, get detectedImportKind() { return detectedImportKind; }, get importNoun() { return importNoun; },
     get refreshing() { return refreshing; }, get refreshDisabled() { return refreshing || queryState.onlineDistros.activity === "loading"; },
     get validation() { return validation; }, get importValidation() { return importValidation; }, get spaceNotice() { return spaceNotice; }, get importSpaceNotice() { return importSpaceNotice; },

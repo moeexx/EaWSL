@@ -1,6 +1,5 @@
 <script lang="ts">
   import BadgeCheck from "@lucide/svelte/icons/badge-check";
-  import Boxes from "@lucide/svelte/icons/boxes";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import ChevronUp from "@lucide/svelte/icons/chevron-up";
   import FileOutput from "@lucide/svelte/icons/file-output";
@@ -177,6 +176,7 @@
         row.name,
         exportTargetFile,
         selectedFormat.format,
+        row.logoSrc,
       );
     } finally {
       exportSubmitting = false;
@@ -202,11 +202,11 @@
   <div class="flex flex-col gap-3">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div class="flex min-w-0 items-center gap-3">
-        <div
-          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-shell-200 bg-shell-50 text-shell-700"
-        >
-          <Boxes size={19} strokeWidth={1.9} />
-        </div>
+        <img
+          alt=""
+          class="h-11 w-11 shrink-0 rounded-[10px] border border-shell-200 bg-shell-50 object-contain p-1.5"
+          src={row.logoSrc}
+        />
 
         <div class="min-w-0 flex-1">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">
