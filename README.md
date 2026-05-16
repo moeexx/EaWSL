@@ -1,6 +1,6 @@
 # EaWSL
 
-Languages: English | [Simplified Chinese](docs/README.zh-CN.md)
+Languages: English | [简体中文](docs/README.zh-CN.md)
 
 EaWSL is a Windows 11 x64 desktop app for managing WSL distributions with a graphical interface. It is built with SvelteKit, Tauri 2, and Rust.
 
@@ -23,6 +23,15 @@ This project has not been tested across multiple operating systems or WSL versio
 - Settings for language, default install location, and background refresh targets.
 - English and Simplified Chinese UI.
 
+## Development Environment
+
+- Windows: Windows 11 25H2, build 26200.8457
+- WSL: 2.6.3.0
+- Rust: rustc 1.94.1
+- MSVC: 14.50.35717
+- Node.js: v22.20.0
+- pnpm: 10.22.0
+
 ## Run
 
 Install the frontend dependencies:
@@ -34,5 +43,11 @@ pnpm install
 Start Tauri:
 
 ```powershell
-pnpm tauri dev
+pnpm dev
+```
+
+Build release bundles:
+
+```powershell
+pnpm build
 ```

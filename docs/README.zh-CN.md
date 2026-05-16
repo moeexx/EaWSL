@@ -23,6 +23,15 @@ EaWSL 是面向 Windows 11 x64 的 WSL 图形化管理桌面应用，使用 Svel
 - 配置语言、默认安装位置和后台刷新目标。
 - 支持 English 和简体中文界面。
 
+## 开发环境
+
+- Windows：Windows 11 25H2，build 26200.8457
+- WSL：2.6.3.0
+- Rust：rustc 1.94.1
+- MSVC：14.50.35717
+- Node.js：v22.20.0
+- pnpm：10.22.0
+
 ## 运行
 
 安装前端依赖：
@@ -34,5 +43,11 @@ pnpm install
 启动 Tauri：
 
 ```powershell
-pnpm tauri dev
+pnpm dev
+```
+
+打包 release 安装包：
+
+```powershell
+pnpm build
 ```

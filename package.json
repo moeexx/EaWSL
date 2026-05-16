@@ -5,12 +5,12 @@
   "description": "EaWSL desktop app shell",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "frontend:dev": "vite dev",
+    "frontend:build": "vite build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "tauri": "tauri dev"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "license": "MIT",
   "dependencies": {
