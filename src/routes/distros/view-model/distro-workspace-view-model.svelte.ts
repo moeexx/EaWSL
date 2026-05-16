@@ -36,7 +36,7 @@ export function createDistroWorkspaceViewModel(
   let shutdownMode = $state<ShutdownMode>(null);
   let hasActiveLongTask = $state(false);
   let copy = $state(getCopy());
-  let lastDistrosRef = queryState.distros.data;
+  let lastDistrosRef: DistroInfo[] | null = null;
   let disposed = false;
 
   const view = $derived(
