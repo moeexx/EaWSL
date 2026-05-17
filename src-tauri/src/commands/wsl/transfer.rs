@@ -1,15 +1,18 @@
 use tauri::AppHandle;
 
-use crate::bridge::progress::{run_with_progress, TRANSFER_PROGRESS_EVENT};
+use crate::bridge::progress::{run_wsl_with_progress, TRANSFER_PROGRESS_EVENT};
 use crate::commands::shared::dto::{
     ExportDistroRequest, ImportDistroInPlaceRequest, ImportDistroRequest, InstallDistroRequest,
 };
-use crate::commands::shared::error::map_command_error;
+use crate::commands::shared::error::{map_command_error, message_command_error, CommandErrorDto};
 
 use super::vhdx_relocation::prepare_vhdx_relocation;
 
 #[tauri::command]
-pub async fn install_distro(app: AppHandle, req: InstallDistroRequest) -> Result<(), String> {
+pub async fn install_distro(
+    app: AppHandle,
+    req: InstallDistroRequest,
+) -> Result<(), CommandErrorDto> {
     let InstallDistroRequest {
         request_id,
         distro,
@@ -17,7 +20,7 @@ pub async fn install_distro(app: AppHandle, req: InstallDistroRequest) -> Result
     } = req;
     let options = options.into_core().map_err(map_command_error)?;
 
-    run_with_progress(
+    run_wsl_with_progress(
         app,
         TRANSFER_PROGRESS_EVENT,
         request_id,
@@ -30,7 +33,10 @@ pub async fn install_distro(app: AppHandle, req: InstallDistroRequest) -> Result
 }
 
 #[tauri::command]
-pub async fn import_distro(app: AppHandle, req: ImportDistroRequest) -> Result<(), String> {
+pub async fn import_distro(
+    app: AppHandle,
+    req: ImportDistroRequest,
+) -> Result<(), CommandErrorDto> {
     let ImportDistroRequest {
         request_id,
         distro,
@@ -38,7 +44,7 @@ pub async fn import_distro(app: AppHandle, req: ImportDistroRequest) -> Result<(
         file,
     } = req;
 
-    run_with_progress(
+    run_wsl_with_progress(
         app,
         TRANSFER_PROGRESS_EVENT,
         request_id,
@@ -54,7 +60,7 @@ pub async fn import_distro(app: AppHandle, req: ImportDistroRequest) -> Result<(
 pub async fn import_distro_in_place(
     app: AppHandle,
     req: ImportDistroInPlaceRequest,
-) -> Result<(), String> {
+) -> Result<(), CommandErrorDto> {
     let ImportDistroInPlaceRequest {
         request_id,
         distro,
@@ -69,10 +75,11 @@ pub async fn import_distro_in_place(
         source_vhdx,
         target_directory,
     )
-    .await?;
+    .await
+    .map_err(message_command_error)?;
     let final_vhdx = relocation.final_vhdx.clone();
 
-    let import_result = run_with_progress(
+    let import_result = run_wsl_with_progress(
         app,
         TRANSFER_PROGRESS_EVENT,
         request_id,
@@ -92,7 +99,10 @@ pub async fn import_distro_in_place(
 }
 
 #[tauri::command]
-pub async fn export_distro(app: AppHandle, req: ExportDistroRequest) -> Result<(), String> {
+pub async fn export_distro(
+    app: AppHandle,
+    req: ExportDistroRequest,
+) -> Result<(), CommandErrorDto> {
     let ExportDistroRequest {
         request_id,
         distro,
@@ -100,7 +110,7 @@ pub async fn export_distro(app: AppHandle, req: ExportDistroRequest) -> Result<(
         format,
     } = req;
 
-    run_with_progress(
+    run_wsl_with_progress(
         app,
         TRANSFER_PROGRESS_EVENT,
         request_id,

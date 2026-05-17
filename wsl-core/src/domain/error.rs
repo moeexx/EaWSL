@@ -34,6 +34,7 @@ pub enum WslError {
     UnknownWslError {
         context: WslCommandContext,
         code: String,
+        raw_output: String,
     },
     RegistryReadFailed {
         key: Option<String>,
@@ -116,9 +117,17 @@ impl fmt::Display for WslError {
             Self::OperationNotPermitted { distro } => {
                 write!(f, "operation not permitted for distro {}", distro)
             }
-            Self::UnknownWslError { context, code } => {
-                write!(f, "unknown WSL error in {}: {}", context.as_str(), code)
-            }
+            Self::UnknownWslError {
+                context,
+                code,
+                raw_output,
+            } => write!(
+                f,
+                "unknown WSL error in {}: {} ({})",
+                context.as_str(),
+                code,
+                summarize_output(raw_output)
+            ),
             Self::RegistryReadFailed { key, detail } => write!(
                 f,
                 "failed to read registry{}: {}",
@@ -201,6 +210,7 @@ pub(crate) fn map_wsl_error_with_output(
         _ => WslError::UnknownWslError {
             context: ctx,
             code: normalized.to_string(),
+            raw_output,
         },
     }
 }
@@ -271,12 +281,32 @@ mod tests {
     fn map_unknown_error_falls_back() {
         let err = map_wsl_error(WslCommandContext::Version, "Wsl/UNKNOWN_CODE");
         match err {
-            WslError::UnknownWslError { context, code } => {
+            WslError::UnknownWslError {
+                context,
+                code,
+                raw_output,
+            } => {
                 assert_eq!(context, WslCommandContext::Version);
                 assert_eq!(code, "Wsl/UNKNOWN_CODE");
+                assert!(raw_output.is_empty());
             }
             other => panic!("unexpected error variant: {other:?}"),
         }
+    }
+
+    #[test]
+    fn unknown_error_user_message_stays_stable_when_output_is_available() {
+        let err = WslError::UnknownWslError {
+            context: WslCommandContext::Install,
+            code: "exit-status:-1".to_string(),
+            raw_output: "发行版不存在，请使用 wsl.exe --list --online 查看有效名称。".to_string(),
+        };
+
+        assert_eq!(
+            err.to_user_message(),
+            "The WSL command failed: exit-status:-1."
+        );
+        assert!(err.to_string().contains("发行版不存在"));
     }
 
     #[test]

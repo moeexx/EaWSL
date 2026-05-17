@@ -141,6 +141,23 @@ export const enUS = {
     stopped: "Stopped",
     errors: {
       operationFailed: "Operation failed. Please try again.",
+      wslCommandFailed: (code: string, details?: string) =>
+        details
+          ? `The WSL command failed: ${code}. Details: ${details}`
+          : `The WSL command failed: ${code}.`,
+      wslCommandTimedOut:
+        "The WSL command timed out before a stable result was available.",
+      invalidWslArguments: "The WSL command arguments are invalid.",
+      fileNotFound: "The specified file was not found.",
+      distroNotFound: "The specified distro was not found.",
+      diskResizeFailed: "Failed to resize the distro disk.",
+      wslOperationNotPermitted: (distro: string) =>
+        `The requested operation is not permitted for distro \`${distro}\`.`,
+      registryReadFailed: "Failed to read WSL registry information.",
+      outputParseFailed: "Failed to parse WSL command output.",
+      processFailed: "Failed to start the WSL command.",
+      processKilled: "The WSL command exited without a status code.",
+      cancelled: "The operation was cancelled by the user.",
     },
     feedback: {
       dismissConfirmDialog: "Close confirmation dialog",

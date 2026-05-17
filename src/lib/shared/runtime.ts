@@ -1,4 +1,7 @@
 import { getCopy, type AppLanguage } from "$lib/i18n";
+import {
+  getTauriCommandErrorMessage,
+} from "$lib/tauri/errors";
 
 export function hasTauriBridge(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -11,6 +14,11 @@ export function toErrorMessage(error: unknown): string {
 }
 
 export function getExplicitErrorMessage(error: unknown): string | null {
+  const tauriMessage = getTauriCommandErrorMessage(error);
+  if (tauriMessage !== null && tauriMessage.length > 0) {
+    return tauriMessage;
+  }
+
   if (typeof error === "string" && error.length > 0) {
     return error;
   }

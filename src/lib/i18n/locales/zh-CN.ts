@@ -139,6 +139,22 @@ export const zhCN = {
     stopped: "已停止",
     errors: {
       operationFailed: "操作失败，请重试。",
+      wslCommandFailed: (code: string, details?: string) =>
+        details
+          ? `WSL 命令失败：${code}。详情：${details}`
+          : `WSL 命令失败：${code}。`,
+      wslCommandTimedOut: "WSL 命令超时，未能获得稳定结果。",
+      invalidWslArguments: "WSL 命令参数无效。",
+      fileNotFound: "指定文件不存在。",
+      distroNotFound: "指定发行版不存在。",
+      diskResizeFailed: "发行版磁盘扩容失败。",
+      wslOperationNotPermitted: (distro: string) =>
+        `发行版 \`${distro}\` 不允许执行该操作。`,
+      registryReadFailed: "WSL 注册表信息读取失败。",
+      outputParseFailed: "WSL 命令输出解析失败。",
+      processFailed: "WSL 命令启动失败。",
+      processKilled: "WSL 命令退出时没有状态码。",
+      cancelled: "操作已取消。",
     },
     feedback: {
       dismissConfirmDialog: "关闭确认弹窗",

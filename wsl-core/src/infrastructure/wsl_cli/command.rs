@@ -198,6 +198,7 @@ pub(crate) fn interpret_command_result(
             Err(WslError::UnknownWslError {
                 context,
                 code: format!("exit-status:{status_code}"),
+                raw_output: merged_output,
             })
         }
         None => Err(WslError::ProcessKilled),
@@ -272,8 +273,30 @@ mod tests {
             err,
             WslError::UnknownWslError {
                 context: WslCommandContext::Shutdown,
-                code
-            } if code == "exit-status:42"
+                code,
+                raw_output
+            } if code == "exit-status:42" && raw_output == "unexpected failure"
+        ));
+    }
+
+    #[test]
+    fn interpret_command_result_preserves_raw_output_for_unknown_wsl_code() {
+        let decoded = decode_command_output(CommandOutput {
+            status_code: Some(-1),
+            stdout: encode_utf16le("错误代码: Wsl/Install/UNKNOWN\r\ninstall failed\r\n"),
+            stderr: Vec::new(),
+        });
+
+        let err = interpret_command_result(WslCommandContext::Install, decoded)
+            .expect_err("unknown WSL code should be preserved");
+
+        assert!(matches!(
+            err,
+            WslError::UnknownWslError {
+                context: WslCommandContext::Install,
+                code,
+                raw_output
+            } if code == "Wsl/Install/UNKNOWN" && raw_output.contains("install failed")
         ));
     }
 
