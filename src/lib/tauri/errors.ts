@@ -32,7 +32,8 @@ export type WslCommandErrorDto = WslErrorExtras & {
 };
 export type MessageCommandErrorDto = { kind: "message"; message: string };
 export type RecoverableCommandCode =
-  "wsl-command-timed-out" | "host-command-timed-out";
+  | "wsl-command-timed-out"
+  | "host-command-timed-out";
 export type PersistedCommandError =
   | WslCommandErrorDto
   | MessageCommandErrorDto
@@ -40,7 +41,10 @@ export type PersistedCommandError =
   | { kind: "unknown" };
 
 export class RecoverableCommandError extends Error {
-  constructor(readonly code: RecoverableCommandCode, message: string) {
+  constructor(
+    readonly code: RecoverableCommandCode,
+    message: string,
+  ) {
     super(message);
     this.name = "RecoverableCommandError";
   }
@@ -137,7 +141,9 @@ export function isRecoverableCommandError(
   return error instanceof RecoverableCommandError;
 }
 
-export function isWslCommandErrorDto(error: unknown): error is WslCommandErrorDto {
+export function isWslCommandErrorDto(
+  error: unknown,
+): error is WslCommandErrorDto {
   return (
     isObject(error) &&
     error.kind === "wsl" &&
@@ -149,7 +155,11 @@ export function isWslCommandErrorDto(error: unknown): error is WslCommandErrorDt
 export function isMessageCommandErrorDto(
   error: unknown,
 ): error is MessageCommandErrorDto {
-  return isObject(error) && error.kind === "message" && typeof error.message === "string";
+  return (
+    isObject(error) &&
+    error.kind === "message" &&
+    typeof error.message === "string"
+  );
 }
 
 function isPersistedRecoverableCommandError(

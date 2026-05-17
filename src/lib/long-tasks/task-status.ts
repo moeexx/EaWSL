@@ -113,7 +113,9 @@ export function getTaskErrorMessage(
     return copy.errors.interrupted;
   }
 
-  return task.error === null ? null : getPersistedCommandErrorMessage(task.error);
+  return task.error === null
+    ? null
+    : getPersistedCommandErrorMessage(task.error);
 }
 
 export function getOperationLabel(task: LongTask, copy: LongTasksCopy): string {

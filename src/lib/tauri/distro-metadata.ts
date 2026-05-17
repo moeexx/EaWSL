@@ -21,15 +21,10 @@ async function invokeDistroMetadata<T>(
   }
 }
 
-export function getDistroMetadata(): Promise<
-  DistroMetadata[]
-> {
+export function getDistroMetadata(): Promise<DistroMetadata[]> {
   return invokeDistroMetadata("get_distro_metadata");
 }
 
-export function refreshDistroMetadata(): Promise<
-  DistroMetadata[]
-> {
+export function refreshDistroMetadata(): Promise<DistroMetadata[]> {
   return invokeDistroMetadata("refresh_distro_metadata");
 }
-

@@ -41,9 +41,12 @@ pub(crate) fn map_command_error(err: WslError) -> CommandErrorDto {
         WslError::FileNotFound => wsl_error(WslCommandErrorCode::FileNotFound),
         WslError::DistroNotFound => wsl_error(WslCommandErrorCode::DistroNotFound),
         WslError::DiskResizeFailed => wsl_error(WslCommandErrorCode::DiskResizeFailed),
-        WslError::OperationNotPermitted { distro } => {
-            wsl_detail_error(WslCommandErrorCode::OperationNotPermitted, None, None, Some(distro))
-        }
+        WslError::OperationNotPermitted { distro } => wsl_detail_error(
+            WslCommandErrorCode::OperationNotPermitted,
+            None,
+            None,
+            Some(distro),
+        ),
         WslError::UnknownWslError {
             code, raw_output, ..
         } => wsl_detail_error(
@@ -52,15 +55,9 @@ pub(crate) fn map_command_error(err: WslError) -> CommandErrorDto {
             non_empty(&raw_output),
             None,
         ),
-        WslError::RegistryReadFailed { .. } => {
-            wsl_error(WslCommandErrorCode::RegistryReadFailed)
-        }
-        WslError::OutputParseFailed { .. } => {
-            wsl_error(WslCommandErrorCode::OutputParseFailed)
-        }
-        WslError::WslCommandTimedOut { .. } => {
-            wsl_error(WslCommandErrorCode::WslCommandTimedOut)
-        }
+        WslError::RegistryReadFailed { .. } => wsl_error(WslCommandErrorCode::RegistryReadFailed),
+        WslError::OutputParseFailed { .. } => wsl_error(WslCommandErrorCode::OutputParseFailed),
+        WslError::WslCommandTimedOut { .. } => wsl_error(WslCommandErrorCode::WslCommandTimedOut),
         WslError::ProcessFailed(_) => wsl_error(WslCommandErrorCode::ProcessFailed),
         WslError::ProcessKilled => wsl_error(WslCommandErrorCode::ProcessKilled),
         WslError::Cancelled => wsl_error(WslCommandErrorCode::Cancelled),

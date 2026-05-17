@@ -314,8 +314,7 @@ export const zhCN = {
       stopSyncFailedMessage:
         "已执行停止命令，但列表同步失败，请手动刷新确认状态",
       actionSyncFailedTitle: "操作后同步失败",
-      actionSyncFailedMessage:
-        "命令已返回，但列表同步失败，请手动刷新确认状态",
+      actionSyncFailedMessage: "命令已返回，但列表同步失败，请手动刷新确认状态",
       forceStopSyncFailedTitle: "强停后同步失败",
       shutdownSyncFailedMessage:
         "停止命令已返回，但列表同步失败，请手动刷新确认状态",
@@ -332,8 +331,7 @@ export const zhCN = {
       unregisterSyncFailedMessage:
         "删除命令已返回，但列表同步失败，请手动刷新确认状态",
       unregisterSuccessTitle: "删除成功",
-      unregisterSuccessMessage: (distro: string) =>
-        `${distro} 已从列表中移除`,
+      unregisterSuccessMessage: (distro: string) => `${distro} 已从列表中移除`,
       unregisterPendingTitle: "删除后同步延后",
       unregisterUnknownTitle: "无法确认删除结果",
       unregisterUnknownFallback: "删除命令已提交，但暂时无法确认最终状态",
