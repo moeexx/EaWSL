@@ -4,6 +4,7 @@
   import HardDrive from "@lucide/svelte/icons/hard-drive";
   import { i18nState } from "$lib/i18n";
   import Button from "$lib/ui/Button.svelte";
+  import DistroLogo from "$lib/ui/DistroLogo.svelte";
   import PathPickerField from "$lib/ui/PathPickerField.svelte";
   import type { AcquireWorkspaceViewModel } from "../view-model/workspace.svelte";
   import AcquireSpaceNotice from "./AcquireSpaceNotice.svelte";
@@ -20,7 +21,7 @@
 <div class="min-w-0 grid gap-3">
   {#if model.selectedDistro}
     <div class="flex items-center gap-3 rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3">
-      <img alt="" class="h-10 w-10 shrink-0 rounded-[9px] border-[0.5px] border-shell-200 bg-shell-50 object-contain p-1.5" src={model.selectedDistro.logoSrc} />
+      <DistroLogo src={model.selectedDistro.logoSrc} size="lg" />
       <div class="min-w-0 flex-1"><p class="text-[12px] font-medium text-shell-500">{copy.selectedDistro}</p><strong class="mt-1 block truncate text-[15px] leading-5 text-shell-950">{model.selectedDistro.friendly_name}</strong><p class="mt-0.5 truncate text-[12px] leading-4 text-shell-500">{model.selectedDistro.name}</p></div>
       <div aria-hidden="true" class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-700 text-white"><Check size={16} strokeWidth={2.4} /></div>
     </div>

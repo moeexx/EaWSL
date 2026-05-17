@@ -172,7 +172,7 @@ function buildDistroRowView(
 
   return {
     name: distro.name,
-    logoSrc: getDistroLogoSrc(distro.flavor),
+    logoSrc: getDistroLogoSrc(distro.flavor, distro.name),
     panelId: getDistroPanelId(distro.name),
     state: getStateBadge(distro.state, input.copy),
     isDefault: distro.is_default,

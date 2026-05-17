@@ -13,10 +13,11 @@
 
   import { i18nState } from "$lib/i18n";
   import { longTaskState } from "$lib/long-tasks";
+  import { hasTauriBridge } from "$lib/shared/runtime";
   import Button from "$lib/ui/Button.svelte";
+  import DistroLogo from "$lib/ui/DistroLogo.svelte";
   import PathPickerField from "$lib/ui/PathPickerField.svelte";
   import RefreshButton from "$lib/ui/RefreshButton.svelte";
-  import { hasTauriBridge } from "$lib/shared/runtime";
 
   import {
     getExportFileNameError,
@@ -202,11 +203,7 @@
   <div class="flex flex-col gap-3">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div class="flex min-w-0 items-center gap-3">
-        <img
-          alt=""
-          class="h-11 w-11 shrink-0 rounded-[10px] border border-shell-200 bg-shell-50 object-contain p-1.5"
-          src={row.logoSrc}
-        />
+        <DistroLogo src={row.logoSrc} />
 
         <div class="min-w-0 flex-1">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">

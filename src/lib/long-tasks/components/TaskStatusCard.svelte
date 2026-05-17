@@ -1,5 +1,6 @@
 <script lang="ts">
   import { i18nState } from "$lib/i18n";
+  import DistroLogo from "$lib/ui/DistroLogo.svelte";
 
   import {
     getOperationLabel,
@@ -26,9 +27,8 @@
 <li class={getTaskCardClass(task)}>
   <div class="flex min-w-0 items-start justify-between gap-3">
     <div class="flex min-w-0 items-start gap-3">
-      <img
+      <DistroLogo
         alt={copy.card.logoAlt(task.distro)}
-        class="h-11 w-11 shrink-0 rounded-[10px] border-[0.5px] border-shell-200 bg-shell-50 object-contain p-1.5"
         src={task.logoSrc}
       />
 
