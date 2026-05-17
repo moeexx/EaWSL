@@ -36,7 +36,7 @@
   } from "$lib/tauri/settings";
 
   const DEFAULT_LANGUAGE: AppLanguage = "en-US";
-  const FALLBACK_APP_VERSION = "0.1.0";
+  const FALLBACK_APP_VERSION = "0.2.0";
   const APP_LOGO_SRC = "/favicon.png";
   const REPOSITORY_URL = "https://github.com/moeexx/EaWSL";
   const ISSUE_URL = `${REPOSITORY_URL}/issues`;
