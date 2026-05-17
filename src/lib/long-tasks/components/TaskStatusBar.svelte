@@ -88,7 +88,7 @@
           ></span>
           <div class="min-w-0 flex-1">
             <strong
-              class="block truncate text-[17px] font-semibold leading-5 text-shell-800"
+              class="block min-h-[24px] truncate text-[17px] font-semibold leading-[1.4] text-shell-800"
               title={collapsedStatusText}
             >
               {collapsedStatusTitle}
