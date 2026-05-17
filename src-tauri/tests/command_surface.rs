@@ -1,9 +1,9 @@
 use eawsl_tauri::commands::{
-    self, AppSettings, BackgroundRefreshSettings, BackgroundRefreshTarget, DistroProgressEvent,
-    ExportDistroRequest, FileSystemPathProbe, ImportDistroInPlaceRequest, ImportDistroRequest,
-    InstallDistroRequest, InstallOptionsPayload, PathVolumeSpace, PersistedLongTask,
-    SystemOverview, SystemOverviewScope, TransferProgressEvent, TransferProgressPhase,
-    TransferProgressValue,
+    self, AppSettings, BackgroundRefreshSettings, BackgroundRefreshTarget, DistroMetadata,
+    DistroProgressEvent, ExportDistroRequest, FileSystemPathProbe, ImportDistroInPlaceRequest,
+    ImportDistroRequest, InstallDistroRequest, InstallOptionsPayload, PathVolumeSpace,
+    PersistedLongTask, SystemOverview, SystemOverviewScope, TransferProgressEvent,
+    TransferProgressPhase, TransferProgressValue,
 };
 use wsl_core::{ExportFormat, ProgressState};
 
@@ -93,6 +93,13 @@ fn command_public_surface_type_checks() {
         logo_src: "/distro-logos/ubuntu.ico".to_string(),
         interrupted: false,
     };
+    let _ = DistroMetadata {
+        name: "Ubuntu".to_string(),
+        friendly_name: "Ubuntu".to_string(),
+        amd64_url: Some("https://example.test/ubuntu.appx".to_string()),
+        arm64_url: Some("https://example.test/ubuntu-arm64.appx".to_string()),
+        modern: true,
+    };
 
     let _ = commands::get_file_size;
     let _ = commands::probe_file_system_path;
@@ -100,6 +107,8 @@ fn command_public_surface_type_checks() {
     let _ = commands::get_system_overview;
     let _ = commands::get_app_settings;
     let _ = commands::save_app_settings;
+    let _ = commands::get_distro_metadata;
+    let _ = commands::refresh_distro_metadata;
     let _ = commands::get_long_tasks;
     let _ = commands::save_long_tasks;
     let _ = commands::get_wsl_version;
