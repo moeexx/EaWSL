@@ -105,7 +105,7 @@
     ></div>
 
     <header
-      class="relative flex h-10 items-stretch justify-between border-b border-shell-200/70 bg-white/[0.65]"
+      class="relative z-10 flex h-10 items-stretch justify-between bg-transparent"
     >
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
@@ -115,10 +115,15 @@
       >
         <div class="flex min-w-0 items-center gap-2.5" data-tauri-drag-region>
           <div
-            class="flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-accent-700"
+            class="flex h-[45px] w-[45px] shrink-0 translate-y-[5px] items-center justify-center rounded-[8px]"
             data-tauri-drag-region
           >
-            <ShellIcon name="app" size={17} />
+            <img
+              alt=""
+              aria-hidden="true"
+              class="h-[45px] w-[45px] rounded-[8px] object-contain"
+              src="/favicon.png"
+            />
           </div>
 
           <div class="min-w-0" data-tauri-drag-region>
@@ -167,10 +172,12 @@
       </div>
     </header>
 
-    <div class="relative flex min-h-0 flex-1 bg-transparent">
+    <div
+      class="relative flex min-h-0 flex-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(244,248,252,0.5))]"
+    >
       <ShellSidebar />
       <main
-        class="relative min-w-0 flex-1 overflow-hidden bg-[linear-gradient(180deg,rgba(248,250,252,0.78),rgba(236,242,248,0.62))]"
+        class="relative min-w-0 flex-1 overflow-hidden rounded-tl-[8px] border-l-[1px] border-t-[1px] border-shell-300/90 bg-[linear-gradient(180deg,rgba(248,250,252,0.78),rgba(236,242,248,0.62))]"
         style="--task-tray-collapsed-height: 63px;"
       >
         <div

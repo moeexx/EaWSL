@@ -29,7 +29,7 @@
 
   const sidebarClass = $derived(
     [
-      "relative min-w-0 shrink-0 border-r border-shell-200/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(246,249,252,0.92))] px-2.5 py-2.5 transition-[width] duration-200",
+      "relative min-w-0 shrink-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.38),rgba(246,249,252,0.72))] px-2.5 py-2.5 transition-[width] duration-200",
       $shellUiState.sidebarCollapsed ? "w-[70px]" : "w-[70px] md:w-[180px]",
     ].join(" "),
   );
@@ -144,7 +144,7 @@
       </button>
     </div>
 
-    <div class="border-t border-shell-200/70"></div>
+    <div class="border-t-[1px] border-shell-300/90"></div>
 
     <nav
       aria-label={shellCopy.navigation.primaryAriaLabel}
@@ -155,7 +155,7 @@
       {/each}
     </nav>
 
-    <div class="mt-auto grid gap-1.5 border-t border-shell-200/70 pt-3">
+    <div class="mt-auto grid gap-1.5 border-t-[1px] border-shell-300/90 pt-3">
       {@render navButton(settingsNavigation)}
     </div>
   </div>
