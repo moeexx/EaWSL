@@ -17,7 +17,7 @@
 </script>
 
 <header
-  class="relative isolate overflow-hidden rounded-[14px] border-[0.5px] border-shell-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,254,0.92))] px-4 py-3.5 shadow-[0_12px_32px_rgba(17,26,39,0.07)]"
+  class="relative isolate overflow-hidden rounded-[14px] border-[0.5px] border-shell-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,254,0.92))] px-4 py-[9px] shadow-[0_12px_32px_rgba(17,26,39,0.07)]"
 >
   <div
     aria-hidden="true"
@@ -30,9 +30,9 @@
   ></div>
 
   <div
-    class="relative flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+    class="relative flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-8"
   >
-    <div class="min-w-0">
+    <div class="flex min-w-0 flex-col items-start gap-1">
       <div
         class="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-accent-100 bg-accent-50/80 px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-accent-700"
       >
@@ -41,13 +41,13 @@
       </div>
 
       <h1
-        class="mt-1.5 text-[1.55rem] font-semibold tracking-[-0.04em] text-shell-950"
+        class="text-[1.55rem] font-semibold tracking-[-0.04em] text-shell-950"
       >
         {title}
       </h1>
 
       {#if description}
-        <p class="mt-1.5 w-full text-[13px] leading-5 text-shell-600">
+        <p class="w-full text-[13px] leading-5 text-shell-600">
           {description}
         </p>
       {/if}
