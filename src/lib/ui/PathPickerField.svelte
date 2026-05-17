@@ -63,7 +63,10 @@
       {label}{#if required}<span class="text-rose-600">*</span>{/if}
     </label>
     {#if error}
-      <p id={errorId} class="min-w-0 text-right text-[12px] leading-5 text-rose-700">
+      <p
+        id={errorId}
+        class="min-w-0 text-right text-[12px] leading-5 text-rose-700"
+      >
         {error}
       </p>
     {/if}

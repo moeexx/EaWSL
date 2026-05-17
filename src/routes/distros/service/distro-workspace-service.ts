@@ -1,7 +1,10 @@
 import { get, type Readable } from "svelte/store";
 import { open } from "@tauri-apps/plugin-dialog";
 
-import { openConfirmDialog, type ConfirmDialogOptions } from "$lib/feedback/confirm-dialog";
+import {
+  openConfirmDialog,
+  type ConfirmDialogOptions,
+} from "$lib/feedback/confirm-dialog";
 import {
   buildDistroVhdPath,
   getVhdSizeEntry,
@@ -128,7 +131,9 @@ async function chooseDirectory(
   return typeof selected === "string" ? selected : null;
 }
 
-async function submitExportTask(input: SubmitExportTaskInput): Promise<boolean> {
+async function submitExportTask(
+  input: SubmitExportTaskInput,
+): Promise<boolean> {
   const copy = getCopy();
 
   if (get(longTaskState).hasActiveLongTask) {
@@ -183,7 +188,9 @@ async function submitExportTask(input: SubmitExportTaskInput): Promise<boolean> 
   }
 }
 
-async function guardExportTarget(input: SubmitExportTaskInput): Promise<boolean> {
+async function guardExportTarget(
+  input: SubmitExportTaskInput,
+): Promise<boolean> {
   if (input.format === "Vhd" && !input.file.toLowerCase().endsWith(".vhdx")) {
     const copy = getCopy();
     pushToast({
@@ -223,7 +230,8 @@ async function guardExportTargetDirectory(file: string): Promise<boolean> {
     pushToast({
       tone: "error",
       title: copy.longTasks.exportTasks.targetDirectoryInvalidTitle,
-      message: copy.longTasks.exportTasks.targetDirectoryInvalidMessage(directory),
+      message:
+        copy.longTasks.exportTasks.targetDirectoryInvalidMessage(directory),
     });
     return false;
   } catch (error) {

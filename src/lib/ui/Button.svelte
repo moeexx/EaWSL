@@ -100,7 +100,7 @@
   aria-pressed={ariaPressed}
   class={`${baseButtonClass} ${variantClassMap[variant]} ${currentSizeClass.button} ${className}`}
   {disabled}
-  onclick={onclick}
+  {onclick}
   {title}
   {type}
 >

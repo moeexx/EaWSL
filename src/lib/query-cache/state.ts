@@ -1,14 +1,7 @@
 import { get, writable } from "svelte/store";
 
-import type {
-  SystemOverview,
-  SystemOverviewScope,
-} from "$lib/tauri/system";
-import type {
-  DistroInfo,
-  OnlineDistro,
-  WslVersion,
-} from "$lib/tauri/wsl";
+import type { SystemOverview, SystemOverviewScope } from "$lib/tauri/system";
+import type { DistroInfo, OnlineDistro, WslVersion } from "$lib/tauri/wsl";
 import type { RecoverableCommandError } from "$lib/tauri/errors";
 import { clearVhdSizeCache } from "$lib/probes/distro-vhd-size";
 import { getExplicitErrorMessage } from "$lib/shared/runtime";
@@ -274,12 +267,17 @@ function getCacheEntry<K extends QueryKey>(
 
 function updateCacheEntry<K extends QueryKey>(
   key: K,
-  updater: (entry: QueryEntry<QueryDataByKey[K]>) => QueryEntry<QueryDataByKey[K]>,
+  updater: (
+    entry: QueryEntry<QueryDataByKey[K]>,
+  ) => QueryEntry<QueryDataByKey[K]>,
 ): void {
-  store.update((state) => ({
-    ...state,
-    [key]: updater(getCacheEntry(state, key)),
-  }) as QueryCacheState);
+  store.update(
+    (state) =>
+      ({
+        ...state,
+        [key]: updater(getCacheEntry(state, key)),
+      }) as QueryCacheState,
+  );
 }
 
 function hasFreshCache<T>(
@@ -332,7 +330,10 @@ function resolveNextQueryData<K extends QueryKey>(
   }
 
   if (key === "distros" && currentData !== null) {
-    return areDistroListsEqual(currentData as DistroInfo[], nextData as DistroInfo[])
+    return areDistroListsEqual(
+      currentData as DistroInfo[],
+      nextData as DistroInfo[],
+    )
       ? currentData
       : nextData;
   }
@@ -367,16 +368,20 @@ function areDistroListsEqual(
   currentDistros: DistroInfo[],
   nextDistros: DistroInfo[],
 ): boolean {
-  return areListsEqual(currentDistros, nextDistros, (currentDistro, nextDistro) =>
-    currentDistro.name === nextDistro.name &&
-    getDistroStateKey(currentDistro.state) === getDistroStateKey(nextDistro.state) &&
-    currentDistro.version === nextDistro.version &&
-    currentDistro.is_default === nextDistro.is_default &&
-    currentDistro.base_path === nextDistro.base_path &&
-    currentDistro.vhd_file_name === nextDistro.vhd_file_name &&
-    currentDistro.flavor === nextDistro.flavor &&
-    currentDistro.os_version === nextDistro.os_version &&
-    currentDistro.default_uid === nextDistro.default_uid,
+  return areListsEqual(
+    currentDistros,
+    nextDistros,
+    (currentDistro, nextDistro) =>
+      currentDistro.name === nextDistro.name &&
+      getDistroStateKey(currentDistro.state) ===
+        getDistroStateKey(nextDistro.state) &&
+      currentDistro.version === nextDistro.version &&
+      currentDistro.is_default === nextDistro.is_default &&
+      currentDistro.base_path === nextDistro.base_path &&
+      currentDistro.vhd_file_name === nextDistro.vhd_file_name &&
+      currentDistro.flavor === nextDistro.flavor &&
+      currentDistro.os_version === nextDistro.os_version &&
+      currentDistro.default_uid === nextDistro.default_uid,
   );
 }
 
@@ -388,8 +393,11 @@ function areOnlineDistroListsEqual(
   currentDistros: OnlineDistro[],
   nextDistros: OnlineDistro[],
 ): boolean {
-  return areListsEqual(currentDistros, nextDistros, (currentDistro, nextDistro) =>
-    currentDistro.name === nextDistro.name &&
-    currentDistro.friendly_name === nextDistro.friendly_name,
+  return areListsEqual(
+    currentDistros,
+    nextDistros,
+    (currentDistro, nextDistro) =>
+      currentDistro.name === nextDistro.name &&
+      currentDistro.friendly_name === nextDistro.friendly_name,
   );
 }

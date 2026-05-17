@@ -79,7 +79,8 @@ export const enUS = {
     },
     refresh: {
       failedTitle: "Refresh failed",
-      failedMessage: "Online distro list refresh failed. Please try again later.",
+      failedMessage:
+        "Online distro list refresh failed. Please try again later.",
       completedTitle: "Refresh complete",
       successMessage: "Online distro list was updated.",
     },
@@ -94,7 +95,8 @@ export const enUS = {
       installLocationRequired: "Fill the final install directory.",
       installLocationProbeFailed: "Install directory check failed.",
       installLocationExists: "Install directory already exists.",
-      installSpaceEmpty: "Fill the final install directory to check disk space.",
+      installSpaceEmpty:
+        "Fill the final install directory to check disk space.",
       targetDirectoryRequired: "Fill the import directory.",
       targetDirectoryProbeFailed: "Target directory check failed.",
       targetDirectoryExists: "Target directory already exists.",
@@ -121,8 +123,7 @@ export const enUS = {
       importFileProbeFailed: "Import file check failed.",
       importFileMissing: "Import file does not exist.",
       importFileNotFile: "Import path is not a file.",
-      installedDistroListReadFailed:
-        "Failed to read installed distro list.",
+      installedDistroListReadFailed: "Failed to read installed distro list.",
     },
   },
   common: {
@@ -207,7 +208,8 @@ export const enUS = {
         formatLabel: "Suffix",
         directoryLabel: "Directory",
         directoryPlaceholder: "Choose export directory",
-        directoryDialogTitle: (distro: string) => `Choose ${distro} export directory`,
+        directoryDialogTitle: (distro: string) =>
+          `Choose ${distro} export directory`,
         submit: "Start export",
         exporting: "Exporting...",
         formats: {
@@ -218,7 +220,8 @@ export const enUS = {
         },
         validation: {
           fileNameRequired: "Fill the export file name.",
-          fileNameInvalid: "File name contains characters Windows does not allow.",
+          fileNameInvalid:
+            "File name contains characters Windows does not allow.",
           fileNameSuffixNotAllowed:
             "Enter the base file name only. The selected suffix is added automatically.",
           directoryRequired: "Fill the export directory.",
@@ -266,8 +269,7 @@ export const enUS = {
       syncUnknownMessage:
         "The command returned, but the latest list state is not confirmed.",
       missingDistroTitle: "Distro does not exist",
-      missingDistroSuccess: (distro: string) =>
-        `${distro} no longer exists.`,
+      missingDistroSuccess: (distro: string) => `${distro} no longer exists.`,
       missingDistroFailed: (distro: string) =>
         `${distro} no longer exists, but list sync failed. Refresh manually to confirm.`,
       listStatePendingTitle: "List state is not confirmed",
@@ -285,7 +287,8 @@ export const enUS = {
       noRunningMessage: "There are no running distros.",
       noRunningFailed:
         "Whether any distros are still running is not confirmed. Refresh manually.",
-      noRunningUnknown: "The list changed. Re-check using the current running state.",
+      noRunningUnknown:
+        "The list changed. Re-check using the current running state.",
       noDefaultNeededTitle: "No default change needed",
       alreadyDefaultMessage: (distro: string) =>
         `${distro} is already the default distro.`,
@@ -308,10 +311,8 @@ export const enUS = {
         "The stop command returned, but list sync failed. Refresh manually to confirm state.",
       forceStoppedTitle: "Force stopped",
       stoppedAllTitle: "Stopped all",
-      forceStoppedMessage:
-        "Force stop ran and no running distros remain.",
-      stoppedAllMessage:
-        "Stop all WSL ran and no running distros remain.",
+      forceStoppedMessage: "Force stop ran and no running distros remain.",
+      stoppedAllMessage: "Stop all WSL ran and no running distros remain.",
       forceStopPendingTitle: "Force stop sync delayed",
       stopPendingTitle: "Stop sync delayed",
       forceStopUnknownTitle: "Force stop result is not confirmed",
@@ -413,8 +414,7 @@ export const enUS = {
       syncDelayedTitle: (noun: string) => `${noun} sync delayed`,
       syncDelayedMessage: (displayName: string, noun: string) =>
         `${displayName} ${noun} completed, but installed list sync is delayed. Refresh manually later.`,
-      resultUnknownTitle: (noun: string) =>
-        `${noun} result is not confirmed`,
+      resultUnknownTitle: (noun: string) => `${noun} result is not confirmed`,
       resultUnknownMessage: (displayName: string, noun: string) =>
         `${displayName} ${noun} completed, but it has not been confirmed in the installed list.`,
       completedTitle: (noun: string) => `${noun} completed`,
@@ -422,8 +422,7 @@ export const enUS = {
         `${displayName} completed ${noun} and is now in the installed list.`,
       installDirectoryExistsTitle: "Install directory already exists",
       targetDirectoryExistsTitle: "Target directory already exists",
-      installedDistroListReadFailed:
-        "Failed to read installed distro list.",
+      installedDistroListReadFailed: "Failed to read installed distro list.",
     },
     exportTasks: {
       activeTitle: "A long task is already running",
@@ -439,8 +438,7 @@ export const enUS = {
       targetDirectoryInvalidTitle: "Export directory is unavailable",
       targetDirectoryInvalidMessage: (directory: string) =>
         `${directory} does not exist or is not a folder.`,
-      vhdxSuffixRequiredMessage:
-        "VHD export must use a .vhdx target file.",
+      vhdxSuffixRequiredMessage: "VHD export must use a .vhdx target file.",
     },
   },
   overview: {

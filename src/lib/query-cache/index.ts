@@ -10,10 +10,7 @@ export {
   refreshDistroWorkspace,
   refreshDistrosAfterAction,
 } from "./plans";
-export {
-  getQueryErrorMessage,
-  getQueryRecoveringHint,
-} from "./display";
+export { getQueryErrorMessage, getQueryRecoveringHint } from "./display";
 export { queryCache } from "./state";
 export type {
   AcquireTaskBackgroundRefresh,

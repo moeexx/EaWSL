@@ -39,7 +39,9 @@
           {#if hasHeading}
             <div class="min-w-0">
               {#if title.trim().length > 0}
-                <h2 class="text-[1.2rem] font-semibold tracking-[-0.025em] text-shell-950">
+                <h2
+                  class="text-[1.2rem] font-semibold tracking-[-0.025em] text-shell-950"
+                >
                   {title}
                 </h2>
               {/if}

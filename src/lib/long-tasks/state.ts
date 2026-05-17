@@ -137,7 +137,10 @@ export async function startTask(input: StartTaskInput): Promise<void> {
   await persistLongTasks(tasks);
 }
 
-export async function failTask(requestId: string, error: string): Promise<void> {
+export async function failTask(
+  requestId: string,
+  error: string,
+): Promise<void> {
   await updateTaskAndSave(requestId, (task) => ({
     ...task,
     status: "failed",
@@ -157,9 +160,7 @@ export async function completeTask(requestId: string): Promise<void> {
   }));
 }
 
-export function applyLongTaskProgress(
-  payload: DistroProgressEvent,
-): void {
+export function applyLongTaskProgress(payload: DistroProgressEvent): void {
   const progressState = extractProgressState(payload.progress.value);
   const progressPercent = extractProgressPercent(payload.progress.value);
 
@@ -254,7 +255,8 @@ async function hydrateLongTasks(): Promise<void> {
 
 function mapPersistedTask(task: PersistedLongTask): LongTask {
   const startedAt = parsePersistedDate(task.startedAt);
-  const endedAt = task.endedAt === null ? null : parsePersistedDate(task.endedAt);
+  const endedAt =
+    task.endedAt === null ? null : parsePersistedDate(task.endedAt);
   const active = task.status === "started" || task.status === "running";
 
   return {

@@ -9,6 +9,7 @@
     "build": "tauri build",
     "frontend:dev": "vite dev",
     "frontend:build": "vite build",
+    "format": "cargo fmt --all && prettier --plugin prettier-plugin-svelte --write \"src/**/*.{js,ts,svelte,css,json}\" \"src-tauri/**/*.json\" \"wsl-core/tests/fixtures/**/*.json\" \"package.json\" \"pnpm-lock.yaml\" \"tsconfig.json\" \"svelte.config.js\" \"vite.config.js\"",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
@@ -25,6 +26,8 @@
     "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/cli": "^2",
     "@types/node": "^18.19.130",
+    "prettier": "^3.8.0",
+    "prettier-plugin-svelte": "^3.5.0",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "tailwindcss": "^4.2.2",

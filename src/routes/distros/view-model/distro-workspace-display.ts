@@ -3,7 +3,10 @@ import {
   sortUiActionHiddenDistrosLast,
 } from "$lib/shared/distros";
 import { getDistroLogoSrc } from "$lib/shared/distro-logos";
-import type { VhdSizeCacheState, VhdSizeEntry } from "$lib/probes/distro-vhd-size";
+import type {
+  VhdSizeCacheState,
+  VhdSizeEntry,
+} from "$lib/probes/distro-vhd-size";
 import {
   getQueryErrorMessage,
   getQueryRecoveringHint,
@@ -37,9 +40,7 @@ import {
   getVhdSizeLabel,
   isCompactFlavorVersion,
 } from "./distro-workspace-display-format";
-import {
-  buildDistroExportFormats,
-} from "./distro-export-rules";
+import { buildDistroExportFormats } from "./distro-export-rules";
 
 interface DistroWorkspaceViewInput {
   copy: AppCopy;
@@ -108,8 +109,9 @@ export function getWorkspaceActionOverlay(
   scope: DistroWorkspaceOverlayScope,
 ): DistroWorkspaceOverlayState | null {
   return (
-    overlays.find((overlay) => isSameActionOverlayScope(overlay.scope, scope)) ??
-    null
+    overlays.find((overlay) =>
+      isSameActionOverlayScope(overlay.scope, scope),
+    ) ?? null
   );
 }
 
@@ -184,7 +186,8 @@ function buildDistroRowView(
     flavorVersionCompact: isCompactFlavorVersion(flavorVersion),
     versionLabel: `WSL ${distro.version}`,
     actionsDisabled,
-    terminateRunning: input.activeActionButtonKey === `terminate:${distro.name}`,
+    terminateRunning:
+      input.activeActionButtonKey === `terminate:${distro.name}`,
     unregisterBusy:
       unregisterOverlay?.phase === "running" ||
       unregisterOverlay?.phase === "verifying",
@@ -251,8 +254,9 @@ function buildDistroRowView(
 }
 
 function getDistroPanelId(distroName: string): string {
-  const encodedName = Array.from(distroName, (char) =>
-    char.codePointAt(0)?.toString(36) ?? "0",
+  const encodedName = Array.from(
+    distroName,
+    (char) => char.codePointAt(0)?.toString(36) ?? "0",
   ).join("-");
 
   return `distro-advanced-${encodedName || "unknown"}`;

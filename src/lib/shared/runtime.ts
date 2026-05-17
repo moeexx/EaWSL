@@ -5,7 +5,9 @@ export function hasTauriBridge(): boolean {
 }
 
 export function toErrorMessage(error: unknown): string {
-  return getExplicitErrorMessage(error) ?? getCopy().common.errors.operationFailed;
+  return (
+    getExplicitErrorMessage(error) ?? getCopy().common.errors.operationFailed
+  );
 }
 
 export function getExplicitErrorMessage(error: unknown): string | null {
@@ -21,7 +23,10 @@ export function getExplicitErrorMessage(error: unknown): string | null {
 }
 
 export function createRequestId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID();
   }
 
@@ -30,7 +35,9 @@ export function createRequestId(): string {
 
 const fullTimeFormatterCache = new Map<AppLanguage, Intl.DateTimeFormat>();
 
-export function getFullTimeFormatter(language: AppLanguage): Intl.DateTimeFormat {
+export function getFullTimeFormatter(
+  language: AppLanguage,
+): Intl.DateTimeFormat {
   const cached = fullTimeFormatterCache.get(language);
   if (cached) {
     return cached;
@@ -91,7 +98,9 @@ const CACHE_LOG_ICONS: Record<CacheLogKind, string> = {
 };
 
 export function formatLogTags(tags: readonly string[]): string {
-  const normalized = tags.filter((tag) => typeof tag === "string" && tag.length > 0);
+  const normalized = tags.filter(
+    (tag) => typeof tag === "string" && tag.length > 0,
+  );
 
   if (normalized.length === 0) {
     return "";
@@ -106,5 +115,7 @@ export function formatLogLinePrefix(
   tags: readonly string[] = [],
   value = new Date(),
 ): string {
-  return `${formatLogPrefix(value)}${formatLogTags(tags)} [${CACHE_LOG_ICONS[kind]}][${subject}]`;
+  return `${formatLogPrefix(value)}${formatLogTags(tags)} [${
+    CACHE_LOG_ICONS[kind]
+  }][${subject}]`;
 }

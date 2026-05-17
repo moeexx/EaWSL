@@ -580,10 +580,9 @@ mod tests {
     use std::{cell::RefCell, fs, io, path::Path};
 
     use super::{
-        copy_file_exclusive_with_progress,
-        probe_file_size_blocking, probe_file_system_path_blocking, read_path_volume_space_blocking,
-        resolve_storage_anchor, write_text_creating_parent, FileCopyError, FileSizeProbeError,
-        FileSystemProbeError,
+        copy_file_exclusive_with_progress, probe_file_size_blocking,
+        probe_file_system_path_blocking, read_path_volume_space_blocking, resolve_storage_anchor,
+        write_text_creating_parent, FileCopyError, FileSizeProbeError, FileSystemProbeError,
         PathVolumeSpaceQueryError, FILE_SIZE_ERROR_MESSAGE, FILE_SYSTEM_PROBE_ERROR_MESSAGE,
         PATH_VOLUME_SPACE_ERROR_MESSAGE,
     };

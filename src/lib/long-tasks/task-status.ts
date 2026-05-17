@@ -246,19 +246,26 @@ export function getCollapsedTaskMeta(
   language: AppLanguage,
   copy: LongTasksCopy,
 ): string {
-  const prefix = isCurrentTask
-    ? copy.tray.currentTask
-    : copy.tray.recentTask;
+  const prefix = isCurrentTask ? copy.tray.currentTask : copy.tray.recentTask;
 
   if (task.status === "failed" && task.endedAt !== null) {
-    return `${prefix} · ${copy.tray.failedAt}${formatFullTime(task.endedAt, language)}`;
+    return `${prefix} · ${copy.tray.failedAt}${formatFullTime(
+      task.endedAt,
+      language,
+    )}`;
   }
 
   if (task.status === "completed" && task.endedAt !== null) {
-    return `${prefix} · ${copy.tray.endedAt}${formatFullTime(task.endedAt, language)}`;
+    return `${prefix} · ${copy.tray.endedAt}${formatFullTime(
+      task.endedAt,
+      language,
+    )}`;
   }
 
-  return `${prefix} · ${copy.tray.startedAt}${formatFullTime(task.startedAt, language)}`;
+  return `${prefix} · ${copy.tray.startedAt}${formatFullTime(
+    task.startedAt,
+    language,
+  )}`;
 }
 
 export function getTraySummaryText(

@@ -5,7 +5,10 @@ import { longTaskState } from "$lib/long-tasks";
 import { findDistroByName } from "$lib/shared/distros";
 import type { DistroInfo } from "$lib/tauri/wsl";
 
-import { createDistroWorkspaceService, type DistroWorkspaceService } from "../service/distro-workspace-service";
+import {
+  createDistroWorkspaceService,
+  type DistroWorkspaceService,
+} from "../service/distro-workspace-service";
 import {
   createDistroWorkspaceActions,
   type DistroWorkspaceActions,
@@ -74,7 +77,9 @@ export function createDistroWorkspaceViewModel(
   function reconcileExpandedPanels(distros: DistroInfo[]): void {
     const availableNames = new Set(distros.map((distro) => distro.name));
     const nextPanels = Object.fromEntries(
-      Object.entries(expandedPanels).filter(([name]) => availableNames.has(name)),
+      Object.entries(expandedPanels).filter(([name]) =>
+        availableNames.has(name),
+      ),
     );
 
     expandedPanels = nextPanels;
@@ -143,32 +148,36 @@ export function createDistroWorkspaceViewModel(
     }
   }
 
-  $effect(() => untrack(() => {
-    disposed = false;
-    void service.enterWorkspace();
+  $effect(() =>
+    untrack(() => {
+      disposed = false;
+      void service.enterWorkspace();
 
-    const unsubscribeQuery = service.queryCache.subscribe(handleQueryStateChanged);
-    const unsubscribeI18n = i18nState.subscribe((state) => {
-      copy = state.copy;
-    });
-    const unsubscribeLongTask = longTaskState.subscribe((state) => {
-      hasActiveLongTask = state.hasActiveLongTask;
-    });
-    const unsubscribeVhdSize = service.vhdSizeCache.subscribe((state) => {
-      untrack(() => {
-        vhdSizeState = state;
-        hydrateExpandedPanels(queryState.distros.data ?? [], expandedPanels);
+      const unsubscribeQuery = service.queryCache.subscribe(
+        handleQueryStateChanged,
+      );
+      const unsubscribeI18n = i18nState.subscribe((state) => {
+        copy = state.copy;
       });
-    });
+      const unsubscribeLongTask = longTaskState.subscribe((state) => {
+        hasActiveLongTask = state.hasActiveLongTask;
+      });
+      const unsubscribeVhdSize = service.vhdSizeCache.subscribe((state) => {
+        untrack(() => {
+          vhdSizeState = state;
+          hydrateExpandedPanels(queryState.distros.data ?? [], expandedPanels);
+        });
+      });
 
-    return () => {
-      disposed = true;
-      unsubscribeQuery();
-      unsubscribeI18n();
-      unsubscribeLongTask();
-      unsubscribeVhdSize();
-    };
-  }));
+      return () => {
+        disposed = true;
+        unsubscribeQuery();
+        unsubscribeI18n();
+        unsubscribeLongTask();
+        unsubscribeVhdSize();
+      };
+    }),
+  );
 
   async function refreshWorkspace(): Promise<void> {
     workspaceRefreshing = true;

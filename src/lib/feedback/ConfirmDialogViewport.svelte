@@ -3,10 +3,7 @@
 
   import { i18nState } from "$lib/i18n";
 
-  import {
-    confirmDialogState,
-    resolveConfirmDialog,
-  } from "./confirm-dialog";
+  import { confirmDialogState, resolveConfirmDialog } from "./confirm-dialog";
 
   const toneClassMap = {
     warning: {

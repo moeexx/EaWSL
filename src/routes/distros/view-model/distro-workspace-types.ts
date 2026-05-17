@@ -6,10 +6,7 @@ export type DistroWorkspaceOverlayScope =
   | Extract<ActionOverlayScope, { kind: "distros-list" }>
   | Extract<ActionOverlayScope, { kind: "distro-row" }>;
 
-export type DistroWorkspaceOverlayState = Omit<
-  ActionOverlayState,
-  "scope"
-> & {
+export type DistroWorkspaceOverlayState = Omit<ActionOverlayState, "scope"> & {
   scope: DistroWorkspaceOverlayScope;
 };
 
@@ -154,10 +151,7 @@ export const shutdownAllScope: Extract<
 
 export function createDistroRowScope(
   distroName: string,
-  operation: Extract<
-    ActionOverlayScope,
-    { kind: "distro-row" }
-  >["operation"],
+  operation: Extract<ActionOverlayScope, { kind: "distro-row" }>["operation"],
 ): Extract<ActionOverlayScope, { kind: "distro-row" }> {
   return {
     kind: "distro-row",

@@ -84,14 +84,18 @@ export function normalizeAppSettings(settings: AppSettings): AppSettings {
     defaultInstallLocation: settings.defaultInstallLocation.trim(),
     backgroundRefresh: {
       intervalMinutes: settings.backgroundRefresh.intervalMinutes,
-      targets: orderBackgroundRefreshTargets(settings.backgroundRefresh.targets),
+      targets: orderBackgroundRefreshTargets(
+        settings.backgroundRefresh.targets,
+      ),
     },
   };
 }
 
 export async function getDefaultInstallLocation(): Promise<string> {
   const settings = await readAppSettingsOrDefault();
-  return settings.defaultInstallLocation || (await resolveDefaultInstallLocation());
+  return (
+    settings.defaultInstallLocation || (await resolveDefaultInstallLocation())
+  );
 }
 
 export async function getBackgroundRefreshSettings(): Promise<BackgroundRefreshSettings> {

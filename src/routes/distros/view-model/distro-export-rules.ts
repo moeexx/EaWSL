@@ -1,7 +1,10 @@
 import type { AppCopy } from "$lib/i18n";
 import { joinWindowsPath } from "$lib/shared/windows-path";
 
-import type { DistroExportFormatOption, DistroExportMenuView } from "./distro-workspace-types";
+import type {
+  DistroExportFormatOption,
+  DistroExportMenuView,
+} from "./distro-workspace-types";
 
 const knownExportSuffixPattern = /\.(tar|tar\.gz|tar\.xz|vhd|vhdx)$/i;
 

@@ -42,7 +42,7 @@
   }: Props = $props();
 
   let CurrentIcon = $derived(
-    refreshing ? refreshIcon ?? RefreshCw : icon ?? RefreshCw,
+    refreshing ? (refreshIcon ?? RefreshCw) : (icon ?? RefreshCw),
   );
   const currentRefreshingLabel = $derived(
     refreshingLabel ?? $i18nState.copy.common.refreshing,
@@ -60,5 +60,5 @@
   {size}
   {className}
   disabled={disabled || refreshing}
-  onclick={onclick}
+  {onclick}
 />

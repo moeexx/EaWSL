@@ -36,7 +36,9 @@ export function hasHiddenRowActions(distro: DistroInfo | string): boolean {
   return uiActionHiddenDistroNames.has(normalizeDistroName(name));
 }
 
-export function sortUiActionHiddenDistrosLast(distros: DistroInfo[]): DistroInfo[] {
+export function sortUiActionHiddenDistrosLast(
+  distros: DistroInfo[],
+): DistroInfo[] {
   const regularDistros: DistroInfo[] = [];
   const actionHiddenDistros: DistroInfo[] = [];
 

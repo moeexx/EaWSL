@@ -27,10 +27,7 @@
 <li class={getTaskCardClass(task)}>
   <div class="flex min-w-0 items-start justify-between gap-3">
     <div class="flex min-w-0 items-start gap-3">
-      <DistroLogo
-        alt={copy.card.logoAlt(task.distro)}
-        src={task.logoSrc}
-      />
+      <DistroLogo alt={copy.card.logoAlt(task.distro)} src={task.logoSrc} />
 
       <div class="min-w-0 flex-1">
         <div class="flex min-w-0 flex-wrap items-center gap-2">
@@ -95,7 +92,9 @@
           {getProgressStageLabel(task, copy)}
         </span>
         {#if progressPercentLabel}
-          <span class="shrink-0 whitespace-nowrap text-[12px] font-semibold text-shell-700">
+          <span
+            class="shrink-0 whitespace-nowrap text-[12px] font-semibold text-shell-700"
+          >
             {progressPercentLabel}
           </span>
         {/if}

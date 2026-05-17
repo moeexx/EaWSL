@@ -60,26 +60,23 @@
   });
 </script>
 
-<SectionPanel
-  title={copy.wsl.title}
-  description={copy.wsl.description}
->
+<SectionPanel title={copy.wsl.title} description={copy.wsl.description}>
   {#snippet icon()}
-  <span
-    class="flex h-10 w-10 items-center justify-center rounded-full bg-shell-100 text-shell-800"
-  >
-    <Info size={20} strokeWidth={2} />
-  </span>
+    <span
+      class="flex h-10 w-10 items-center justify-center rounded-full bg-shell-100 text-shell-800"
+    >
+      <Info size={20} strokeWidth={2} />
+    </span>
   {/snippet}
 
   {#snippet actions()}
-  <Button
-    label={copyButtonLabel}
-    icon={copyButtonIcon}
-    variant="secondary"
-    className="gap-2 rounded-[10px] border border-shell-200 bg-white px-4 py-2 text-[14px] font-medium text-shell-800 hover:border-shell-300 hover:bg-shell-50"
-    onclick={() => void copyWslInfo()}
-  />
+    <Button
+      label={copyButtonLabel}
+      icon={copyButtonIcon}
+      variant="secondary"
+      className="gap-2 rounded-[10px] border border-shell-200 bg-white px-4 py-2 text-[14px] font-medium text-shell-800 hover:border-shell-300 hover:bg-shell-50"
+      onclick={() => void copyWslInfo()}
+    />
   {/snippet}
 
   <div class="border-t border-shell-200/80 pt-3">

@@ -8,11 +8,25 @@ import {
   type PathVolumeSpaceProbeState,
 } from "$lib/probes/path-input-probes";
 
-export type TargetProbeState = { location: FileSystemPathProbeState; space: PathVolumeSpaceProbeState };
-export type AcquireProbeState = { install: TargetProbeState; importTarget: TargetProbeState; importFile: FileSystemPathProbeState };
+export type TargetProbeState = {
+  location: FileSystemPathProbeState;
+  space: PathVolumeSpaceProbeState;
+};
+export type AcquireProbeState = {
+  install: TargetProbeState;
+  importTarget: TargetProbeState;
+  importFile: FileSystemPathProbeState;
+};
 
-const idleTarget = (): TargetProbeState => ({ location: createIdleFileSystemPathProbeState(), space: createIdlePathVolumeSpaceState() });
-export const createIdleAcquireProbeState = (): AcquireProbeState => ({ install: idleTarget(), importTarget: idleTarget(), importFile: createIdleFileSystemPathProbeState() });
+const idleTarget = (): TargetProbeState => ({
+  location: createIdleFileSystemPathProbeState(),
+  space: createIdlePathVolumeSpaceState(),
+});
+export const createIdleAcquireProbeState = (): AcquireProbeState => ({
+  install: idleTarget(),
+  importTarget: idleTarget(),
+  importFile: createIdleFileSystemPathProbeState(),
+});
 
 function createTargetProbe() {
   const location = createFileSystemPathProbe();
@@ -31,7 +45,16 @@ function createTargetProbe() {
     location.reset();
     space.reset();
   }
-  return { location, space, check, reset, cancel: () => { location.cancel(); space.cancel(); } };
+  return {
+    location,
+    space,
+    check,
+    reset,
+    cancel: () => {
+      location.cancel();
+      space.cancel();
+    },
+  };
 }
 
 export function createAcquireProbeController() {
@@ -40,12 +63,23 @@ export function createAcquireProbeController() {
   const install = createTargetProbe();
   const importTarget = createTargetProbe();
   const importFile = createFileSystemPathProbe();
-  const patch = (next: Partial<AcquireProbeState>) => { current = { ...current, ...next }; store.set(current); };
+  const patch = (next: Partial<AcquireProbeState>) => {
+    current = { ...current, ...next };
+    store.set(current);
+  };
   const unsubs = [
-    install.location.subscribe((location) => patch({ install: { ...current.install, location } })),
-    install.space.subscribe((space) => patch({ install: { ...current.install, space } })),
-    importTarget.location.subscribe((location) => patch({ importTarget: { ...current.importTarget, location } })),
-    importTarget.space.subscribe((space) => patch({ importTarget: { ...current.importTarget, space } })),
+    install.location.subscribe((location) =>
+      patch({ install: { ...current.install, location } }),
+    ),
+    install.space.subscribe((space) =>
+      patch({ install: { ...current.install, space } }),
+    ),
+    importTarget.location.subscribe((location) =>
+      patch({ importTarget: { ...current.importTarget, location } }),
+    ),
+    importTarget.space.subscribe((space) =>
+      patch({ importTarget: { ...current.importTarget, space } }),
+    ),
     importFile.subscribe((state) => patch({ importFile: state })),
   ];
   return {
@@ -56,6 +90,11 @@ export function createAcquireProbeController() {
     resetImportTarget: importTarget.reset,
     checkImportFile: importFile.check,
     resetImportFile: importFile.reset,
-    dispose() { unsubs.forEach((unsub) => unsub()); install.cancel(); importTarget.cancel(); importFile.cancel(); },
+    dispose() {
+      unsubs.forEach((unsub) => unsub());
+      install.cancel();
+      importTarget.cancel();
+      importFile.cancel();
+    },
   };
 }

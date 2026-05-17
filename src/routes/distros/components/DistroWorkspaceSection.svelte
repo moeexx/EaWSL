@@ -24,14 +24,14 @@
 
 <SectionPanel title={section.title}>
   {#snippet meta()}
-  <span class={distroCountClass}>
-    <span class={distroCountValueClass}>
-      {section.count}
+    <span class={distroCountClass}>
+      <span class={distroCountValueClass}>
+        {section.count}
+      </span>
+      <span class={distroCountLabelClass}>
+        {$i18nState.copy.distros.section.countLabel}
+      </span>
     </span>
-    <span class={distroCountLabelClass}>
-      {$i18nState.copy.distros.section.countLabel}
-    </span>
-  </span>
   {/snippet}
 
   {#if section.state !== "ready" && section.emptyTitle && section.emptyMessage}

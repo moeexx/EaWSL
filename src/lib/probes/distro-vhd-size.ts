@@ -80,18 +80,22 @@ export function probeVhdSize(distro: DistroInfo): void {
   });
 
   void getFileSize(path)
-    .then((bytes): VhdSizeEntry => ({
-      status: "ready",
-      path,
-      bytes,
-      errorMessage: null,
-    }))
-    .catch((error): VhdSizeEntry => ({
-      status: "error",
-      path,
-      bytes: null,
-      errorMessage: toErrorMessage(error),
-    }))
+    .then(
+      (bytes): VhdSizeEntry => ({
+        status: "ready",
+        path,
+        bytes,
+        errorMessage: null,
+      }),
+    )
+    .catch(
+      (error): VhdSizeEntry => ({
+        status: "error",
+        path,
+        bytes: null,
+        errorMessage: toErrorMessage(error),
+      }),
+    )
     .then((entry) => {
       if (revision !== vhdSizeRevision) {
         return;

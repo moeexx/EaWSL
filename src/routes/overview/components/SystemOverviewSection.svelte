@@ -12,10 +12,7 @@
   let { cards, copy }: Props = $props();
 </script>
 
-<SectionPanel
-  title={copy.system.title}
-  description={copy.system.description}
->
+<SectionPanel title={copy.system.title} description={copy.system.description}>
   <div class="grid gap-2.5 md:grid-cols-2 xl:grid-cols-5">
     {#each cards as card (card.label)}
       {@const Icon = card.icon}

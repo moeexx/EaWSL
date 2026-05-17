@@ -39,9 +39,14 @@
   const toneClasses = $derived(toneClassMap[tone]);
 </script>
 
-<section class={`rounded-[8px] border-[0.5px] px-3 py-3 backdrop-blur-sm ${toneClasses.container}`}>
+<section
+  class={`rounded-[8px] border-[0.5px] px-3 py-3 backdrop-blur-sm ${toneClasses.container}`}
+>
   <div class="flex items-start gap-3">
-    <span aria-hidden="true" class={`mt-2 h-2.5 w-2.5 shrink-0 rounded-full ${toneClasses.dot}`}></span>
+    <span
+      aria-hidden="true"
+      class={`mt-2 h-2.5 w-2.5 shrink-0 rounded-full ${toneClasses.dot}`}
+    ></span>
 
     <div class="min-w-0">
       <p class={`text-sm font-semibold ${toneClasses.title}`}>{title}</p>

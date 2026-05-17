@@ -86,7 +86,10 @@ function persistLanguage(language: AppLanguage): void {
   localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
 }
 
-function mergeWithFallback<T>(fallback: T, override: DeepPartial<T> | undefined): T {
+function mergeWithFallback<T>(
+  fallback: T,
+  override: DeepPartial<T> | undefined,
+): T {
   if (!isPlainRecord(fallback)) {
     return override === undefined ? fallback : (override as T);
   }
@@ -106,9 +109,5 @@ function mergeWithFallback<T>(fallback: T, override: DeepPartial<T> | undefined)
 }
 
 function isPlainRecord(value: unknown): value is CopyRecord {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value)
-  );
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

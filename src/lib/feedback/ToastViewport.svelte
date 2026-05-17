@@ -60,7 +60,9 @@
         ></span>
 
         <div class="min-w-0 flex-1">
-          <p class={`text-sm font-semibold ${toneClasses.title}`}>{toast.title}</p>
+          <p class={`text-sm font-semibold ${toneClasses.title}`}>
+            {toast.title}
+          </p>
           <p class="mt-1 text-[13px] leading-5 text-shell-600">
             {toast.message}
           </p>

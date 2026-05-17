@@ -61,7 +61,10 @@ export function createDistroWorkspaceActionFlow(
   }
 
   function getRecoveringMessage(): string {
-    return getDistroRecoveringMessage(service.getQueryState(), runtime.getCopy());
+    return getDistroRecoveringMessage(
+      service.getQueryState(),
+      runtime.getCopy(),
+    );
   }
 
   function setOverlays(
@@ -74,7 +77,9 @@ export function createDistroWorkspaceActionFlow(
 
   function clearActionOverlay(scope: DistroWorkspaceOverlayScope): void {
     setOverlays((overlays) =>
-      overlays.filter((overlay) => !isSameActionOverlayScope(overlay.scope, scope)),
+      overlays.filter(
+        (overlay) => !isSameActionOverlayScope(overlay.scope, scope),
+      ),
     );
   }
 
@@ -96,7 +101,8 @@ export function createDistroWorkspaceActionFlow(
 
     setOverlays((overlays) => [
       ...overlays.filter(
-        (overlay) => !isSameActionOverlayScope(overlay.scope, nextOverlay.scope),
+        (overlay) =>
+          !isSameActionOverlayScope(overlay.scope, nextOverlay.scope),
       ),
       nextOverlay,
     ]);

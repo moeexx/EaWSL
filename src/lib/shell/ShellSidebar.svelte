@@ -5,10 +5,7 @@
   import { i18nState } from "$lib/i18n";
 
   import ShellIcon from "./ShellIcon.svelte";
-  import {
-    shellUiState,
-    toggleSidebarCollapsed,
-  } from "./state";
+  import { shellUiState, toggleSidebarCollapsed } from "./state";
 
   type NavigationItem = {
     href: string;
@@ -122,8 +119,14 @@
 
 <aside class={sidebarClass}>
   <div class="flex h-full min-h-0 flex-col gap-3">
-    <div class={`flex items-center px-0.5 ${$shellUiState.sidebarCollapsed ? "justify-center" : "justify-between"}`}>
-      <p class={$shellUiState.sidebarCollapsed ? "hidden" : "eyebrow-label text-[13px]"}>
+    <div
+      class={`flex items-center px-0.5 ${$shellUiState.sidebarCollapsed ? "justify-center" : "justify-between"}`}
+    >
+      <p
+        class={$shellUiState.sidebarCollapsed
+          ? "hidden"
+          : "eyebrow-label text-[13px]"}
+      >
         {shellCopy.navigation.label}
       </p>
       <button
@@ -143,7 +146,10 @@
 
     <div class="border-t border-shell-200/70"></div>
 
-    <nav aria-label={shellCopy.navigation.primaryAriaLabel} class="grid gap-1.5">
+    <nav
+      aria-label={shellCopy.navigation.primaryAriaLabel}
+      class="grid gap-1.5"
+    >
       {#each primaryNavigation as item}
         {@render navButton(item)}
       {/each}

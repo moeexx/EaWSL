@@ -1,7 +1,4 @@
-import {
-  findDistroByName,
-  isDistroRunning,
-} from "$lib/shared/distros";
+import { findDistroByName, isDistroRunning } from "$lib/shared/distros";
 import type { QueryRefreshResult } from "$lib/query-cache";
 import type { ToastInput } from "$lib/feedback/toasts";
 import type { AppCopy } from "$lib/i18n";
@@ -489,7 +486,10 @@ export function createDistroWorkspaceActions(
       return messages.failed;
     }
 
-    const overlay = getWorkspaceActionOverlay(runtime.getActionOverlays(), scope);
+    const overlay = getWorkspaceActionOverlay(
+      runtime.getActionOverlays(),
+      scope,
+    );
     if (!overlay) {
       return messages.success;
     }

@@ -1,12 +1,5 @@
-import type {
-  SystemOverview,
-  SystemOverviewScope,
-} from "$lib/tauri/system";
-import type {
-  DistroInfo,
-  OnlineDistro,
-  WslVersion,
-} from "$lib/tauri/wsl";
+import type { SystemOverview, SystemOverviewScope } from "$lib/tauri/system";
+import type { DistroInfo, OnlineDistro, WslVersion } from "$lib/tauri/wsl";
 import type { RefreshReason } from "$lib/shared/refresh-reasons";
 import type { RecoverableCommandCode } from "$lib/tauri/errors";
 

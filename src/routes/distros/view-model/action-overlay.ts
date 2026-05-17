@@ -54,7 +54,9 @@ export function isSameActionOverlayScope(
   return false;
 }
 
-export function isBlockingActionOverlayPhase(phase: ActionOverlayPhase): boolean {
+export function isBlockingActionOverlayPhase(
+  phase: ActionOverlayPhase,
+): boolean {
   return phase === "running" || phase === "verifying";
 }
 

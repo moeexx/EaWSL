@@ -125,10 +125,7 @@ mod tests {
 
         let entries = parse_list_verbose_output(raw).expect("parse with unknown states");
         assert_eq!(entries.len(), 3);
-        assert_eq!(
-            entries[0].state,
-            DistroState::Unknown("Paused".to_string())
-        );
+        assert_eq!(entries[0].state, DistroState::Unknown("Paused".to_string()));
         assert_eq!(
             entries[1].state,
             DistroState::Unknown("Suspended".to_string())

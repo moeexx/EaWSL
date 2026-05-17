@@ -168,7 +168,9 @@ export async function closeWindow(): Promise<void> {
   await getCurrentWindow().close();
 }
 
-export async function startResizeDrag(direction: ResizeDirection): Promise<void> {
+export async function startResizeDrag(
+  direction: ResizeDirection,
+): Promise<void> {
   if (!hasTauriBridge() || get(store).windowMaximized) {
     return;
   }

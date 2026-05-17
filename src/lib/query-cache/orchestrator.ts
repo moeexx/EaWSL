@@ -1,9 +1,5 @@
 import { getSystemOverview } from "$lib/tauri/system";
-import {
-  getWslVersion,
-  listDistros,
-  listOnlineDistros,
-} from "$lib/tauri/wsl";
+import { getWslVersion, listDistros, listOnlineDistros } from "$lib/tauri/wsl";
 import { isRecoverableCommandError } from "$lib/tauri/errors";
 import {
   DEFAULT_BACKGROUND_REFRESH_SETTINGS,
@@ -169,14 +165,19 @@ async function loadBackgroundRefreshSettings(): Promise<void> {
   const configurationVersion = backgroundRefreshConfigurationVersion;
   const settings = await getBackgroundRefreshSettings();
 
-  if (!started || configurationVersion !== backgroundRefreshConfigurationVersion) {
+  if (
+    !started ||
+    configurationVersion !== backgroundRefreshConfigurationVersion
+  ) {
     return;
   }
 
   applyBackgroundRefreshSettings(settings);
 }
 
-function applyBackgroundRefreshSettings(settings: BackgroundRefreshSettings): void {
+function applyBackgroundRefreshSettings(
+  settings: BackgroundRefreshSettings,
+): void {
   backgroundRefreshSettings = settings;
   restartBackgroundRefreshInterval();
 }
@@ -191,7 +192,9 @@ function restartBackgroundRefreshInterval(): void {
   refreshInterval = setInterval(() => {
     void refreshQueries({
       foreground: [],
-      background: buildBackgroundRefreshRequests(backgroundRefreshSettings.targets),
+      background: buildBackgroundRefreshRequests(
+        backgroundRefreshSettings.targets,
+      ),
       reason: "background",
     });
   }, backgroundRefreshSettings.intervalMinutes * MILLISECONDS_PER_MINUTE);
@@ -231,7 +234,9 @@ async function runQuerySequence(
         REFRESH_WAIT_SUBJECT,
         sourceReason,
         stage,
-        `${stage === "foreground" ? "Foreground" : "Background"} request interval: ${intervalMs} ms.`,
+        `${
+          stage === "foreground" ? "Foreground" : "Background"
+        } request interval: ${intervalMs} ms.`,
       );
       await delay(intervalMs);
     }
@@ -281,9 +286,8 @@ async function refreshQuery<K extends QueryKey>(
     markQueryStarted(key, reason);
     logBackendRequestReuse(subject, sourceReason, stage);
 
-    const existingResult = (await existingRequest.request) as QueryRefreshResult<
-      QueryDataByKey[K]
-    >;
+    const existingResult =
+      (await existingRequest.request) as QueryRefreshResult<QueryDataByKey[K]>;
 
     if (reason === "action-sync" && key === "distros") {
       return refreshQuery(effectiveRequest, reason, options);
@@ -400,7 +404,9 @@ async function waitForForegroundMinDuration(
 }
 
 function getBackgroundReason(reason: QueryRefreshReason): QueryRefreshReason {
-  return reason === "manual" || reason === "action-sync" ? "background" : reason;
+  return reason === "manual" || reason === "action-sync"
+    ? "background"
+    : reason;
 }
 
 function resolveQueryRequest(request: QueryRequest): ResolvedQueryRequest {
@@ -426,9 +432,9 @@ async function executeQueryRequest<K extends QueryKey>(
     })) as QueryDataByKey[K];
   }
 
-  return queries[request.key as Exclude<QueryKey, "systemOverview">]() as Promise<
-    QueryDataByKey[K]
-  >;
+  return queries[
+    request.key as Exclude<QueryKey, "systemOverview">
+  ]() as Promise<QueryDataByKey[K]>;
 }
 
 function getInFlightKey(request: ResolvedQueryRequest): string {

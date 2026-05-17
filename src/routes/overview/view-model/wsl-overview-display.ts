@@ -127,7 +127,8 @@ function formatDistroState(
 function getDefaultDistroLabel(state: QueryCacheState, copy: AppCopy): string {
   return formatDistroState(
     state,
-    (distros) => findDefaultDistro(distros)?.name ?? copy.overview.wsl.status.notSet,
+    (distros) =>
+      findDefaultDistro(distros)?.name ?? copy.overview.wsl.status.notSet,
     copy,
   );
 }

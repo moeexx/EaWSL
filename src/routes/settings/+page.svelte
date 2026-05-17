@@ -256,10 +256,7 @@
 
       <div class="grid gap-3">
         <div class="grid gap-1.5 sm:max-w-[260px]">
-          <label
-            class={settingLabelClass}
-            for="background-refresh-interval"
-          >
+          <label class={settingLabelClass} for="background-refresh-interval">
             {settingsCopy.backgroundRefresh.intervalLabel}
           </label>
           <input
@@ -332,7 +329,9 @@
 
       <div class="flex justify-start">
         <Button
-          label={saving ? settingsCopy.actions.saving : settingsCopy.actions.saveSettings}
+          label={saving
+            ? settingsCopy.actions.saving
+            : settingsCopy.actions.saveSettings}
           className="min-h-[36px]"
           disabled={!canSave}
           onclick={() => void saveSettings()}

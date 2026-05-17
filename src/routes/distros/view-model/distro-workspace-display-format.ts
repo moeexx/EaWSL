@@ -45,7 +45,9 @@ export function getStateBadge(
   }
 
   const unknownState =
-    typeof state === "object" && "Unknown" in state ? state.Unknown : String(state);
+    typeof state === "object" && "Unknown" in state
+      ? state.Unknown
+      : String(state);
 
   return {
     label: copy.distros.row.unknownState(unknownState),

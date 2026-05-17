@@ -220,7 +220,10 @@ async function syncAcquireTaskResult(
     pushToast({
       tone: "warning",
       title: copy.longTasks.acquireTasks.syncDelayedTitle(noun),
-      message: copy.longTasks.acquireTasks.syncDelayedMessage(displayName, noun),
+      message: copy.longTasks.acquireTasks.syncDelayedMessage(
+        displayName,
+        noun,
+      ),
     });
     return;
   }
@@ -229,7 +232,10 @@ async function syncAcquireTaskResult(
     pushToast({
       tone: "warning",
       title: copy.longTasks.acquireTasks.resultUnknownTitle(noun),
-      message: copy.longTasks.acquireTasks.resultUnknownMessage(displayName, noun),
+      message: copy.longTasks.acquireTasks.resultUnknownMessage(
+        displayName,
+        noun,
+      ),
     });
     return;
   }
@@ -284,7 +290,8 @@ function getAcquireTaskNoun(
   operation: LongTaskOperation,
   copy: AppCopy,
 ): string {
-  if (operation === "importArchive") return copy.longTasks.operations.importArchive;
+  if (operation === "importArchive")
+    return copy.longTasks.operations.importArchive;
   if (operation === "importVhd") return copy.longTasks.operations.importVhd;
   return copy.longTasks.operations.install;
 }

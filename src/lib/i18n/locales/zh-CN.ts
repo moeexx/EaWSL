@@ -105,7 +105,8 @@ export const zhCN = {
       nameProbeFailed: "发行版名称检查失败，请刷新后重试。",
       nameExists: "发行版名称已存在。",
       importFileRequired: "请选择导入文件。",
-      importFileUnsupported: "请选择 `.tar`、`.tar.gz`、`.tar.xz` 或 `.vhdx` 文件。",
+      importFileUnsupported:
+        "请选择 `.tar`、`.tar.gz`、`.tar.xz` 或 `.vhdx` 文件。",
       fixedVhdSizeRequired: "固定大小 VHD 需要填写 `--vhd-size`。",
       vhdSizeInteger: "请输入整数 GB，例如 `20`。",
       vhdSizeMinimum: "`--vhd-size` 不能小于 15 GiB。",
@@ -215,7 +216,8 @@ export const zhCN = {
         validation: {
           fileNameRequired: "请填写导出文件名。",
           fileNameInvalid: "文件名包含 Windows 不允许的字符。",
-          fileNameSuffixNotAllowed: "只填写基础文件名，后缀会按所选格式自动添加。",
+          fileNameSuffixNotAllowed:
+            "只填写基础文件名，后缀会按所选格式自动添加。",
           directoryRequired: "请填写导出目录。",
           noTauriDirectoryPicker: "未检测到 Tauri 运行时，无法开始导出。",
         },
@@ -284,9 +286,11 @@ export const zhCN = {
     },
     actionSupport: {
       stopSyncFailedTitle: "停止后同步失败",
-      stopSyncFailedMessage: "已执行停止命令，但列表同步失败，请手动刷新确认状态。",
+      stopSyncFailedMessage:
+        "已执行停止命令，但列表同步失败，请手动刷新确认状态。",
       actionSyncFailedTitle: "操作后同步失败",
-      actionSyncFailedMessage: "命令已返回，但列表同步失败，请手动刷新确认状态。",
+      actionSyncFailedMessage:
+        "命令已返回，但列表同步失败，请手动刷新确认状态。",
       forceStopSyncFailedTitle: "强停后同步失败",
       shutdownSyncFailedMessage:
         "停止命令已返回，但列表同步失败，请手动刷新确认状态。",
@@ -303,7 +307,8 @@ export const zhCN = {
       unregisterSyncFailedMessage:
         "删除命令已返回，但列表同步失败，请手动刷新确认状态。",
       unregisterSuccessTitle: "删除成功",
-      unregisterSuccessMessage: (distro: string) => `${distro} 已从列表中移除。`,
+      unregisterSuccessMessage: (distro: string) =>
+        `${distro} 已从列表中移除。`,
       unregisterPendingTitle: "删除后同步延后",
       unregisterUnknownTitle: "无法确认删除结果",
       unregisterUnknownFallback: "删除命令已提交，但暂时无法确认最终状态。",
@@ -339,8 +344,7 @@ export const zhCN = {
       interrupted: "任务已中断",
     },
     errors: {
-      interrupted:
-        "应用在该任务完成前重载或关闭，原 WSL 命令无法恢复。",
+      interrupted: "应用在该任务完成前重载或关闭，原 WSL 命令无法恢复。",
     },
     status: {
       completed: "已完成",
@@ -381,8 +385,7 @@ export const zhCN = {
       failedTitle: (noun: string) => `${noun}失败`,
       nameCheckFailedTitle: "名称检查失败",
       nameExistsTitle: "名称已存在",
-      nameExistsMessage: (name: string) =>
-        `${name} 已存在，请更换发行版名称。`,
+      nameExistsMessage: (name: string) => `${name} 已存在，请更换发行版名称。`,
       targetExistsMessage: (location: string) =>
         `${location} 已存在，请更换目标目录。`,
       directoryCheckFailedTitle: "目录检查失败",

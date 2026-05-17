@@ -330,5 +330,8 @@ function normalizePathKey(path: string): string {
 }
 
 function normalizeVolumeKey(volumeRoot: string): string {
-  return volumeRoot.replace(/\//g, "\\").replace(/[\\/]+$/, "\\").toLowerCase();
+  return volumeRoot
+    .replace(/\//g, "\\")
+    .replace(/[\\/]+$/, "\\")
+    .toLowerCase();
 }

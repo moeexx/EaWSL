@@ -55,7 +55,9 @@
 
     {#if actions}
       <div class="shrink-0">
-        <div class="flex flex-wrap items-center justify-start gap-1.5 sm:justify-end">
+        <div
+          class="flex flex-wrap items-center justify-start gap-1.5 sm:justify-end"
+        >
           {@render actions()}
         </div>
       </div>

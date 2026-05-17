@@ -98,11 +98,11 @@
     description={overviewCopy.page.description}
   >
     {#snippet actions()}
-    <RefreshButton
-      label={overviewCopy.page.refreshLabel}
-      refreshing={overviewRefreshing}
-      onclick={() => void handleRefreshOverview()}
-    />
+      <RefreshButton
+        label={overviewCopy.page.refreshLabel}
+        refreshing={overviewRefreshing}
+        onclick={() => void handleRefreshOverview()}
+      />
     {/snippet}
   </PageHeader>
 

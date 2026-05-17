@@ -4,10 +4,7 @@ import HardDrive from "@lucide/svelte/icons/hard-drive";
 import MemoryStick from "@lucide/svelte/icons/memory-stick";
 import Monitor from "@lucide/svelte/icons/monitor";
 
-import {
-  formatBytes,
-  formatOptionalText,
-} from "$lib/shared/format";
+import { formatBytes, formatOptionalText } from "$lib/shared/format";
 import type { AppCopy } from "$lib/i18n";
 import type { SystemOverview } from "$lib/tauri/system";
 
@@ -76,7 +73,9 @@ export function buildOverviewSystemCards(
       label: labels.memory,
       icon: MemoryStick,
       iconClass: "bg-emerald-50 text-emerald-600",
-      value: resolveValue(formatBytes(data?.memory.totalBytes, 1, copy.common.missing)),
+      value: resolveValue(
+        formatBytes(data?.memory.totalBytes, 1, copy.common.missing),
+      ),
       metrics: [
         {
           label: labels.speed,
@@ -85,7 +84,11 @@ export function buildOverviewSystemCards(
         {
           label: labels.slots,
           value: resolveValue(
-            formatSlotSummary(data?.memory.usedSlots, data?.memory.totalSlots, copy),
+            formatSlotSummary(
+              data?.memory.usedSlots,
+              data?.memory.totalSlots,
+              copy,
+            ),
           ),
         },
       ],
@@ -98,7 +101,9 @@ export function buildOverviewSystemCards(
       metrics: [
         {
           label: labels.gpuMemory,
-          value: resolveValue(formatBytes(data?.gpu?.memoryBytes, 1, copy.common.missing)),
+          value: resolveValue(
+            formatBytes(data?.gpu?.memoryBytes, 1, copy.common.missing),
+          ),
         },
         {
           label: labels.driverVersion,
@@ -110,15 +115,21 @@ export function buildOverviewSystemCards(
       label: labels.storage,
       icon: HardDrive,
       iconClass: "bg-slate-100 text-slate-600",
-      value: resolveValue(formatBytes(data?.storage.totalBytes, 2, copy.common.missing)),
+      value: resolveValue(
+        formatBytes(data?.storage.totalBytes, 2, copy.common.missing),
+      ),
       metrics: [
         {
           label: labels.used,
-          value: resolveValue(formatBytes(data?.storage.usedBytes, 2, copy.common.missing)),
+          value: resolveValue(
+            formatBytes(data?.storage.usedBytes, 2, copy.common.missing),
+          ),
         },
         {
           label: labels.free,
-          value: resolveValue(formatBytes(data?.storage.freeBytes, 2, copy.common.missing)),
+          value: resolveValue(
+            formatBytes(data?.storage.freeBytes, 2, copy.common.missing),
+          ),
         },
         {
           label: labels.volumeCount,
@@ -141,7 +152,10 @@ function formatCount(value: number | null | undefined, copy: AppCopy): string {
   return String(value);
 }
 
-function formatMemorySpeed(value: number | null | undefined, copy: AppCopy): string {
+function formatMemorySpeed(
+  value: number | null | undefined,
+  copy: AppCopy,
+): string {
   if (!hasPositiveNumber(value)) {
     return copy.common.missing;
   }
@@ -149,7 +163,10 @@ function formatMemorySpeed(value: number | null | undefined, copy: AppCopy): str
   return `${value} MT/s`;
 }
 
-function formatClockMhz(value: number | null | undefined, copy: AppCopy): string {
+function formatClockMhz(
+  value: number | null | undefined,
+  copy: AppCopy,
+): string {
   if (!hasPositiveNumber(value)) {
     return copy.common.missing;
   }

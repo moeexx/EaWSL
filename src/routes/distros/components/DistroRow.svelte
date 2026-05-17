@@ -184,7 +184,9 @@
     }
   }
 
-  function getDetailClass(variant: DistroRowView["details"][number]["variant"]): string {
+  function getDetailClass(
+    variant: DistroRowView["details"][number]["variant"],
+  ): string {
     if (variant === "strong") {
       return detailValueStrongClass;
     }
@@ -201,7 +203,9 @@
   class="rounded-[10px] border border-shell-200/85 bg-white/[0.9] px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
 >
   <div class="flex flex-col gap-3">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <div
+      class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+    >
       <div class="flex min-w-0 items-center gap-3">
         <DistroLogo src={row.logoSrc} />
 
@@ -258,7 +262,9 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-3 border-t border-shell-150/90 pt-3 sm:flex-row sm:items-center sm:justify-between">
+    <div
+      class="flex flex-col gap-3 border-t border-shell-150/90 pt-3 sm:flex-row sm:items-center sm:justify-between"
+    >
       {#if !row.isProtected}
         <div class="flex min-w-0 flex-wrap gap-2">
           <RefreshButton
@@ -299,7 +305,9 @@
         </span>
       {/if}
 
-      <div class="flex min-w-0 flex-wrap items-center gap-2 self-start sm:ml-auto sm:self-auto">
+      <div
+        class="flex min-w-0 flex-wrap items-center gap-2 self-start sm:ml-auto sm:self-auto"
+      >
         {#if !row.isProtected}
           <Button
             label={exportOpen ? rowCopy.collapseExportMenu : row.exportLabel}
@@ -327,10 +335,16 @@
     </div>
 
     {#if row.expanded || (exportOpen && !row.isProtected)}
-      <section id={row.panelId} class="pt-2" transition:slide={{ duration: 150 }}>
+      <section
+        id={row.panelId}
+        class="pt-2"
+        transition:slide={{ duration: 150 }}
+      >
         {#if row.expanded}
           <div class="mb-2 flex items-center justify-between gap-3">
-            <h3 class="text-[13px] font-semibold tracking-[-0.02em] text-shell-900">
+            <h3
+              class="text-[13px] font-semibold tracking-[-0.02em] text-shell-900"
+            >
               {rowCopy.moreInfo}
             </h3>
             <span class="text-[11px] font-medium text-shell-500">
@@ -340,7 +354,9 @@
 
           <dl class="grid grid-cols-2 gap-2">
             {#each row.details as detail (detail.key)}
-              <div class={`grid gap-0.5 ${detail.variant === "mono" ? "col-span-2" : ""}`}>
+              <div
+                class={`grid gap-0.5 ${detail.variant === "mono" ? "col-span-2" : ""}`}
+              >
                 <dt class="text-[12px] text-shell-500">{detail.label}</dt>
                 <dd class={getDetailClass(detail.variant)}>
                   {detail.value}
@@ -350,7 +366,9 @@
           </dl>
         {:else if !row.isProtected}
           <div class="mb-2 flex items-center justify-between gap-3">
-            <h3 class="text-[13px] font-semibold tracking-[-0.02em] text-shell-900">
+            <h3
+              class="text-[13px] font-semibold tracking-[-0.02em] text-shell-900"
+            >
               {row.exportMenu.title}
             </h3>
           </div>
@@ -364,13 +382,17 @@
                   class="text-[14px] font-medium text-shell-600"
                   for={`${row.panelId}-export-file-name`}
                 >
-                  {row.exportMenu.fileNameLabel}<span class="text-rose-600">*</span>
+                  {row.exportMenu.fileNameLabel}<span class="text-rose-600"
+                    >*</span
+                  >
                 </label>
                 <input
                   id={`${row.panelId}-export-file-name`}
                   class={`${selectClass} ${exportFileNameError ? "border-rose-300 focus-visible:ring-rose-200" : ""}`}
                   aria-invalid={exportFileNameError !== null}
-                  aria-describedby={exportFileNameError ? `${row.panelId}-export-file-name-error` : undefined}
+                  aria-describedby={exportFileNameError
+                    ? `${row.panelId}-export-file-name-error`
+                    : undefined}
                   disabled={exportSubmitting}
                   placeholder={row.exportMenu.fileNamePlaceholder}
                   type="text"
@@ -395,7 +417,9 @@
                   class="text-[14px] font-medium text-shell-600"
                   for={`${row.panelId}-export-format`}
                 >
-                  {row.exportMenu.formatLabel}<span class="text-rose-600">*</span>
+                  {row.exportMenu.formatLabel}<span class="text-rose-600"
+                    >*</span
+                  >
                 </label>
                 <select
                   id={`${row.panelId}-export-format`}
@@ -441,7 +465,9 @@
             </PathPickerField>
 
             <Button
-              label={exportSubmitting ? row.exportMenu.exporting : row.exportMenu.submit}
+              label={exportSubmitting
+                ? row.exportMenu.exporting
+                : row.exportMenu.submit}
               icon={FileOutput}
               iconStrokeWidth={2.1}
               className="min-h-[38px] justify-self-start text-[14px]"
