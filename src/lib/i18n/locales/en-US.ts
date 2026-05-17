@@ -568,25 +568,36 @@ export const enUS = {
       eyebrow: "Settings",
       title: "Settings",
     },
+    sections: {
+      basic: "Basic settings",
+      about: "About",
+    },
     language: {
       label: "Language",
+      description: "Click save to apply language changes.",
       options: {
         "en-US": "English",
-        "zh-CN": "Simplified Chinese",
+        "zh-CN": "简体中文",
       },
     },
     defaultInstallLocation: {
       label: "Default install location",
+      description: "Set the default install directory for WSL distros.",
       dialogTitle: "Choose default install location",
     },
     backgroundRefresh: {
-      intervalLabel: "Background refresh interval (minutes)",
+      intervalLabel: "Background refresh interval",
+      intervalDescription:
+        "Set the automatic background refresh frequency in minutes.",
+      intervalUnit: "min",
       targetsLabel: "Background refresh targets",
+      targetsDescription:
+        "Choose which data should refresh automatically in the background.",
       targets: {
         distros: "Distro list",
-        systemOverviewStorage: "System storage information",
+        systemOverviewStorage: "Storage info",
         wslVersion: "WSL version",
-        onlineDistros: "Online distro list",
+        onlineDistros: "Online distros",
       },
     },
     validation: {
@@ -605,8 +616,16 @@ export const enUS = {
       saveFailed: "Save failed",
     },
     actions: {
+      restoreDefaults: "Restore defaults",
       saving: "Saving",
       saveSettings: "Save settings",
+    },
+    about: {
+      appName: "EaWSL",
+      meta: (year: number, version: string) =>
+        `© ${year} Avalon | v${version} release`,
+      reportIssue: "Report an issue or send feedback",
+      repository: "View repository",
     },
   },
   shell: {

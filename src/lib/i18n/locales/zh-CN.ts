@@ -545,8 +545,13 @@ export const zhCN = {
       eyebrow: "Settings",
       title: "设置",
     },
+    sections: {
+      basic: "基础设置",
+      about: "关于",
+    },
     language: {
       label: "语言",
+      description: "更改语言需要点击保存",
       options: {
         "en-US": "English",
         "zh-CN": "简体中文",
@@ -554,11 +559,15 @@ export const zhCN = {
     },
     defaultInstallLocation: {
       label: "默认安装位置",
+      description: "设置 WSL 发行版默认安装目录",
       dialogTitle: "选择默认安装位置",
     },
     backgroundRefresh: {
-      intervalLabel: "后台刷新间隔（分钟）",
+      intervalLabel: "后台刷新间隔",
+      intervalDescription: "设置后台自动刷新频率，单位为分钟",
+      intervalUnit: "分钟",
       targetsLabel: "后台刷新项目",
+      targetsDescription: "选择需要在后台自动刷新的数据",
       targets: {
         distros: "发行版列表",
         systemOverviewStorage: "系统磁盘信息",
@@ -579,8 +588,16 @@ export const zhCN = {
       saveFailed: "保存失败",
     },
     actions: {
+      restoreDefaults: "恢复默认",
       saving: "保存中",
       saveSettings: "保存设置",
+    },
+    about: {
+      appName: "EaWSL",
+      meta: (year: number, version: string) =>
+        `© ${year} Avalon | v${version} 发行版`,
+      reportIssue: "报告错误或提交意见",
+      repository: "查看仓库",
     },
   },
   shell: {
