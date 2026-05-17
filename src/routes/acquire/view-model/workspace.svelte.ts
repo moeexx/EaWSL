@@ -14,6 +14,12 @@ import { getDistroLogoSrc } from "$lib/shared/distro-logos";
 import { hasTauriBridge } from "$lib/shared/runtime";
 import { getWindowsParentPath } from "$lib/shared/windows-path";
 import {
+  getDistroMetadata,
+  refreshDistroMetadata,
+  type DistroMetadata,
+} from "$lib/tauri/distro-metadata";
+import { openUrl } from "$lib/tauri/opener";
+import {
   DEFAULT_INSTALL_LOCATION,
   getDefaultInstallLocation,
 } from "$lib/tauri/settings";
@@ -43,6 +49,12 @@ const selectedPath = (value: unknown) =>
   typeof value === "string" ? value : null;
 const makeTarget = (root: string, name: string) =>
   createDistroTargetLocation(root, name);
+const normalizeDistroMetadataKey = (name: string) =>
+  name.toLocaleLowerCase("en-US");
+const findDistroMetadata = (
+  metadataByName: Map<string, DistroMetadata>,
+  name: string,
+) => metadataByName.get(normalizeDistroMetadataKey(name)) ?? null;
 const pickDirectory = async (title: string, defaultPath?: string) =>
   selectedPath(
     await open({ title, directory: true, multiple: false, defaultPath }),
@@ -67,6 +79,7 @@ export function createAcquireWorkspaceViewModel() {
   let queryState = $state<QueryCacheState>(get(queryCache));
   let defaultLocation = $state(DEFAULT_INSTALL_LOCATION);
   let selectedDistroName = $state<string | null>(null);
+  let distroMetadata = $state<DistroMetadata[]>([]);
   let draft = $state<InstallDraft>(createInstallDraft());
   let importDraft = $state<ImportDraft>(createImportDraft());
   let refreshing = $state(false);
@@ -78,23 +91,47 @@ export function createAcquireWorkspaceViewModel() {
   let installLocationTouched = false;
   let importNameTouched = false;
   let importLocationTouched = false;
+  let metadataLoadTimer: ReturnType<typeof setTimeout> | null = null;
   let disposed = false;
 
   const onlineDistros = $derived(queryState.onlineDistros.data ?? []);
-  const onlineDistroViews = $derived(
-    onlineDistros.map((distro) => ({
-      ...distro,
-      logoSrc: getDistroLogoSrc(distro.name),
-    })),
-  );
   const installedDistros = $derived(queryState.distros.data ?? []);
   const selectedDistro = $derived(
     findOnlineDistro(onlineDistros, selectedDistroName),
   );
+  const metadataByName = $derived(
+    new Map(
+      distroMetadata.map((metadata) => [
+        normalizeDistroMetadataKey(metadata.name),
+        metadata,
+      ]),
+    ),
+  );
+  const onlineDistroViews = $derived(
+    onlineDistros.map((distro) => {
+      const metadata = findDistroMetadata(metadataByName, distro.name);
+      return {
+        ...distro,
+        logoSrc: getDistroLogoSrc(distro.name),
+        isLegacy: metadata?.modern === false,
+      };
+    }),
+  );
   const selectedDistroView = $derived(
     selectedDistro === null
       ? null
-      : { ...selectedDistro, logoSrc: getDistroLogoSrc(selectedDistro.name) },
+      : (() => {
+          const metadata = findDistroMetadata(
+            metadataByName,
+            selectedDistro.name,
+          );
+          return {
+            ...selectedDistro,
+            logoSrc: getDistroLogoSrc(selectedDistro.name),
+            downloadUrl: metadata?.amd64Url ?? null,
+            isLegacy: metadata?.modern === false,
+          };
+        })(),
   );
   const detectedImportKind = $derived(detectImportKind(importDraft.file));
   const importNoun = $derived(
@@ -194,6 +231,33 @@ export function createAcquireWorkspaceViewModel() {
       setImportLocation(makeTarget(next, importDraft.name), false);
   }
 
+  async function loadDistroMetadata() {
+    if (!hasTauriBridge()) return;
+
+    try {
+      const cachedMetadata = await getDistroMetadata();
+      if (!disposed) distroMetadata = cachedMetadata;
+    } catch {
+      // Supplemental display only.
+    }
+
+    try {
+      const refreshedMetadata = await refreshDistroMetadata();
+      if (!disposed) distroMetadata = refreshedMetadata;
+    } catch {
+      // Supplemental display only.
+    }
+  }
+
+  function scheduleSupplementalMetadataLoad() {
+    if (disposed || metadataLoadTimer !== null) return;
+
+    metadataLoadTimer = setTimeout(() => {
+      metadataLoadTimer = null;
+      if (!disposed) void loadDistroMetadata();
+    }, 0);
+  }
+
   async function refreshOnlineDistros() {
     refreshing = true;
     try {
@@ -239,6 +303,17 @@ export function createAcquireWorkspaceViewModel() {
       draft.location || defaultLocation,
     );
     if (root !== null) setInstallLocation(makeTarget(root, draft.name), true);
+  }
+
+  async function openSelectedDistroDownload() {
+    const url = selectedDistroView?.downloadUrl;
+    if (!url) return;
+
+    try {
+      await openUrl(url);
+    } catch {
+      // Supplemental display only.
+    }
   }
 
   function updateImportName(name: string) {
@@ -378,9 +453,15 @@ export function createAcquireWorkspaceViewModel() {
       const unI18n = i18nState.subscribe((state) => (copy = state.copy));
       const unProbes = probes.subscribe((state) => (probeState = state));
       void loadSettings();
-      void refreshAcquireWorkspace("page-enter");
+      void refreshAcquireWorkspace("page-enter").finally(() =>
+        scheduleSupplementalMetadataLoad(),
+      );
       return () => {
         disposed = true;
+        if (metadataLoadTimer !== null) {
+          clearTimeout(metadataLoadTimer);
+          metadataLoadTimer = null;
+        }
         unQuery();
         unLongTask();
         unI18n();
@@ -454,6 +535,7 @@ export function createAcquireWorkspaceViewModel() {
       updateName: updateInstallName,
       updateLocation: (value: string) => setInstallLocation(value, true),
       chooseLocation: chooseInstallLocation,
+      openSelectedDistroDownload,
       updateVhdSize: (vhdSize: string) => (draft = { ...draft, vhdSize }),
       setFixedVhd: (fixedVhd: boolean) => (draft = { ...draft, fixedVhd }),
       startInstall,

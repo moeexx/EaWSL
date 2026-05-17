@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Check from "@lucide/svelte/icons/check";
   import Download from "@lucide/svelte/icons/download";
   import HardDrive from "@lucide/svelte/icons/hard-drive";
   import { i18nState } from "$lib/i18n";
@@ -27,9 +26,15 @@
     >
       <DistroLogo src={model.selectedDistro.logoSrc} size="lg" />
       <div class="min-w-0 flex-1">
-        <p class="text-[12px] font-medium text-shell-500">
-          {copy.selectedDistro}
-        </p>
+        <div class="flex min-w-0 items-center gap-2">
+          <p class="text-[12px] font-medium text-shell-500">
+            {copy.selectedDistro}
+          </p>
+          {#if model.selectedDistro.isLegacy}<span
+              class="shrink-0 rounded-full border-[0.5px] border-rose-200 bg-rose-50 px-2 py-0.5 text-[11px] font-semibold leading-4 text-rose-700"
+              >{copy.legacy}</span
+            >{/if}
+        </div>
         <strong class="mt-1 block truncate text-[15px] leading-5 text-shell-950"
           >{model.selectedDistro.friendly_name}</strong
         >
@@ -37,12 +42,14 @@
           {model.selectedDistro.name}
         </p>
       </div>
-      <div
-        aria-hidden="true"
-        class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-700 text-white"
-      >
-        <Check size={16} strokeWidth={2.4} />
-      </div>
+      {#if model.selectedDistro.downloadUrl}<Button
+          ariaLabel={copy.downloadX64}
+          title={copy.downloadInBrowser}
+          icon={Download}
+          variant="secondary"
+          className="h-8 w-8 shrink-0 !rounded-full !p-0"
+          onclick={() => void model.callbacks.openSelectedDistroDownload()}
+        />{/if}
     </div>
   {/if}
 
