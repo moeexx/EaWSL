@@ -26,13 +26,18 @@ const WSL_ERROR_LOCALIZERS = {
 } as const;
 
 export type WslCommandErrorCode = keyof typeof WSL_ERROR_LOCALIZERS;
-type WslCommandErrorDto = WslErrorExtras & {
+export type WslCommandErrorDto = WslErrorExtras & {
   kind: "wsl";
   code: WslCommandErrorCode;
 };
-type MessageCommandErrorDto = { kind: "message"; message: string };
+export type MessageCommandErrorDto = { kind: "message"; message: string };
 export type RecoverableCommandCode =
   "wsl-command-timed-out" | "host-command-timed-out";
+export type PersistedCommandError =
+  | WslCommandErrorDto
+  | MessageCommandErrorDto
+  | { kind: "recoverable"; code: RecoverableCommandCode }
+  | { kind: "unknown" };
 
 export class RecoverableCommandError extends Error {
   constructor(readonly code: RecoverableCommandCode, message: string) {
@@ -65,9 +70,7 @@ export function normalizeTauriCommandError(error: unknown): unknown {
 
 export function getTauriCommandErrorMessage(error: unknown): string | null {
   if (error instanceof RecoverableCommandError) {
-    return error.code === "wsl-command-timed-out"
-      ? getCopy().common.errors.wslCommandTimedOut
-      : null;
+    return getRecoverableCommandErrorMessage(error.code);
   }
 
   if (isWslCommandErrorDto(error)) {
@@ -77,13 +80,64 @@ export function getTauriCommandErrorMessage(error: unknown): string | null {
   return isMessageCommandErrorDto(error) ? error.message : null;
 }
 
+export function persistCommandError(error: unknown): PersistedCommandError {
+  if (isWslCommandErrorDto(error)) {
+    return {
+      kind: "wsl",
+      code: error.code,
+      ...(typeof error.wslCode === "string" ? { wslCode: error.wslCode } : {}),
+      ...(typeof error.distro === "string" ? { distro: error.distro } : {}),
+      ...(typeof error.details === "string" ? { details: error.details } : {}),
+    };
+  }
+
+  if (isMessageCommandErrorDto(error)) {
+    return {
+      kind: "message",
+      message: error.message,
+    };
+  }
+
+  if (error instanceof RecoverableCommandError) {
+    return {
+      kind: "recoverable",
+      code: error.code,
+    };
+  }
+
+  return {
+    kind: "unknown",
+  };
+}
+
+export function getPersistedCommandErrorMessage(
+  error: PersistedCommandError,
+): string {
+  if (isWslCommandErrorDto(error)) {
+    return WSL_ERROR_LOCALIZERS[error.code](getCopy().common.errors, error);
+  }
+
+  if (isMessageCommandErrorDto(error)) {
+    return error.message;
+  }
+
+  if (isPersistedRecoverableCommandError(error)) {
+    return (
+      getRecoverableCommandErrorMessage(error.code) ??
+      getCopy().common.errors.operationFailed
+    );
+  }
+
+  return getCopy().common.errors.operationFailed;
+}
+
 export function isRecoverableCommandError(
   error: unknown,
 ): error is RecoverableCommandError {
   return error instanceof RecoverableCommandError;
 }
 
-function isWslCommandErrorDto(error: unknown): error is WslCommandErrorDto {
+export function isWslCommandErrorDto(error: unknown): error is WslCommandErrorDto {
   return (
     isObject(error) &&
     error.kind === "wsl" &&
@@ -92,10 +146,29 @@ function isWslCommandErrorDto(error: unknown): error is WslCommandErrorDto {
   );
 }
 
-function isMessageCommandErrorDto(
+export function isMessageCommandErrorDto(
   error: unknown,
 ): error is MessageCommandErrorDto {
   return isObject(error) && error.kind === "message" && typeof error.message === "string";
+}
+
+function isPersistedRecoverableCommandError(
+  error: unknown,
+): error is Extract<PersistedCommandError, { kind: "recoverable" }> {
+  return (
+    isObject(error) &&
+    error.kind === "recoverable" &&
+    (error.code === "wsl-command-timed-out" ||
+      error.code === "host-command-timed-out")
+  );
+}
+
+function getRecoverableCommandErrorMessage(
+  code: RecoverableCommandCode,
+): string | null {
+  return code === "wsl-command-timed-out"
+    ? getCopy().common.errors.wslCommandTimedOut
+    : null;
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

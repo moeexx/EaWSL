@@ -1,6 +1,7 @@
 import type { LongTask } from "./state";
 import type { AppCopy, AppLanguage } from "$lib/i18n";
 import { formatFullTime } from "$lib/shared/runtime";
+import { getPersistedCommandErrorMessage } from "$lib/tauri/errors";
 
 type LongTasksCopy = AppCopy["longTasks"];
 
@@ -112,7 +113,7 @@ export function getTaskErrorMessage(
     return copy.errors.interrupted;
   }
 
-  return task.error;
+  return task.error === null ? null : getPersistedCommandErrorMessage(task.error);
 }
 
 export function getOperationLabel(task: LongTask, copy: LongTasksCopy): string {

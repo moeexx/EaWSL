@@ -95,7 +95,7 @@ export async function submitAcquireTask(
     const copy = getCopy();
     const noun = getAcquireTaskNoun(input.operation, copy);
     if (taskStarted) {
-      await failTask(requestId, message).catch(() => undefined);
+      await failTask(requestId, error).catch(() => undefined);
     }
     pushToast({
       tone: "error",

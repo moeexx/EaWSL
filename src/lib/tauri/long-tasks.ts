@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 
 import { normalizeTauriCommandError } from "./errors";
+import type { PersistedCommandError } from "./errors";
 
 export interface PersistedLongTask {
   requestId: string;
@@ -11,7 +12,7 @@ export interface PersistedLongTask {
   percent: number | null;
   startedAt: string;
   endedAt: string | null;
-  error: string | null;
+  error: PersistedCommandError | null;
   location: string | null;
   logoSrc: string;
   interrupted: boolean;

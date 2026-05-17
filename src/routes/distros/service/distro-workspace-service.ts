@@ -177,7 +177,7 @@ async function submitExportTask(
   } catch (error) {
     const message = toErrorMessage(error);
     if (taskStarted) {
-      await failTask(requestId, message).catch(() => undefined);
+      await failTask(requestId, error).catch(() => undefined);
     }
     pushToast({
       tone: "error",

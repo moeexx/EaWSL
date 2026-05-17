@@ -85,7 +85,10 @@ fn command_public_surface_type_checks() {
         percent: Some(100.0),
         started_at: "2026-05-16T00:00:00.000Z".to_string(),
         ended_at: Some("2026-05-16T00:01:00.000Z".to_string()),
-        error: None,
+        error: Some(serde_json::json!({
+            "kind": "message",
+            "message": "export failed"
+        })),
         location: Some("D:/exports/ubuntu.tar".to_string()),
         logo_src: "/distro-logos/ubuntu.ico".to_string(),
         interrupted: false,

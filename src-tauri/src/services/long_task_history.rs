@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use tauri::{AppHandle, Manager};
 
 use crate::services::system::filesystem::{self, WriteTextError};
@@ -18,7 +19,7 @@ pub struct PersistedLongTask {
     pub percent: Option<f32>,
     pub started_at: String,
     pub ended_at: Option<String>,
-    pub error: Option<String>,
+    pub error: Option<Value>,
     pub location: Option<String>,
     pub logo_src: String,
     #[serde(default)]
@@ -116,7 +117,10 @@ mod tests {
             percent: Some(100.0),
             started_at: "2026-05-16T00:00:00.000Z".to_string(),
             ended_at: Some("2026-05-16T00:01:00.000Z".to_string()),
-            error: None,
+            error: Some(serde_json::json!({
+                "kind": "wsl",
+                "code": "processFailed"
+            })),
             location: Some("D:/exports/ubuntu.tar".to_string()),
             logo_src: "/distro-logos/ubuntu.ico".to_string(),
             interrupted: false,

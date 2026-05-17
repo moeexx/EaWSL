@@ -13,6 +13,10 @@ import {
   saveLongTasks,
   type PersistedLongTask,
 } from "$lib/tauri/long-tasks";
+import {
+  persistCommandError,
+  type PersistedCommandError,
+} from "$lib/tauri/errors";
 
 export type LongTaskStatus = "started" | "running" | "completed" | "failed";
 export type LongTaskOperation =
@@ -30,7 +34,7 @@ export interface LongTask {
   percent: number | null;
   startedAt: Date;
   endedAt: Date | null;
-  error: string | null;
+  error: PersistedCommandError | null;
   location: string | null;
   logoSrc: string;
   interrupted: boolean;
@@ -139,13 +143,14 @@ export async function startTask(input: StartTaskInput): Promise<void> {
 
 export async function failTask(
   requestId: string,
-  error: string,
+  error: unknown,
 ): Promise<void> {
+  const persistedError = persistLongTaskError(error);
   await updateTaskAndSave(requestId, (task) => ({
     ...task,
     status: "failed",
     endedAt: task.endedAt ?? new Date(),
-    error,
+    error: persistedError,
     interrupted: false,
   }));
 }
@@ -335,6 +340,10 @@ function toPersistedTask(task: LongTask): PersistedLongTask {
     logoSrc: task.logoSrc,
     interrupted: task.interrupted,
   };
+}
+
+function persistLongTaskError(error: unknown): PersistedCommandError {
+  return persistCommandError(error);
 }
 
 function persistLongTasks(tasks: LongTask[]): Promise<void> {
