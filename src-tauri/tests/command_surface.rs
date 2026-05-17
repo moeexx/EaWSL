@@ -118,6 +118,7 @@ fn command_public_surface_type_checks() {
     let _ = commands::terminate_distro;
     let _ = commands::shutdown_wsl;
     let _ = commands::unregister_distro;
+    let _ = commands::launch_legacy_install_terminal;
     let _ = commands::install_distro;
     let _ = commands::import_distro;
     let _ = commands::import_distro_in_place;

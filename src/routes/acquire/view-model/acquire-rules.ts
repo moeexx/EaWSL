@@ -101,7 +101,12 @@ export function validateInstall(input: {
 }) {
   const { copy, draft, enabled, target } = input;
   const nameError = enabled
-    ? validateName(copy, draft.name, input.nameDuplicate, input.nameProbeError)
+    ? validateName(
+        copy,
+        draft.name,
+        input.nameDuplicate,
+        input.nameProbeError,
+      )
     : null;
   const vhdSizeError = enabled ? validateVhdSize(copy, draft) : null;
   const locationError = enabled

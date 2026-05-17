@@ -156,6 +156,12 @@ export async function installDistro(req: InstallDistroRequest): Promise<void> {
   });
 }
 
+export async function launchLegacyInstallTerminal(
+  distro: string,
+): Promise<void> {
+  return invokeWsl("launch_legacy_install_terminal", { distro });
+}
+
 export async function importDistro(req: ImportDistroRequest): Promise<void> {
   return invokeWsl("import_distro", {
     req: {

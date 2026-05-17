@@ -24,6 +24,7 @@ import {
   getDefaultInstallLocation,
 } from "$lib/tauri/settings";
 import type { InstallOptions } from "$lib/tauri/wsl";
+import { launchLegacyInstallTerminal } from "$lib/tauri/wsl";
 import {
   createAcquireProbeController,
   createIdleAcquireProbeState,
@@ -133,6 +134,10 @@ export function createAcquireWorkspaceViewModel() {
           };
         })(),
   );
+  const selectedDistroIsLegacy = $derived(
+    selectedDistroView?.isLegacy === true,
+  );
+  const tauriBridgeAvailable = $derived(hasTauriBridge());
   const detectedImportKind = $derived(detectImportKind(importDraft.file));
   const importNoun = $derived(
     detectedImportKind === "archive"
@@ -161,7 +166,7 @@ export function createAcquireWorkspaceViewModel() {
       nameDuplicate: isDistroNameUsed(installedDistros, draft.name),
       nameProbePending,
       nameProbeError,
-      hasTauriBridge: hasTauriBridge(),
+      hasTauriBridge: tauriBridgeAvailable,
     }),
   );
   const importValidation = $derived(
@@ -174,7 +179,7 @@ export function createAcquireWorkspaceViewModel() {
       nameDuplicate: isDistroNameUsed(installedDistros, importDraft.name),
       nameProbePending,
       nameProbeError,
-      hasTauriBridge: hasTauriBridge(),
+      hasTauriBridge: tauriBridgeAvailable,
     }),
   );
   const spaceNotice = $derived(
@@ -196,7 +201,14 @@ export function createAcquireWorkspaceViewModel() {
     }),
   );
   const installSubmitDisabled = $derived(
-    validation.disabled || installSubmitting || hasActiveLongTask,
+    installSubmitting ||
+      hasActiveLongTask ||
+      (selectedDistroIsLegacy
+        ? !tauriBridgeAvailable ||
+          selectedDistro === null ||
+          nameProbePending ||
+          !!validation.nameError
+        : validation.disabled),
   );
   const importSubmitDisabled = $derived(
     importValidation.disabled || importSubmitting || hasActiveLongTask,
@@ -378,6 +390,28 @@ export function createAcquireWorkspaceViewModel() {
         title: copy.acquire.toasts.cannotStartInstallTitle,
         message: copy.acquire.toasts.installValidationFallback,
       });
+
+    if (selectedDistroIsLegacy) {
+      installSubmitting = true;
+      try {
+        await launchLegacyInstallTerminal(selectedDistro.name);
+        pushToast({
+          tone: "success",
+          title: copy.acquire.toasts.legacyTerminalOpenedTitle,
+          message: copy.acquire.toasts.legacyTerminalOpenedMessage,
+        });
+      } catch (error) {
+        pushToast({
+          tone: "error",
+          title: copy.acquire.toasts.cannotStartInstallTitle,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      } finally {
+        if (!disposed) installSubmitting = false;
+      }
+      return;
+    }
+
     const displayName = draft.name.trim();
     const options: InstallOptions = {
       name: displayName,

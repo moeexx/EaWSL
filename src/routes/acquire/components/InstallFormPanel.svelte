@@ -1,6 +1,7 @@
 <script lang="ts">
   import Download from "@lucide/svelte/icons/download";
   import HardDrive from "@lucide/svelte/icons/hard-drive";
+  import Terminal from "@lucide/svelte/icons/terminal";
   import { i18nState } from "$lib/i18n";
   import Button from "$lib/ui/Button.svelte";
   import DistroLogo from "$lib/ui/DistroLogo.svelte";
@@ -14,6 +15,11 @@
   const copy = $derived($i18nState.copy.acquire.install);
   const commonCopy = $derived($i18nState.copy.common);
   const fieldDisabled = $derived(model.selectedDistro === null);
+  const legacyInstallCommand = $derived(
+    model.selectedDistro
+      ? `wsl.exe --install ${model.selectedDistro.name}`
+      : "",
+  );
   const vhdClass = $derived(
     `min-h-[36px] w-full rounded-[10px] border-[0.5px] bg-white px-3 pr-12 text-[14px] text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${model.validation.vhdSizeError ? "border-rose-200" : "border-shell-200/80"} ${fieldDisabled ? "cursor-not-allowed opacity-60" : ""}`,
   );
@@ -43,7 +49,7 @@
         </p>
       </div>
       {#if model.selectedDistro.downloadUrl}<Button
-          ariaLabel={copy.downloadX64}
+          ariaLabel={copy.downloadInBrowser}
           title={copy.downloadInBrowser}
           icon={Download}
           variant="secondary"
@@ -53,105 +59,139 @@
     </div>
   {/if}
 
-  <AcquireTextField
-    id="install-name"
-    label={copy.nameLabel}
-    required
-    value={model.draft.name}
-    invalid={model.validation.nameError !== null}
-    error={model.validation.nameError}
-    placeholder={copy.namePlaceholder}
-    disabled={fieldDisabled}
-    oninput={model.callbacks.updateName}
-  />
-  <PathPickerField
-    id="install-location"
-    label={copy.locationLabel}
-    required
-    value={model.draft.location}
-    error={model.validation.locationError}
-    placeholder={copy.locationPlaceholder}
-    chooseLabel={commonCopy.chooseDirectory}
-    disabled={fieldDisabled}
-    oninput={model.callbacks.updateLocation}
-    onchoose={() => void model.callbacks.chooseLocation()}
-  >
-    {#snippet after()}
-      {#if model.spaceNotice}<AcquireSpaceNotice
-          tone={model.spaceNotice.tone}
-          message={model.spaceNotice.message}
-        />{/if}
-    {/snippet}
-  </PathPickerField>
-
-  <div
-    class="rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
-  >
-    <div class="flex items-center justify-between gap-3">
-      <strong class="text-[15px] font-semibold text-shell-950"
-        >{copy.vhdOptions}</strong
-      ><HardDrive size={17} strokeWidth={1.9} class="text-shell-600" />
-    </div>
-    <div class="mt-3 grid gap-3">
-      <div class="grid gap-1.5">
-        <label
-          class="text-[14px] font-medium text-shell-600"
-          for="install-vhd-size"
-          >{copy.diskSize}{#if model.draft.fixedVhd}<span class="text-rose-600"
-              >*</span
-            >{/if}</label
+  {#if model.selectedDistro?.isLegacy}
+    <div
+      class="rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+    >
+      <p class="text-[14px] font-medium leading-6 text-shell-900">
+        {copy.legacyInstallNote}
+      </p>
+      <div class="mt-3 grid gap-1.5">
+        <p class="text-[13px] font-semibold leading-5 text-shell-900">
+          {copy.legacyCommandLabel}
+        </p>
+        <code
+          class="block overflow-x-auto rounded-[8px] border-[0.5px] border-shell-200/80 bg-shell-50 px-3 py-2 text-[14px] leading-5 text-shell-950"
+          >{legacyInstallCommand}</code
         >
-        <div class="relative">
-          <input
-            id="install-vhd-size"
-            aria-invalid={model.validation.vhdSizeError !== null}
-            class={vhdClass}
-            disabled={fieldDisabled}
-            inputmode="numeric"
-            min={15}
-            oninput={(event) => {
-              const normalized = event.currentTarget.value.replace(/\D/g, "");
-              if (event.currentTarget.value !== normalized)
-                event.currentTarget.value = normalized;
-              model.callbacks.updateVhdSize(normalized);
-            }}
-            placeholder="20"
-            required={model.draft.fixedVhd}
-            step={1}
-            type="number"
-            value={model.draft.vhdSize}
-          />
-          <span
-            class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[13px] font-medium text-shell-500"
-            >GB</span
-          >
-        </div>
-        {#if model.validation.vhdSizeError}<p
-            class="text-[12px] leading-5 text-rose-700"
-          >
-            {model.validation.vhdSizeError}
-          </p>{/if}
       </div>
-      <label
-        class="inline-flex min-h-[36px] items-center gap-2 text-[14px] text-shell-700"
-        ><input
-          checked={model.draft.fixedVhd}
-          class="h-4 w-4 accent-[#1d78d7]"
-          disabled={fieldDisabled}
-          onchange={(event) =>
-            model.callbacks.setFixedVhd(event.currentTarget.checked)}
-          type="checkbox"
-        /><span>{copy.enableFixedVhd}</span></label
-      >
+      {#if model.validation.nameError}<p
+          class="mt-3 text-[13px] font-medium leading-5 text-rose-700"
+        >
+          {model.validation.nameError}
+        </p>{/if}
     </div>
-  </div>
+    <Button
+      label={model.installSubmitting
+        ? copy.installing
+        : copy.startLegacyTerminal}
+      icon={Terminal}
+      iconStrokeWidth={2.1}
+      className="min-h-[38px] w-full text-[14px]"
+      disabled={model.installSubmitDisabled}
+      onclick={() => void model.callbacks.startInstall()}
+    />
+  {:else}
+    <AcquireTextField
+      id="install-name"
+      label={copy.nameLabel}
+      required
+      value={model.draft.name}
+      invalid={model.validation.nameError !== null}
+      error={model.validation.nameError}
+      placeholder={copy.namePlaceholder}
+      disabled={fieldDisabled}
+      oninput={model.callbacks.updateName}
+    />
+    <PathPickerField
+      id="install-location"
+      label={copy.locationLabel}
+      required
+      value={model.draft.location}
+      error={model.validation.locationError}
+      placeholder={copy.locationPlaceholder}
+      chooseLabel={commonCopy.chooseDirectory}
+      disabled={fieldDisabled}
+      oninput={model.callbacks.updateLocation}
+      onchoose={() => void model.callbacks.chooseLocation()}
+    >
+      {#snippet after()}
+        {#if model.spaceNotice}<AcquireSpaceNotice
+            tone={model.spaceNotice.tone}
+            message={model.spaceNotice.message}
+          />{/if}
+      {/snippet}
+    </PathPickerField>
 
-  <Button
-    label={model.installSubmitting ? copy.installing : copy.start}
-    icon={Download}
-    iconStrokeWidth={2.1}
-    className="min-h-[38px] w-full text-[14px]"
-    disabled={model.installSubmitDisabled}
-    onclick={() => void model.callbacks.startInstall()}
-  />
+    <div
+      class="rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+    >
+      <div class="flex items-center justify-between gap-3">
+        <strong class="text-[15px] font-semibold text-shell-950"
+          >{copy.vhdOptions}</strong
+        ><HardDrive size={17} strokeWidth={1.9} class="text-shell-600" />
+      </div>
+      <div class="mt-3 grid gap-3">
+        <div class="grid gap-1.5">
+          <label
+            class="text-[14px] font-medium text-shell-600"
+            for="install-vhd-size"
+            >{copy.diskSize}{#if model.draft.fixedVhd}<span
+                class="text-rose-600">*</span
+              >{/if}</label
+          >
+          <div class="relative">
+            <input
+              id="install-vhd-size"
+              aria-invalid={model.validation.vhdSizeError !== null}
+              class={vhdClass}
+              disabled={fieldDisabled}
+              inputmode="numeric"
+              min={15}
+              oninput={(event) => {
+                const normalized = event.currentTarget.value.replace(/\D/g, "");
+                if (event.currentTarget.value !== normalized)
+                  event.currentTarget.value = normalized;
+                model.callbacks.updateVhdSize(normalized);
+              }}
+              placeholder="20"
+              required={model.draft.fixedVhd}
+              step={1}
+              type="number"
+              value={model.draft.vhdSize}
+            />
+            <span
+              class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[13px] font-medium text-shell-500"
+              >GB</span
+            >
+          </div>
+          {#if model.validation.vhdSizeError}<p
+              class="text-[12px] leading-5 text-rose-700"
+            >
+              {model.validation.vhdSizeError}
+            </p>{/if}
+        </div>
+        <label
+          class="inline-flex min-h-[36px] items-center gap-2 text-[14px] text-shell-700"
+          ><input
+            checked={model.draft.fixedVhd}
+            class="h-4 w-4 accent-[#1d78d7]"
+            disabled={fieldDisabled}
+            onchange={(event) =>
+              model.callbacks.setFixedVhd(event.currentTarget.checked)}
+            type="checkbox"
+          /><span>{copy.enableFixedVhd}</span></label
+        >
+      </div>
+    </div>
+
+    <Button
+      label={model.installSubmitting ? copy.installing : copy.start}
+      icon={Download}
+      iconStrokeWidth={2.1}
+      className="min-h-[38px] w-full text-[14px]"
+      disabled={model.installSubmitDisabled}
+      onclick={() => void model.callbacks.startInstall()}
+    />
+  {/if}
 </div>

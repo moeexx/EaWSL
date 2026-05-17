@@ -53,10 +53,13 @@ export const zhCN = {
       vhdOptions: "VHD 选项",
       diskSize: "磁盘空间大小",
       enableFixedVhd: "启用固定大小 VHDX",
-      downloadX64: "下载 x64 包",
       downloadInBrowser: "在浏览器中下载",
       legacy: "旧版",
+      legacyInstallNote:
+        "不建议安装旧版 Store 发行版，除非你明确需要这个旧渠道。安装必须在终端中由 WSL 完成，发行版名称固定为在线名称，不能修改。",
+      legacyCommandLabel: "复制命令到终端执行，或点击下方按钮安装",
       start: "开始安装",
+      startLegacyTerminal: "在终端中安装",
       installing: "安装中...",
     },
     importForm: {
@@ -91,6 +94,9 @@ export const zhCN = {
     toasts: {
       cannotStartInstallTitle: "无法开始安装",
       cannotStartImportTitle: "无法导入",
+      legacyTerminalOpenedTitle: "终端已打开",
+      legacyTerminalOpenedMessage:
+        "请在终端中完成初始化，完成后手动刷新已安装发行版列表。",
       installValidationFallback: "请先完成发行版选择和安装参数校验。",
       importValidationFallback: "请先完成导入参数校验。",
     },

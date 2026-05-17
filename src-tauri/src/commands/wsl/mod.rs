@@ -1,3 +1,4 @@
+pub(crate) mod legacy_install;
 pub(crate) mod lifecycle;
 pub(crate) mod query;
 pub(crate) mod transfer;

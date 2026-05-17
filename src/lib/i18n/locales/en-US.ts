@@ -51,10 +51,14 @@ export const enUS = {
       vhdOptions: "VHD options",
       diskSize: "Disk size",
       enableFixedVhd: "Enable fixed-size VHDX",
-      downloadX64: "Download x64 package",
       downloadInBrowser: "Download in browser",
       legacy: "Legacy",
+      legacyInstallNote:
+        "Legacy Store distro installation is not recommended unless you specifically need this older channel. WSL must install it in a terminal, and the distro name is fixed to the online name and cannot be changed.",
+      legacyCommandLabel:
+        "Copy this command into a terminal, or click the button below to install",
       start: "Start install",
+      startLegacyTerminal: "Install in terminal",
       installing: "Installing...",
     },
     importForm: {
@@ -90,6 +94,9 @@ export const enUS = {
     toasts: {
       cannotStartInstallTitle: "Cannot start install",
       cannotStartImportTitle: "Cannot import",
+      legacyTerminalOpenedTitle: "Terminal opened",
+      legacyTerminalOpenedMessage:
+        "Complete the initialization in the terminal, then refresh the installed distro list.",
       installValidationFallback:
         "Complete distro selection and install parameter validation first.",
       importValidationFallback: "Complete import parameter validation first.",

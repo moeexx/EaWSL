@@ -23,6 +23,7 @@ fn register_handlers(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<taur
         commands::wsl::lifecycle::terminate_distro,
         commands::wsl::lifecycle::shutdown_wsl,
         commands::wsl::lifecycle::unregister_distro,
+        commands::wsl::legacy_install::launch_legacy_install_terminal,
         commands::wsl::transfer::install_distro,
         commands::wsl::transfer::import_distro,
         commands::wsl::transfer::import_distro_in_place,
