@@ -37,7 +37,7 @@
 
   const DEFAULT_LANGUAGE: AppLanguage = "en-US";
   const FALLBACK_APP_VERSION = "0.1.0";
-  const APP_LOGO_SRC = "/logo/logo 1.png";
+  const APP_LOGO_SRC = "/favicon.png";
   const REPOSITORY_URL = "https://github.com/moeexx/EaWSL";
   const ISSUE_URL = `${REPOSITORY_URL}/issues`;
   const currentYear = new Date().getFullYear();
