@@ -1,7 +1,6 @@
 <script lang="ts">
   import Check from "@lucide/svelte/icons/check";
   import Copy from "@lucide/svelte/icons/copy";
-  import Info from "@lucide/svelte/icons/info";
 
   import Button from "$lib/ui/Button.svelte";
   import SectionPanel from "$lib/ui/SectionPanel.svelte";
@@ -61,14 +60,6 @@
 </script>
 
 <SectionPanel title={copy.wsl.title} description={copy.wsl.description}>
-  {#snippet icon()}
-    <span
-      class="flex h-10 w-10 items-center justify-center rounded-full bg-shell-100 text-shell-800"
-    >
-      <Info size={20} strokeWidth={2} />
-    </span>
-  {/snippet}
-
   {#snippet actions()}
     <Button
       label={copyButtonLabel}
@@ -79,11 +70,11 @@
     />
   {/snippet}
 
-  <div class="border-t border-shell-200/80 pt-3">
+  <div class="border-t border-shell-200/80">
     <div class="grid gap-0 divide-y divide-shell-150/90">
       {#each items as item (item.label)}
         <div
-          class="grid gap-1 py-2.5 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-4"
+          class="grid gap-1 py-2 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-4"
         >
           <span class="text-[14px] font-semibold text-shell-950">
             {item.label}

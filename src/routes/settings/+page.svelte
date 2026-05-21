@@ -7,6 +7,7 @@
   import Languages from "@lucide/svelte/icons/languages";
   import ListChecks from "@lucide/svelte/icons/list-checks";
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
+  import Save from "@lucide/svelte/icons/save";
   import Timer from "@lucide/svelte/icons/timer";
   import { get } from "svelte/store";
 
@@ -345,6 +346,7 @@
             />
             <Button
               label={commonCopy.chooseDirectory}
+              icon={Folder}
               variant="secondary"
               className="shrink-0 hover:border-accent-200 hover:bg-accent-50/70"
               disabled={loading || saving}
@@ -456,6 +458,7 @@
         label={saving
           ? settingsCopy.actions.saving
           : settingsCopy.actions.saveSettings}
+        icon={Save}
         size="lg"
         disabled={!canSave}
         onclick={() => void saveSettings()}

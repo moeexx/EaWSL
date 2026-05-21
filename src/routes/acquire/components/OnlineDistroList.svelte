@@ -1,7 +1,6 @@
 <script lang="ts">
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { i18nState } from "$lib/i18n";
-  import Button from "$lib/ui/Button.svelte";
   import DistroLogo from "$lib/ui/DistroLogo.svelte";
   import type { AcquireWorkspaceViewModel } from "../view-model/workspace.svelte";
 
@@ -16,7 +15,7 @@
       model.queryState.onlineDistros.activity === "refreshing",
   );
   const cardClass = (selected: boolean) =>
-    `group relative flex max-h-[74px] justify-start gap-2.5 overflow-hidden rounded-[8px] border-[0.5px] py-2.5 text-left ${selected ? "!border-accent-200 !bg-accent-50 pl-3 pr-4" : "!border-shell-200/80 !bg-white px-3 hover:!bg-shell-50"}`;
+    `group relative inline-flex max-h-[74px] cursor-pointer items-center justify-start gap-2.5 overflow-hidden rounded-[8px] border-[0.5px] p-2 text-left transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${selected ? "border-accent-200 bg-accent-50" : "border-shell-200/80 bg-white hover:bg-shell-50"}`;
   const selectedMarkerClass = (legacy: boolean) =>
     `absolute bottom-2 right-0 top-2 w-1 rounded-l-full ${legacy ? "bg-rose-600" : "bg-accent-700"}`;
   const loading = (overlay: boolean) =>
@@ -35,11 +34,11 @@
       >
         {#each model.onlineDistros as distro (distro.name)}
           {@const selected = model.selectedDistroName === distro.name}
-          <Button
-            ariaPressed={selected}
-            variant="secondary"
-            className={cardClass(selected)}
+          <button
+            aria-pressed={selected}
+            class={cardClass(selected)}
             onclick={() => model.callbacks.selectDistro(distro.name)}
+            type="button"
           >
             <DistroLogo src={distro.logoSrc} />
             <div class="min-w-0 flex-1">
@@ -55,7 +54,7 @@
                 aria-hidden="true"
                 class={selectedMarkerClass(distro.isLegacy)}
               ></span>{/if}
-          </Button>
+          </button>
         {/each}
       </div>
       {#if showLoading}<div class={loading(true)} role="status">

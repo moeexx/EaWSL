@@ -12,8 +12,7 @@
 
   type IconComponent = typeof RefreshCw;
 
-  type Props = {
-    label: string;
+  type BaseProps = {
     icon?: IconComponent;
     refreshing: boolean;
     refreshIcon?: IconComponent;
@@ -22,13 +21,21 @@
     size?: ButtonSize;
     className?: string;
     disabled?: boolean;
-    ariaControls?: string;
-    ariaExpanded?: boolean;
     onclick: () => void | Promise<void>;
   };
 
+  type Props =
+    | (BaseProps & {
+        label: string;
+        ariaLabel?: string;
+      })
+    | (BaseProps & {
+        label?: undefined;
+        ariaLabel: string;
+      });
+
   let {
-    label,
+    label = undefined,
     icon,
     refreshing,
     refreshIcon,
@@ -37,8 +44,7 @@
     size = "md",
     className = "",
     disabled = false,
-    ariaControls = undefined,
-    ariaExpanded = undefined,
+    ariaLabel = undefined,
     onclick,
   }: Props = $props();
 
@@ -47,29 +53,35 @@
     refreshing ? (refreshIcon ?? RefreshCw) : (icon ?? RefreshCw),
   );
   const currentLabel = $derived(
-    refreshing
-      ? (refreshingLabel ?? $i18nState.copy.common.refreshing)
-      : label,
+    label === undefined
+      ? undefined
+      : refreshing
+        ? (refreshingLabel ?? $i18nState.copy.common.refreshing)
+        : label,
   );
-  const currentIconStyle = $derived(
-    `width: ${currentSizeClass.icon}px; height: ${currentSizeClass.icon}px;`,
+  const iconOnly = $derived(currentLabel === undefined);
+  const buttonSizeClass = $derived(
+    iconOnly ? currentSizeClass.iconOnlyButton : currentSizeClass.button,
+  );
+  const currentIconSize = $derived(
+    iconOnly ? currentSizeClass.iconOnlyIcon : currentSizeClass.icon,
   );
 </script>
 
 <button
   aria-busy={refreshing}
-  aria-controls={ariaControls}
-  aria-expanded={ariaExpanded}
-  class={`${buttonBaseClass} ${buttonVariantClassMap[variant]} ${currentSizeClass.button} ${className}`}
+  aria-label={ariaLabel}
+  class={`${buttonBaseClass} ${buttonVariantClassMap[variant]} ${buttonSizeClass} ${className}`}
   disabled={disabled || refreshing}
   {onclick}
   type="button"
 >
   <CurrentIcon
     class={`shrink-0 ${refreshing ? "animate-spin" : ""}`}
-    size={currentSizeClass.icon}
-    style={currentIconStyle}
+    size={currentIconSize}
     strokeWidth={2}
   />
-  <span>{currentLabel}</span>
+  {#if currentLabel}
+    <span>{currentLabel}</span>
+  {/if}
 </button>

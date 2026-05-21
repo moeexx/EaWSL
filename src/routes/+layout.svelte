@@ -181,7 +181,7 @@
         style="--task-tray-collapsed-height: 63px;"
       >
         <div
-          class="ui-scrollbar overflow-auto py-[14px] pl-[14px] pr-[4px]"
+          class="ui-scrollbar overflow-auto py-[12px] pl-[12px] pr-[2px]"
           style="height: calc(100% - var(--task-tray-collapsed-height));"
         >
           {@render children?.()}

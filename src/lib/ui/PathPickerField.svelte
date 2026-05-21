@@ -2,7 +2,7 @@
   import FolderOpen from "@lucide/svelte/icons/folder-open";
   import type { Snippet } from "svelte";
 
-  import Button, { type ButtonVariant } from "./Button.svelte";
+  import Button from "./Button.svelte";
 
   type IconComponent = typeof FolderOpen;
 
@@ -13,15 +13,10 @@
     error: string | null;
     placeholder: string;
     chooseLabel: string;
-    chooseIcon?: IconComponent | null;
+    chooseIcon?: IconComponent;
     required?: boolean;
-    inputRequired?: boolean;
     disabled?: boolean;
     chooseDisabled?: boolean;
-    buttonVariant?: ButtonVariant;
-    buttonClassName?: string;
-    inputClassName?: string;
-    labelClassName?: string;
     oninput: (value: string) => void;
     onchoose: () => void;
     after?: Snippet;
@@ -36,13 +31,8 @@
     chooseLabel,
     chooseIcon = FolderOpen,
     required = false,
-    inputRequired = false,
     disabled = false,
     chooseDisabled = false,
-    buttonVariant = "secondary",
-    buttonClassName = "min-h-[36px]",
-    inputClassName = "",
-    labelClassName = "text-[14px] font-medium text-shell-600",
     oninput,
     onchoose,
     after,
@@ -53,13 +43,13 @@
   const inputClass = $derived(
     `min-h-[36px] rounded-[8px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 disabled:cursor-not-allowed disabled:bg-shell-50 disabled:text-shell-500 ${
       invalid ? "border-rose-200" : "border-shell-200/80"
-    } ${inputClassName}`,
+    }`,
   );
 </script>
 
 <div class="grid gap-1.5">
   <div class="flex items-start justify-between gap-3">
-    <label class={labelClassName} for={id}>
+    <label class="text-[14px] font-medium text-shell-600" for={id}>
       {label}{#if required}<span class="text-rose-600">*</span>{/if}
     </label>
     {#if error}
@@ -81,15 +71,14 @@
       {id}
       oninput={(event) => oninput(event.currentTarget.value)}
       {placeholder}
-      required={inputRequired}
       type="text"
       {value}
     />
     <Button
       label={chooseLabel}
-      icon={chooseIcon ?? undefined}
-      variant={buttonVariant}
-      className={buttonClassName}
+      icon={chooseIcon}
+      variant="secondary"
+      className="min-h-[36px]"
       disabled={disabled || chooseDisabled}
       onclick={onchoose}
     />
