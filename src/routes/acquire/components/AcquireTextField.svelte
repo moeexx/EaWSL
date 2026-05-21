@@ -29,7 +29,7 @@
     actions,
   }: Props = $props();
   const inputClass = $derived(
-    `min-h-[36px] rounded-[10px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${invalid ? "border-rose-200" : "border-shell-200/80"} ${disabled ? "cursor-not-allowed opacity-60" : ""}`,
+    `min-h-[36px] rounded-[8px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${invalid ? "border-rose-200" : "border-shell-200/80"} ${disabled ? "cursor-not-allowed opacity-60" : ""}`,
   );
 </script>
 

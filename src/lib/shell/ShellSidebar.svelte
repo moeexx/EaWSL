@@ -35,7 +35,7 @@
   );
 
   const sidebarToggleButtonClass =
-    "flex h-10 w-10 items-center justify-center rounded-[10px] text-shell-700 transition duration-150 hover:bg-shell-100/80 hover:text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-300";
+    "flex h-10 w-10 items-center justify-center rounded-[8px] text-shell-700 transition duration-150 hover:bg-shell-100/80 hover:text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-300";
 
   let pendingNavigationHref = $state<string | null>(null);
 
@@ -78,7 +78,7 @@
 
   function getNavIconClass(active: boolean): string {
     return [
-      "flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] transition duration-150",
+      "flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] transition duration-150",
       active ? "text-accent-700" : "text-shell-600 group-hover:text-shell-800",
     ].join(" ");
   }

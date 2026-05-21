@@ -21,14 +21,14 @@
       : "",
   );
   const vhdClass = $derived(
-    `min-h-[36px] w-full rounded-[10px] border-[0.5px] bg-white px-3 pr-12 text-[14px] text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${model.validation.vhdSizeError ? "border-rose-200" : "border-shell-200/80"} ${fieldDisabled ? "cursor-not-allowed opacity-60" : ""}`,
+    `min-h-[36px] w-full rounded-[8px] border-[0.5px] bg-white px-3 pr-12 text-[14px] text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${model.validation.vhdSizeError ? "border-rose-200" : "border-shell-200/80"} ${fieldDisabled ? "cursor-not-allowed opacity-60" : ""}`,
   );
 </script>
 
 <div class="min-w-0 grid gap-3">
   {#if model.selectedDistro}
     <div
-      class="flex items-center gap-3 rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+      class="flex items-center gap-3 rounded-[8px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
     >
       <DistroLogo src={model.selectedDistro.logoSrc} size="lg" />
       <div class="min-w-0 flex-1">
@@ -62,7 +62,7 @@
 
   {#if model.selectedDistro?.isLegacy}
     <div
-      class="rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+      class="rounded-[8px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
     >
       <p class="text-[14px] font-medium leading-6 text-shell-900">
         {copy.legacyInstallNote}
@@ -126,7 +126,7 @@
     </PathPickerField>
 
     <div
-      class="rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+      class="rounded-[8px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
     >
       <div class="flex items-center justify-between gap-3">
         <strong class="text-[15px] font-semibold text-shell-950"

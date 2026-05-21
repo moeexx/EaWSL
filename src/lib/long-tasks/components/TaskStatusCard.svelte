@@ -106,7 +106,7 @@
 
   {#if task.status === "failed" && taskErrorMessage}
     <div
-      class="rounded-[7px] border-[0.5px] border-rose-200/80 bg-rose-50/80 px-3 py-2 text-[12.5px] font-medium leading-5 text-rose-700"
+      class="rounded-[8px] border-[0.5px] border-rose-200/80 bg-rose-50/80 px-3 py-2 text-[12.5px] font-medium leading-5 text-rose-700"
     >
       {taskErrorMessage}
     </div>

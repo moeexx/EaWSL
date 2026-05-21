@@ -28,11 +28,11 @@
 
 @layer base {
   html {
-    @apply h-full bg-shell-100 text-shell-950;
+    @apply h-full bg-transparent text-shell-950;
   }
 
   body {
-    @apply m-0 min-h-screen bg-[radial-gradient(circle_at_top,#ffffff_0%,#f2f7fc_38%,#dfe9f4_100%)] text-shell-950 antialiased overscroll-none;
+    @apply m-0 min-h-screen bg-transparent text-shell-950 antialiased overscroll-none;
   }
 
   *,

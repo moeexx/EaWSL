@@ -51,7 +51,7 @@
   const invalid = $derived(error !== null);
   const errorId = $derived(invalid ? `${id}-error` : undefined);
   const inputClass = $derived(
-    `min-h-[36px] rounded-[10px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 disabled:cursor-not-allowed disabled:bg-shell-50 disabled:text-shell-500 ${
+    `min-h-[36px] rounded-[8px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 disabled:cursor-not-allowed disabled:bg-shell-50 disabled:text-shell-500 ${
       invalid ? "border-rose-200" : "border-shell-200/80"
     } ${inputClassName}`,
   );

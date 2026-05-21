@@ -26,9 +26,9 @@ export const buttonVariantClassMap = {
 export const buttonSizeClassMap = {
   sm: {
     button:
-      "h-[30px] min-w-[30px] gap-1.5 rounded-[7px] px-2.5 text-[12px] leading-none",
+      "h-[30px] min-w-[30px] gap-1.5 rounded-[8px] px-2.5 text-[12px] leading-none",
     iconOnlyButton:
-      "h-[30px] w-[30px] gap-1.5 rounded-[7px] px-0 text-[12px] leading-none",
+      "h-[30px] w-[30px] gap-1.5 rounded-[8px] px-0 text-[12px] leading-none",
     icon: 14,
     iconOnlyIcon: 16,
   },

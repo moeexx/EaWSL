@@ -22,10 +22,10 @@
 
 <div class="grid min-w-0 gap-3">
   <div
-    class="flex items-center gap-3 rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+    class="flex items-center gap-3 rounded-[8px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
   >
     <div
-      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[9px] border-[0.5px] border-shell-200 bg-shell-50 text-shell-600"
+      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-[0.5px] border-shell-200 bg-shell-50 text-shell-600"
     >
       {#if isArchive}<Archive
           size={17}

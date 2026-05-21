@@ -2,9 +2,9 @@
   import { GENERIC_DISTRO_LOGO_SRC } from "$lib/shared/distro-logos";
 
   const sizeClassBySize = {
-    sm: "h-9 w-9 rounded-[9px]",
-    md: "h-11 w-11 rounded-[11px]",
-    lg: "h-13 w-13 rounded-[13px]",
+    sm: "h-9 w-9 rounded-[8px]",
+    md: "h-11 w-11 rounded-[8px]",
+    lg: "h-13 w-13 rounded-[8px]",
   } as const;
 
   type DistroLogoSize = keyof typeof sizeClassBySize;

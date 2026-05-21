@@ -91,12 +91,12 @@
     <div
       aria-labelledby="confirm-dialog-title"
       aria-modal="true"
-      class={`relative z-10 w-full max-w-[28rem] rounded-[16px] border-[0.5px] p-4 shadow-[0_24px_60px_rgba(17,26,39,0.24)] backdrop-blur-xl ${toneClasses.accent}`}
+      class={`relative z-10 w-full max-w-[28rem] rounded-[8px] border-[0.5px] p-4 shadow-[0_24px_60px_rgba(17,26,39,0.24)] backdrop-blur-xl ${toneClasses.accent}`}
       role="dialog"
     >
       <div class="flex items-start gap-3">
         <span
-          class={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] ${toneClasses.iconWrap}`}
+          class={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] ${toneClasses.iconWrap}`}
         >
           <TriangleAlert size={20} strokeWidth={2.1} />
         </span>
@@ -117,7 +117,7 @@
       <div class="mt-4 flex flex-wrap justify-end gap-2">
         {#each $confirmDialogState.actions as action}
           <button
-            class={`inline-flex min-h-9 items-center justify-center rounded-[10px] border px-4 py-2 text-[13px] font-semibold transition duration-150 focus-visible:outline-none focus-visible:ring-2 ${buttonVariantClassMap[action.variant]}`}
+            class={`inline-flex min-h-9 items-center justify-center rounded-[8px] border px-4 py-2 text-[13px] font-semibold transition duration-150 focus-visible:outline-none focus-visible:ring-2 ${buttonVariantClassMap[action.variant]}`}
             onclick={() => resolveConfirmDialog(action.id)}
             type="button"
           >

@@ -49,7 +49,7 @@
     {@const toneClasses = toneClassMap[toast.tone]}
 
     <section
-      class={`pointer-events-auto rounded-[10px] border-[0.5px] px-3 py-3 shadow-[0_12px_32px_rgba(17,26,39,0.12)] backdrop-blur-xl ${toneClasses.container}`}
+      class={`pointer-events-auto rounded-[8px] border-[0.5px] px-3 py-3 shadow-[0_12px_32px_rgba(17,26,39,0.12)] backdrop-blur-xl ${toneClasses.container}`}
       in:fly={{ y: -8, duration: 160 }}
       out:fly={{ y: -8, duration: 140 }}
     >

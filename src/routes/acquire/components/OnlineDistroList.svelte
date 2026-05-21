@@ -16,7 +16,7 @@
       model.queryState.onlineDistros.activity === "refreshing",
   );
   const cardClass = (selected: boolean) =>
-    `group relative flex max-h-[74px] justify-start gap-2.5 overflow-hidden rounded-[10px] border-[0.5px] py-2.5 text-left ${selected ? "!border-accent-200 !bg-accent-50 pl-3 pr-4" : "!border-shell-200/80 !bg-white px-3 hover:!bg-shell-50"}`;
+    `group relative flex max-h-[74px] justify-start gap-2.5 overflow-hidden rounded-[8px] border-[0.5px] py-2.5 text-left ${selected ? "!border-accent-200 !bg-accent-50 pl-3 pr-4" : "!border-shell-200/80 !bg-white px-3 hover:!bg-shell-50"}`;
   const selectedMarkerClass = (legacy: boolean) =>
     `absolute bottom-2 right-0 top-2 w-1 rounded-l-full ${legacy ? "bg-rose-600" : "bg-accent-700"}`;
   const loading = (overlay: boolean) =>
@@ -24,7 +24,7 @@
       ? "absolute inset-0 z-10 flex items-center justify-center rounded-[8px] bg-white/55 text-shell-700 backdrop-blur-[1px]"
       : "flex flex-1 items-center justify-center text-shell-600";
   const stateCard =
-    "flex flex-1 items-center justify-center rounded-[10px] border-[0.5px] px-4 py-8 text-center";
+    "flex flex-1 items-center justify-center rounded-[8px] border-[0.5px] px-4 py-8 text-center";
 </script>
 
 <div class="flex h-full min-h-[320px] min-w-0 flex-col gap-3">

@@ -59,7 +59,7 @@
   ] as const;
 
   const shellFrameClass =
-    "relative flex h-full min-h-0 flex-col overflow-hidden bg-white/[0.68] backdrop-blur-2xl";
+    "relative flex h-full min-h-0 flex-col overflow-hidden rounded-[8px] bg-white/[0.68] backdrop-blur-2xl";
 
   const titlebarButtonClass =
     "group flex w-10 items-center justify-center border-0 bg-transparent text-shell-600 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300 hover:bg-shell-100/80 hover:text-shell-950";

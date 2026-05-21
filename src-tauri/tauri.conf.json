@@ -18,6 +18,7 @@
         "minWidth": 1024,
         "minHeight": 680,
         "decorations": false,
+        "transparent": true,
         "shadow": true,
         "resizable": true,
         "devtools": true

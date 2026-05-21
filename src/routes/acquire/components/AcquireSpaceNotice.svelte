@@ -14,7 +14,7 @@
 </script>
 
 <div
-  class={`flex min-h-[56px] items-center rounded-[10px] border-[0.5px] px-3 py-2 text-[12px] leading-5 ${toneClass}`}
+  class={`flex min-h-[56px] items-center rounded-[8px] border-[0.5px] px-3 py-2 text-[12px] leading-5 ${toneClass}`}
 >
   {message}
 </div>

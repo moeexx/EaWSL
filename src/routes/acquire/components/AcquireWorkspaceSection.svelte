@@ -73,7 +73,7 @@
       </div>
       <div class="mt-3 grid gap-3">
         {#each copy.importGuide.items as item}<section
-            class="rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
+            class="rounded-[8px] border-[0.5px] border-shell-200/80 bg-white px-3.5 py-3"
           >
             <strong class="block text-[15px] font-semibold text-shell-950"
               >{item.title}</strong

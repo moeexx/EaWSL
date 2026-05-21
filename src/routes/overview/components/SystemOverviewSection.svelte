@@ -18,11 +18,11 @@
       {@const Icon = card.icon}
 
       <article
-        class="flex flex-col rounded-[14px] border border-shell-200/85 bg-white px-3.5 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]"
+        class="flex flex-col rounded-[8px] border border-shell-200/85 bg-white px-3.5 py-3 shadow-[0_8px_18px_rgba(15,23,42,0.04)]"
       >
         <div class="flex items-center gap-2.5">
           <span
-            class={`flex h-9 w-9 items-center justify-center rounded-[10px] ${card.iconClass}`}
+            class={`flex h-9 w-9 items-center justify-center rounded-[8px] ${card.iconClass}`}
           >
             <Icon size={18} strokeWidth={1.9} />
           </span>

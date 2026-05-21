@@ -63,7 +63,7 @@
   const detailValueStrongClass =
     "text-[13px] font-medium leading-5 text-shell-900";
   const selectClass =
-    "min-h-[36px] rounded-[10px] border-[0.5px] border-shell-200/80 bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200";
+    "min-h-[36px] rounded-[8px] border-[0.5px] border-shell-200/80 bg-white px-3 text-[14px] text-shell-900 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200";
   const exportTargetPathClass =
     "min-w-0 truncate rounded-[8px] border border-shell-150 bg-shell-50 px-3 py-2 font-mono text-[12px] leading-5 text-shell-700";
   const fallbackExportFormat: DistroExportFormatOption = {
@@ -200,7 +200,7 @@
 </script>
 
 <li
-  class="rounded-[10px] border border-shell-200/85 bg-white/[0.9] px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
+  class="rounded-[8px] border border-shell-200/85 bg-white/[0.9] px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
 >
   <div class="flex flex-col gap-3">
     <div
@@ -374,7 +374,7 @@
           </div>
 
           <div
-            class="grid gap-3 rounded-[10px] border border-shell-150 bg-shell-50/45 p-3"
+            class="grid gap-3 rounded-[8px] border border-shell-150 bg-shell-50/45 p-3"
           >
             <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_160px]">
               <div class="grid gap-1.5">
