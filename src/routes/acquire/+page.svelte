@@ -24,8 +24,8 @@
 
   function getModeClass(mode: AcquireMode): string {
     return activeMode === mode
-      ? "!h-10 !w-10 !rounded-[10px] !border-accent-200 !bg-accent-100 !p-0 !text-accent-800"
-      : "!h-10 !w-10 !rounded-[10px] !border-shell-200/80 !bg-white !p-0 !text-shell-600 hover:!bg-shell-50";
+      ? "border-accent-200 bg-accent-100 text-accent-800"
+      : "border-shell-200/80 bg-white text-shell-600 hover:bg-shell-50";
   }
 </script>
 
@@ -40,9 +40,9 @@
         {#each acquireModeOrder as mode}
           {@const ModeIcon = modeIconMap[mode]}
           <Button
-            ariaLabel={acquireCopy.modes[mode]}
             ariaPressed={activeMode === mode}
             icon={ModeIcon}
+            label={acquireCopy.modes[mode]}
             variant="secondary"
             className={getModeClass(mode)}
             onclick={() => {

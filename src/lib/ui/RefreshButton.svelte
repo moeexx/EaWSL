@@ -2,10 +2,13 @@
   import RefreshCw from "@lucide/svelte/icons/refresh-cw";
 
   import { i18nState } from "$lib/i18n";
-  import Button, {
+  import {
+    buttonBaseClass,
+    buttonSizeClassMap,
+    buttonVariantClassMap,
     type ButtonSize,
     type ButtonVariant,
-  } from "$lib/ui/Button.svelte";
+  } from "$lib/ui/button-styles";
 
   type IconComponent = typeof RefreshCw;
 
@@ -15,14 +18,13 @@
     refreshing: boolean;
     refreshIcon?: IconComponent;
     refreshingLabel?: string;
-    color?: ButtonVariant;
     variant?: ButtonVariant;
     size?: ButtonSize;
     className?: string;
     disabled?: boolean;
     ariaControls?: string;
     ariaExpanded?: boolean;
-    onclick: () => void;
+    onclick: () => void | Promise<void>;
   };
 
   let {
@@ -31,8 +33,7 @@
     refreshing,
     refreshIcon,
     refreshingLabel,
-    color = "primary",
-    variant = color,
+    variant = "primary",
     size = "md",
     className = "",
     disabled = false,
@@ -41,24 +42,34 @@
     onclick,
   }: Props = $props();
 
-  let CurrentIcon = $derived(
+  const currentSizeClass = $derived(buttonSizeClassMap[size]);
+  const CurrentIcon = $derived(
     refreshing ? (refreshIcon ?? RefreshCw) : (icon ?? RefreshCw),
   );
-  const currentRefreshingLabel = $derived(
-    refreshingLabel ?? $i18nState.copy.common.refreshing,
+  const currentLabel = $derived(
+    refreshing
+      ? (refreshingLabel ?? $i18nState.copy.common.refreshing)
+      : label,
+  );
+  const currentIconStyle = $derived(
+    `width: ${currentSizeClass.icon}px; height: ${currentSizeClass.icon}px;`,
   );
 </script>
 
-<Button
-  ariaBusy={refreshing}
-  {ariaControls}
-  {ariaExpanded}
-  label={refreshing ? currentRefreshingLabel : label}
-  icon={CurrentIcon}
-  iconClass={refreshing ? "animate-spin" : ""}
-  {variant}
-  {size}
-  {className}
+<button
+  aria-busy={refreshing}
+  aria-controls={ariaControls}
+  aria-expanded={ariaExpanded}
+  class={`${buttonBaseClass} ${buttonVariantClassMap[variant]} ${currentSizeClass.button} ${className}`}
   disabled={disabled || refreshing}
   {onclick}
-/>
+  type="button"
+>
+  <CurrentIcon
+    class={`shrink-0 ${refreshing ? "animate-spin" : ""}`}
+    size={currentSizeClass.icon}
+    style={currentIconStyle}
+    strokeWidth={2}
+  />
+  <span>{currentLabel}</span>
+</button>

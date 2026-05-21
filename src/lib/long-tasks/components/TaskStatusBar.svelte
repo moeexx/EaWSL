@@ -1,6 +1,10 @@
 <script lang="ts">
+  import ChevronDown from "@lucide/svelte/icons/chevron-down";
+  import ChevronUp from "@lucide/svelte/icons/chevron-up";
+
   import ShellIcon from "$lib/shell/ShellIcon.svelte";
   import { i18nState } from "$lib/i18n";
+  import Button from "$lib/ui/Button.svelte";
   import TaskProgressBar from "./TaskProgressBar.svelte";
   import TaskStatusCard from "./TaskStatusCard.svelte";
   import {
@@ -17,8 +21,6 @@
   import { shellUiState, toggleTaskTrayExpanded } from "$lib/shell/state";
 
   const taskTrayPanelId = "task-status-tray-panel";
-  type TrayButtonIcon = "chevron-up" | "chevron-down";
-
   const taskStats = $derived(getTaskStats($longTaskState.tasks));
   const copy = $derived($i18nState.copy.longTasks);
   const activeTask = $derived(taskStats.activeTask);
@@ -56,8 +58,13 @@
       copy,
     ),
   );
-  const trayButtonIcon: TrayButtonIcon = $derived(
-    $shellUiState.taskTrayExpanded ? "chevron-down" : "chevron-up",
+  const trayButtonIcon = $derived(
+    $shellUiState.taskTrayExpanded ? ChevronDown : ChevronUp,
+  );
+  const trayButtonLabel = $derived(
+    $shellUiState.taskTrayExpanded
+      ? copy.tray.collapseDetails
+      : copy.tray.expandDetails,
   );
 </script>
 
@@ -154,20 +161,15 @@
         </div>
       </div>
 
-      <button
-        aria-controls={taskTrayPanelId}
-        aria-expanded={$shellUiState.taskTrayExpanded}
-        class="inline-flex h-[30px] shrink-0 items-center justify-center gap-1.5 rounded-[7px] border-[0.5px] border-tertiary background-primary px-2.5 text-[13px] font-semibold leading-none text-secondary transition hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bddfff]"
+      <Button
+        ariaControls={taskTrayPanelId}
+        ariaExpanded={$shellUiState.taskTrayExpanded}
+        icon={trayButtonIcon}
+        label={trayButtonLabel}
+        variant="secondary"
+        className="shrink-0 border-tertiary background-primary text-secondary hover:opacity-95 focus-visible:ring-[#bddfff]"
         onclick={() => toggleTaskTrayExpanded()}
-        type="button"
-      >
-        <ShellIcon name={trayButtonIcon} size={14} />
-        <span>
-          {$shellUiState.taskTrayExpanded
-            ? copy.tray.collapseDetails
-            : copy.tray.expandDetails}
-        </span>
-      </button>
+      />
     </footer>
 
     <div

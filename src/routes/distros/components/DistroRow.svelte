@@ -48,11 +48,11 @@
   let exportDirectoryTouched = false;
 
   const rowButtonClass =
-    "inline-flex min-h-[32px] items-center justify-center gap-1.5 rounded-[8px] border border-shell-200 bg-white px-3 py-[6px] text-[13px] font-medium text-shell-700 transition duration-150 disabled:cursor-not-allowed disabled:opacity-60";
+    "border-shell-200 bg-white text-shell-700 hover:border-shell-300 hover:bg-shell-50";
   const rowExportButtonClass =
-    "inline-flex min-h-[32px] items-center justify-center gap-1.5 rounded-[8px] border border-sky-200 bg-sky-50 px-3 py-[6px] text-[13px] font-medium text-sky-700 transition duration-150 hover:border-sky-300 hover:bg-sky-100 disabled:cursor-not-allowed disabled:opacity-60";
+    "border-sky-200 bg-sky-50 text-sky-700 hover:border-sky-300 hover:bg-sky-100";
   const rowDangerButtonClass =
-    "inline-flex min-h-[32px] items-center justify-center gap-1.5 rounded-[8px] border border-rose-200 bg-rose-50/75 px-3 py-[6px] text-[13px] font-medium text-rose-700 transition duration-150 disabled:cursor-not-allowed disabled:opacity-60";
+    "border-rose-200 bg-rose-50/75 text-rose-700 hover:border-rose-300 hover:bg-rose-100";
   const badgeBaseClass =
     "inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-semibold leading-none shadow-[0_1px_2px_rgba(15,23,42,0.04)]";
   const defaultBadgeClass = `${badgeBaseClass} border-accent-200 bg-accent-50 text-accent-700`;
@@ -270,7 +270,7 @@
           <RefreshButton
             label={commonCopy.stop}
             icon={Square}
-            color="secondary"
+            variant="secondary"
             refreshing={row.terminateRunning}
             refreshingLabel={commonCopy.stopping}
             className={rowButtonClass}
@@ -281,7 +281,7 @@
             label={rowCopy.delete}
             icon={Trash2}
             refreshIcon={RefreshCw}
-            color="danger"
+            variant="danger"
             refreshing={row.unregisterBusy}
             refreshingLabel={row.deleteLabel}
             className={rowDangerButtonClass}
@@ -291,7 +291,7 @@
           <RefreshButton
             label={rowCopy.setDefault}
             icon={Star}
-            color="secondary"
+            variant="secondary"
             refreshing={row.settingDefault}
             refreshingLabel={rowCopy.settingDefault}
             className={rowButtonClass}
@@ -448,7 +448,6 @@
               chooseLabel={commonCopy.chooseDirectory}
               disabled={exportSubmitting}
               chooseDisabled={!tauriAvailable}
-              buttonClassName={rowButtonClass}
               oninput={(value) => {
                 exportDirectoryTouched = true;
                 exportDirectory = value;
@@ -470,7 +469,8 @@
                 : row.exportMenu.submit}
               icon={FileOutput}
               iconStrokeWidth={2.1}
-              className="min-h-[38px] justify-self-start text-[14px]"
+              size="lg"
+              className="justify-self-start"
               disabled={exportSubmitDisabled}
               onclick={() => void submitExport()}
             />

@@ -48,14 +48,15 @@
           {model.selectedDistro.name}
         </p>
       </div>
-      {#if model.selectedDistro.downloadUrl}<Button
-          ariaLabel={copy.downloadInBrowser}
-          title={copy.downloadInBrowser}
-          icon={Download}
-          variant="secondary"
-          className="h-8 w-8 shrink-0 !rounded-full !p-0"
+      {#if model.selectedDistro.downloadUrl}<button
+          aria-label={copy.downloadInBrowser}
+          class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[0.5px] border-shell-200/80 bg-white/90 text-shell-700 transition duration-150 hover:border-shell-300 hover:bg-shell-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-300"
           onclick={() => void model.callbacks.openSelectedDistroDownload()}
-        />{/if}
+          title={copy.downloadInBrowser}
+          type="button"
+        >
+          <Download size={16} strokeWidth={2} />
+        </button>{/if}
     </div>
   {/if}
 
@@ -87,7 +88,8 @@
         : copy.startLegacyTerminal}
       icon={Terminal}
       iconStrokeWidth={2.1}
-      className="min-h-[38px] w-full text-[14px]"
+      size="lg"
+      className="w-full"
       disabled={model.installSubmitDisabled}
       onclick={() => void model.callbacks.startInstall()}
     />
@@ -189,7 +191,8 @@
       label={model.installSubmitting ? copy.installing : copy.start}
       icon={Download}
       iconStrokeWidth={2.1}
-      className="min-h-[38px] w-full text-[14px]"
+      size="lg"
+      className="w-full"
       disabled={model.installSubmitDisabled}
       onclick={() => void model.callbacks.startInstall()}
     />

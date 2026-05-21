@@ -346,7 +346,6 @@
             <Button
               label={commonCopy.chooseDirectory}
               variant="secondary"
-              size="lg"
               className="shrink-0 hover:border-accent-200 hover:bg-accent-50/70"
               disabled={loading || saving}
               onclick={() => void chooseDefaultInstallLocation()}

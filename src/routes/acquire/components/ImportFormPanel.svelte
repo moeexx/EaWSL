@@ -89,7 +89,8 @@
       : copy.start(model.importNoun)}
     icon={Download}
     iconStrokeWidth={2.1}
-    className="min-h-[38px] w-full text-[14px]"
+    size="lg"
+    className="w-full"
     disabled={model.importSubmitDisabled}
     onclick={() => void model.callbacks.startImport()}
   />

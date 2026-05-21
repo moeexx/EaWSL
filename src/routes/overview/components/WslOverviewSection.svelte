@@ -74,7 +74,7 @@
       label={copyButtonLabel}
       icon={copyButtonIcon}
       variant="secondary"
-      className="gap-2 rounded-[10px] border border-shell-200 bg-white px-4 py-2 text-[14px] font-medium text-shell-800 hover:border-shell-300 hover:bg-shell-50"
+      className="border-shell-200 bg-white text-shell-800 hover:border-shell-300 hover:bg-shell-50"
       onclick={() => void copyWslInfo()}
     />
   {/snippet}

@@ -35,9 +35,7 @@
           label={commonCopy.refreshList}
           refreshing={model.refreshing}
           disabled={model.refreshDisabled}
-          color="secondary"
-          size="sm"
-          className="!min-h-0 !gap-1.5 !px-3 !py-[5px] !text-[13px]"
+          variant="secondary"
           onclick={() => void model.callbacks.refreshOnlineDistros()}
         />
       </div>

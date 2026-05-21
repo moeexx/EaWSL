@@ -30,7 +30,7 @@
       <RefreshButton
         label={viewModel.view.shutdownButton.label}
         icon={Square}
-        color="danger"
+        variant="danger"
         refreshing={viewModel.view.shutdownButton.running}
         refreshingLabel={viewModel.view.shutdownButton.refreshingLabel}
         disabled={viewModel.view.shutdownButton.disabled}
