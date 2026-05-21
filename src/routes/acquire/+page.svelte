@@ -3,7 +3,6 @@
   import ShoppingBag from "@lucide/svelte/icons/shopping-bag";
 
   import { i18nState } from "$lib/i18n";
-  import Button from "$lib/ui/Button.svelte";
   import PageHeader from "$lib/ui/PageHeader.svelte";
 
   import AcquireWorkspaceSection from "./components/AcquireWorkspaceSection.svelte";
@@ -24,8 +23,8 @@
 
   function getModeClass(mode: AcquireMode): string {
     return activeMode === mode
-      ? "border-accent-200 bg-accent-100 text-accent-800"
-      : "border-shell-200/80 bg-white text-shell-600 hover:bg-shell-50";
+      ? "border-shell-200 bg-white text-accent-800 shadow-[0_3px_8px_rgba(32,123,229,0.12)]"
+      : "border-transparent text-shell-500 hover:bg-white/65 hover:text-shell-800";
   }
 </script>
 
@@ -36,20 +35,31 @@
     description={acquireCopy.page.description}
   >
     {#snippet actions()}
-      <div class="flex items-center gap-2">
+      <div
+        aria-label={acquireCopy.page.title}
+        class="inline-flex items-center gap-1 rounded-[8px] border-[0.5px] border-shell-200/80 bg-shell-100/85 p-1"
+        role="tablist"
+      >
         {#each acquireModeOrder as mode}
           {@const ModeIcon = modeIconMap[mode]}
-          <Button
-            ariaPressed={activeMode === mode}
-            icon={ModeIcon}
-            label={acquireCopy.modes[mode]}
-            variant="secondary"
-            className={getModeClass(mode)}
+          <button
+            aria-selected={activeMode === mode}
+            class={`inline-flex h-8 min-w-[86px] items-center justify-center gap-2 rounded-[8px] border-[0.5px] px-3 text-[13px] font-semibold leading-none transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 ${getModeClass(mode)}`}
             onclick={() => {
               activeMode = mode;
             }}
+            role="tab"
             title={acquireCopy.modes[mode]}
-          />
+            type="button"
+          >
+            <ModeIcon
+              class="shrink-0"
+              size={16}
+              style="width: 16px; height: 16px;"
+              strokeWidth={2}
+            />
+            <span>{acquireCopy.modes[mode]}</span>
+          </button>
         {/each}
       </div>
     {/snippet}
