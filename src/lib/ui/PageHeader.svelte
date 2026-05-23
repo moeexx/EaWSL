@@ -17,7 +17,7 @@
 </script>
 
 <header
-  class="relative isolate overflow-hidden rounded-[8px] border-[0.5px] border-shell-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,254,0.92))] px-4 py-[9px] shadow-[0_12px_32px_rgba(17,26,39,0.07)]"
+  class="relative isolate overflow-hidden rounded-[8px] border-[0.5px] border-shell-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,250,254,0.92))] px-4 py-[9px] shadow-[0_6px_16px_-10px_rgba(17,26,39,0.035)]"
 >
   <div
     aria-hidden="true"
