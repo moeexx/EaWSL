@@ -35,7 +35,7 @@
   );
 
   const sidebarToggleButtonClass =
-    "flex h-10 w-10 items-center justify-center rounded-[8px] text-shell-700 transition duration-150 hover:bg-shell-100/80 hover:text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-300";
+    "flex h-10 w-10 items-center justify-center rounded-[8px] border-[0.5px] border-transparent text-shell-700 transition duration-150 hover:border-shell-200/80 hover:bg-white/[0.78] hover:text-shell-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-300";
 
   let pendingNavigationHref = $state<string | null>(null);
 
