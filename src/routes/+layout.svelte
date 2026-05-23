@@ -59,7 +59,7 @@
   ] as const;
 
   const shellFrameClass =
-    "relative flex h-full min-h-0 flex-col overflow-hidden rounded-[8px] bg-white/[0.68] backdrop-blur-2xl";
+    "relative flex h-full min-h-0 flex-col overflow-hidden bg-[#F3F3F3]";
 
   const titlebarButtonClass =
     "group flex w-10 items-center justify-center border-0 bg-transparent text-shell-600 transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300 hover:bg-shell-100/80 hover:text-shell-950";
@@ -99,14 +99,7 @@
   {/if}
 
   <div class={shellFrameClass}>
-    <div
-      aria-hidden="true"
-      class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.6),rgba(244,248,252,0.72))]"
-    ></div>
-
-    <header
-      class="relative z-10 flex h-10 items-stretch justify-between bg-transparent"
-    >
+    <header class="relative z-10 flex h-10 items-stretch justify-between bg-[#F3F3F3]">
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
         class="flex min-w-0 flex-1 items-center justify-between gap-2.5 px-3 sm:px-3.5"
@@ -172,12 +165,10 @@
       </div>
     </header>
 
-    <div
-      class="relative flex min-h-0 flex-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.2),rgba(244,248,252,0.5))]"
-    >
+    <div class="relative flex min-h-0 flex-1 bg-[#F3F3F3]">
       <ShellSidebar />
       <main
-        class="relative min-w-0 flex-1 overflow-hidden rounded-tl-[8px] border-l-[1px] border-t-[1px] border-shell-300/90 bg-[linear-gradient(180deg,rgba(248,250,252,0.78),rgba(236,242,248,0.62))]"
+        class="relative min-w-0 flex-1 overflow-hidden bg-[#F3F3F3]"
         style="--task-tray-collapsed-height: 63px;"
       >
         <div
