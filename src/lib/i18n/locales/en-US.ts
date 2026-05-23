@@ -506,6 +506,7 @@ export const enUS = {
         memory: "Memory",
         speed: "Speed",
         slots: "Slots",
+        vendor: "Vendor",
         gpuMemory: "GPU memory",
         driverVersion: "Driver version",
         storage: "Disk",

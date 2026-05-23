@@ -38,7 +38,7 @@ pub struct SystemOverview {
     pub windows: WindowsOverview,
     pub cpu: CpuOverview,
     pub memory: MemoryOverview,
-    pub gpu: Option<GpuOverview>,
+    pub gpus: Option<Vec<GpuOverview>>,
     pub storage: StorageOverview,
 }
 
@@ -72,6 +72,7 @@ pub struct MemoryOverview {
 #[serde(rename_all = "camelCase")]
 pub struct GpuOverview {
     pub name: Option<String>,
+    pub vendor: Option<String>,
     pub memory_bytes: Option<u64>,
     pub driver_version: Option<String>,
 }
@@ -258,11 +259,20 @@ mod tests {
             "usedSlots": 2,
             "totalSlots": 2
           },
-          "gpu": {
-            "name": "AMD Radeon(TM) 610M",
-            "memoryBytes": 4294967296,
-            "driverVersion": "32.0.11018.1000"
-          },
+          "gpus": [
+            {
+              "name": "AMD Radeon(TM) 610M",
+              "vendor": "Advanced Micro Devices, Inc.",
+              "memoryBytes": 4294967296,
+              "driverVersion": "32.0.11018.1000"
+            },
+            {
+              "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+              "vendor": "NVIDIA",
+              "memoryBytes": 8589934592,
+              "driverVersion": "32.0.15.7652"
+            }
+          ],
           "storage": {
             "totalBytes": 3000000000000,
             "usedBytes": 1400000000000,
@@ -293,11 +303,20 @@ mod tests {
                     used_slots: Some(2),
                     total_slots: Some(2),
                 },
-                gpu: Some(GpuOverview {
-                    name: Some("AMD Radeon(TM) 610M".to_string()),
-                    memory_bytes: Some(4_294_967_296),
-                    driver_version: Some("32.0.11018.1000".to_string()),
-                }),
+                gpus: Some(vec![
+                    GpuOverview {
+                        name: Some("AMD Radeon(TM) 610M".to_string()),
+                        vendor: Some("Advanced Micro Devices, Inc.".to_string()),
+                        memory_bytes: Some(4_294_967_296),
+                        driver_version: Some("32.0.11018.1000".to_string()),
+                    },
+                    GpuOverview {
+                        name: Some("NVIDIA GeForce RTX 4070 Laptop GPU".to_string()),
+                        vendor: Some("NVIDIA".to_string()),
+                        memory_bytes: Some(8_589_934_592),
+                        driver_version: Some("32.0.15.7652".to_string()),
+                    },
+                ]),
                 storage: StorageOverview {
                     total_bytes: Some(3_000_000_000_000),
                     used_bytes: Some(1_400_000_000_000),
@@ -328,7 +347,7 @@ mod tests {
             "usedSlots": null,
             "totalSlots": null
           },
-          "gpu": null,
+          "gpus": null,
           "storage": {
             "totalBytes": 3000000000000,
             "usedBytes": 1400000000000,
@@ -359,7 +378,7 @@ mod tests {
                     used_slots: None,
                     total_slots: None,
                 },
-                gpu: None,
+                gpus: None,
                 storage: StorageOverview {
                     total_bytes: Some(3_000_000_000_000),
                     used_bytes: Some(1_400_000_000_000),
@@ -368,6 +387,47 @@ mod tests {
                 },
             }
         );
+    }
+
+    #[test]
+    fn parse_full_system_overview_allows_empty_gpu_list() {
+        let payload = br#"{
+          "windows": {
+            "productName": "Windows 11 Pro",
+            "displayVersion": "24H2",
+            "buildNumber": "26100.8246"
+          },
+          "cpu": {
+            "model": "AMD Ryzen 9 7945HX with Radeon Graphics",
+            "maxClockMhz": 2500,
+            "coreCount": 16,
+            "logicalProcessorCount": 32
+          },
+          "memory": {
+            "totalBytes": 68719476736,
+            "speedMts": 5200,
+            "usedSlots": 2,
+            "totalSlots": 2
+          },
+          "gpus": [],
+          "storage": {
+            "totalBytes": 3000000000000,
+            "usedBytes": 1400000000000,
+            "freeBytes": 1600000000000,
+            "volumeCount": 3
+          }
+        }"#;
+
+        let parsed = parse_system_overview(payload).expect("empty GPU list should parse");
+
+        assert_eq!(parsed.gpus, Some(Vec::new()));
+        assert_eq!(
+            parsed.windows.product_name,
+            Some("Windows 11 Pro".to_string())
+        );
+        assert_eq!(parsed.cpu.core_count, Some(16));
+        assert_eq!(parsed.memory.total_bytes, Some(68_719_476_736));
+        assert_eq!(parsed.storage.volume_count, Some(3));
     }
 
     #[test]
@@ -392,7 +452,7 @@ mod tests {
                 "usedSlots": null,
                 "totalSlots": null
               },
-              "gpu": null,
+              "gpus": null,
               "storage": {
                 "totalBytes": null,
                 "usedBytes": null,
@@ -405,7 +465,7 @@ mod tests {
 
         let parsed = parse_system_overview(&payload).expect("BOM-prefixed payload should parse");
 
-        assert_eq!(parsed.gpu, None);
+        assert_eq!(parsed.gpus, None);
         assert_eq!(parsed.storage.free_bytes, None);
     }
 

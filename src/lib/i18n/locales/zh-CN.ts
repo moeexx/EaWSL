@@ -482,6 +482,7 @@ export const zhCN = {
         memory: "内存",
         speed: "速度",
         slots: "插槽",
+        vendor: "厂商",
         gpuMemory: "显存",
         driverVersion: "驱动版本",
         storage: "磁盘",

@@ -36,7 +36,7 @@ $result = [ordered]@{
     usedSlots = $null
     totalSlots = $null
   }
-  gpu = $null
+  gpus = $null
   storage = [ordered]@{
     totalBytes = if ($null -ne $totalStorage) { [uint64]$totalStorage } else { $null }
     usedBytes = if ($null -ne $usedStorage) { [uint64]$usedStorage } else { $null }
@@ -47,16 +47,66 @@ $result = [ordered]@{
 
 if ($scope -eq 'full') {
   $currentVersion = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
-  $cpu = Get-CimInstance Win32_Processor | Select-Object -First 1
+  $operatingSystem = Get-CimInstance Win32_OperatingSystem | Select-Object -First 1
+  $processors = @(Get-CimInstance Win32_Processor)
   $memoryModules = @(Get-CimInstance Win32_PhysicalMemory)
   $memoryArrays = @(Get-CimInstance Win32_PhysicalMemoryArray)
   $videoControllers = @(
     Get-CimInstance Win32_VideoController |
-      Where-Object { -not [string]::IsNullOrWhiteSpace($_.Name) }
+      Where-Object {
+        -not [string]::IsNullOrWhiteSpace($_.Name) -and
+        -not [string]::IsNullOrWhiteSpace($_.PNPDeviceID) -and
+        (
+          $_.PNPDeviceID.StartsWith('PCI\', [System.StringComparison]::OrdinalIgnoreCase) -or
+          $_.PNPDeviceID.IndexOf('ACPI', [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+        )
+      }
   )
-  $gpu = $videoControllers |
-    Sort-Object -Property @{ Expression = { [uint64]($_.AdapterRAM) }; Descending = $true } |
-    Select-Object -First 1
+
+  $gpuMemoryByMatchingId = @{}
+  $displayAdapterClassPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}'
+  if (Test-Path $displayAdapterClassPath) {
+    Get-ChildItem $displayAdapterClassPath -ErrorAction SilentlyContinue | ForEach-Object {
+      try {
+        $adapterKey = Get-ItemProperty $_.PSPath -ErrorAction Stop
+        $matchingDeviceId = $adapterKey.MatchingDeviceId
+        if (-not [string]::IsNullOrWhiteSpace($matchingDeviceId)) {
+          $memorySize = $null
+          if ($null -ne $adapterKey.'HardwareInformation.qwMemorySize') {
+            $memorySize = [uint64]$adapterKey.'HardwareInformation.qwMemorySize'
+          } elseif ($null -ne $adapterKey.'HardwareInformation.MemorySize' -and
+            -not ($adapterKey.'HardwareInformation.MemorySize' -is [byte[]])) {
+            $memorySize = [uint64]$adapterKey.'HardwareInformation.MemorySize'
+          }
+
+          if ($null -ne $memorySize -and $memorySize -gt 0) {
+            $gpuMemoryByMatchingId[$matchingDeviceId.ToUpperInvariant()] = $memorySize
+          }
+        }
+      } catch {
+      }
+    }
+  }
+
+  function Get-GpuMemoryBytes {
+    param(
+      [Parameter(Mandatory = $true)] $Gpu,
+      [Parameter(Mandatory = $true)] [hashtable] $MemoryByMatchingId
+    )
+
+    $pnpDeviceId = if ($Gpu.PNPDeviceID) { $Gpu.PNPDeviceID.ToUpperInvariant() } else { '' }
+    foreach ($matchingId in $MemoryByMatchingId.Keys) {
+      if ($pnpDeviceId.Contains($matchingId)) {
+        return [uint64]$MemoryByMatchingId[$matchingId]
+      }
+    }
+
+    if ($Gpu.AdapterRAM) {
+      return [uint64]$Gpu.AdapterRAM
+    }
+
+    return $null
+  }
 
   $totalMemory = ($memoryModules | Measure-Object -Property Capacity -Sum).Sum
   $memorySpeed = (
@@ -72,9 +122,17 @@ if ($scope -eq 'full') {
   ).Maximum
   $usedSlots = ($memoryModules | Where-Object { $_.Capacity -gt 0 }).Count
   $totalSlots = ($memoryArrays | Measure-Object -Property MemoryDevices -Sum).Sum
+  $cpu = $processors | Select-Object -First 1
+  $maxCpuClock = ($processors | Measure-Object -Property MaxClockSpeed -Maximum).Maximum
+  $coreCount = ($processors | Measure-Object -Property NumberOfCores -Sum).Sum
+  $logicalProcessorCount = ($processors | Measure-Object -Property NumberOfLogicalProcessors -Sum).Sum
+  $windowsProductName = $operatingSystem.Caption
+  if (-not [string]::IsNullOrWhiteSpace($windowsProductName)) {
+    $windowsProductName = $windowsProductName -replace '^Microsoft\s+', ''
+  }
 
   $result.windows = [ordered]@{
-    productName = $currentVersion.ProductName
+    productName = $windowsProductName
     displayVersion = if ($currentVersion.DisplayVersion) {
       $currentVersion.DisplayVersion
     } else {
@@ -88,10 +146,10 @@ if ($scope -eq 'full') {
   }
   $result.cpu = [ordered]@{
     model = $cpu.Name
-    maxClockMhz = if ($cpu.MaxClockSpeed) { [uint32]$cpu.MaxClockSpeed } else { $null }
-    coreCount = if ($cpu.NumberOfCores) { [uint32]$cpu.NumberOfCores } else { $null }
-    logicalProcessorCount = if ($cpu.NumberOfLogicalProcessors) {
-      [uint32]$cpu.NumberOfLogicalProcessors
+    maxClockMhz = if ($maxCpuClock) { [uint32]$maxCpuClock } else { $null }
+    coreCount = if ($coreCount) { [uint32]$coreCount } else { $null }
+    logicalProcessorCount = if ($logicalProcessorCount) {
+      [uint32]$logicalProcessorCount
     } else {
       $null
     }
@@ -102,15 +160,16 @@ if ($scope -eq 'full') {
     usedSlots = if ($null -ne $usedSlots) { [uint32]$usedSlots } else { $null }
     totalSlots = if ($null -ne $totalSlots) { [uint32]$totalSlots } else { $null }
   }
-  $result.gpu = if ($null -ne $gpu) {
-    [ordered]@{
-      name = $gpu.Name
-      memoryBytes = if ($gpu.AdapterRAM) { [uint64]$gpu.AdapterRAM } else { $null }
-      driverVersion = $gpu.DriverVersion
+  $result.gpus = @(
+    $videoControllers | ForEach-Object {
+      [ordered]@{
+        name = $_.Name
+        vendor = $_.AdapterCompatibility
+        memoryBytes = Get-GpuMemoryBytes -Gpu $_ -MemoryByMatchingId $gpuMemoryByMatchingId
+        driverVersion = $_.DriverVersion
+      }
     }
-  } else {
-    $null
-  }
+  )
 }
 
 $result | ConvertTo-Json -Depth 6 -Compress

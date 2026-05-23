@@ -6,7 +6,7 @@ import Monitor from "@lucide/svelte/icons/monitor";
 
 import { formatBytes, formatOptionalText } from "$lib/shared/format";
 import type { AppCopy } from "$lib/i18n";
-import type { SystemOverview } from "$lib/tauri/system";
+import type { GpuOverview, SystemOverview } from "$lib/tauri/system";
 
 export type OverviewSystemMetric = {
   label: string;
@@ -30,7 +30,7 @@ export function buildOverviewSystemCards(
     isPending ? copy.common.loading : value;
   const labels = copy.overview.system.labels;
 
-  return [
+  const cards: OverviewSystemInfoCard[] = [
     {
       label: labels.windows,
       icon: AppWindow,
@@ -93,24 +93,7 @@ export function buildOverviewSystemCards(
         },
       ],
     },
-    {
-      label: "GPU",
-      icon: Monitor,
-      iconClass: "bg-fuchsia-50 text-fuchsia-600",
-      value: resolveValue(formatText(data?.gpu?.name, copy)),
-      metrics: [
-        {
-          label: labels.gpuMemory,
-          value: resolveValue(
-            formatBytes(data?.gpu?.memoryBytes, 1, copy.common.missing),
-          ),
-        },
-        {
-          label: labels.driverVersion,
-          value: resolveValue(formatText(data?.gpu?.driverVersion, copy)),
-        },
-      ],
-    },
+    ...buildGpuCards(data?.gpus, copy, resolveValue),
     {
       label: labels.storage,
       icon: HardDrive,
@@ -138,6 +121,68 @@ export function buildOverviewSystemCards(
       ],
     },
   ];
+
+  return cards;
+}
+
+function buildGpuCards(
+  gpus: GpuOverview[] | null | undefined,
+  copy: AppCopy,
+  resolveValue: (value: string) => string,
+): OverviewSystemInfoCard[] {
+  const labels = copy.overview.system.labels;
+
+  if (!Array.isArray(gpus) || gpus.length === 0) {
+    return [
+      {
+        label: "GPU",
+        icon: Monitor,
+        iconClass: "bg-fuchsia-50 text-fuchsia-600",
+        value: resolveValue(formatText(undefined, copy)),
+        metrics: [
+          {
+            label: labels.vendor,
+            value: resolveValue(formatText(undefined, copy)),
+          },
+          {
+            label: labels.gpuMemory,
+            value: resolveValue(
+              formatBytes(undefined, 1, copy.common.missing),
+            ),
+          },
+          {
+            label: labels.driverVersion,
+            value: resolveValue(formatText(undefined, copy)),
+          },
+        ],
+      },
+    ];
+  }
+
+  const shouldNumberGpu = gpus.length > 1;
+
+  return gpus.map((gpu, index) => ({
+    label: shouldNumberGpu ? `GPU ${index + 1}` : "GPU",
+    icon: Monitor,
+    iconClass: "bg-fuchsia-50 text-fuchsia-600",
+    value: resolveValue(formatText(gpu.name, copy)),
+    metrics: [
+      {
+        label: labels.vendor,
+        value: resolveValue(formatText(gpu.vendor, copy)),
+      },
+      {
+        label: labels.gpuMemory,
+        value: resolveValue(
+          formatBytes(gpu.memoryBytes, 1, copy.common.missing),
+        ),
+      },
+      {
+        label: labels.driverVersion,
+        value: resolveValue(formatText(gpu.driverVersion, copy)),
+      },
+    ],
+  }));
 }
 
 function formatText(value: string | null | undefined, copy: AppCopy): string {

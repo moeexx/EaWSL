@@ -24,6 +24,7 @@ export interface MemoryOverview {
 
 export interface GpuOverview {
   name: string | null;
+  vendor: string | null;
   memoryBytes: number | null;
   driverVersion: string | null;
 }
@@ -39,7 +40,7 @@ export interface SystemOverview {
   windows: WindowsOverview;
   cpu: CpuOverview;
   memory: MemoryOverview;
-  gpu: GpuOverview | null;
+  gpus: GpuOverview[] | null;
   storage: StorageOverview;
 }
 
