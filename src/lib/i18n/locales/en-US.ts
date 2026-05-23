@@ -2,8 +2,9 @@ export const enUS = {
   acquire: {
     page: {
       eyebrow: "Acquire",
-      title: "Install and import workspace",
-      description: "Install online distros or import local WSL images.",
+      title: "Install and import",
+      description:
+        "Install online distros or import WSL distros from local archives and VHDX files.",
     },
     modes: {
       store: "Store install",
@@ -177,9 +178,9 @@ export const enUS = {
   distros: {
     page: {
       eyebrow: "Workspace",
-      title: "Core workspace",
+      title: "Distro management",
       description:
-        "This default workspace shows installed distro summaries, state, and core actions.",
+        "View installed distros, their current state, and the common actions for stopping, deleting, setting default, and exporting.",
     },
     section: {
       title: "Installed distros",
@@ -471,9 +472,9 @@ export const enUS = {
   overview: {
     page: {
       eyebrow: "Overview",
-      title: "Host overview",
+      title: "Overview",
       description:
-        "System information and WSL overview refresh sequentially when you enter the page. Manual refresh waits for the minimum duration and finishes foreground requests before advancing.",
+        "Review the current Windows host, WSL version, and distro summary in one place before taking further actions.",
       refreshLabel: "Refresh overview",
       logSubject: "Host overview",
     },
@@ -495,7 +496,7 @@ export const enUS = {
     system: {
       title: "System information",
       description:
-        "Shows the host snapshot cached after app startup. It does not refresh automatically.",
+        "Shows the current Windows host hardware and storage details for a quick host status check.",
       labels: {
         windows: "Windows information",
         displayVersion: "Version",
@@ -523,7 +524,7 @@ export const enUS = {
     wsl: {
       title: "WSL information",
       description:
-        "Default distro and distro count come from the installed distro cache. Refreshing updates them with WSL version information.",
+        "Shows the current WSL version, default distro, and installed distro summary for a quick environment check.",
       copied: "Copied",
       copy: "Copy",
       status: {
@@ -578,7 +579,7 @@ export const enUS = {
       description: "Click save to apply language changes.",
       options: {
         "en-US": "English",
-        "zh-CN": "简体中文",
+        "zh-CN": "Simplified Chinese",
       },
     },
     defaultInstallLocation: {

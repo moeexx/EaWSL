@@ -5,8 +5,8 @@ export const zhCN = {
   acquire: {
     page: {
       eyebrow: "Acquire",
-      title: "安装和导入工作台",
-      description: "安装在线发行版，或导入本地 WSL 镜像",
+      title: "安装与导入",
+      description: "安装在线发行版，或从本地归档与 VHDX 导入 WSL 发行版",
     },
     modes: {
       store: "商店安装",
@@ -173,9 +173,9 @@ export const zhCN = {
   distros: {
     page: {
       eyebrow: "Workspace",
-      title: "核心功能工作台",
+      title: "发行版管理",
       description:
-        "这里作为默认首屏，集中展示已安装发行版的摘要信息、状态概览和核心操作布局",
+        "集中查看已安装发行版、运行状态和常用操作，适合处理停止、删除、设为默认和导出",
     },
     section: {
       title: "已安装发行版",
@@ -448,9 +448,9 @@ export const zhCN = {
   overview: {
     page: {
       eyebrow: "Overview",
-      title: "主机概览",
+      title: "概览",
       description:
-        "系统信息与 WSL 概览会在进入页面时按顺序刷新；手动刷新会补足最小等待时间，并在全部前台请求完成后才进入下一阶段",
+        "集中查看当前 Windows 主机、WSL 版本和发行版摘要，作为进入其他操作前的状态总览",
       refreshLabel: "刷新概览",
       logSubject: "主机概览",
     },
@@ -471,7 +471,8 @@ export const zhCN = {
     },
     system: {
       title: "系统信息",
-      description: "这里展示应用启动后缓存的宿主机快照；不会自动轮询刷新",
+      description:
+        "展示当前 Windows 主机的基础硬件与存储信息，用于快速确认宿主机状态",
       labels: {
         windows: "Windows 信息",
         displayVersion: "版本",
@@ -499,7 +500,7 @@ export const zhCN = {
     wsl: {
       title: "WSL 信息",
       description:
-        "默认发行版与发行版数量来自已安装列表缓存；点击顶部刷新会连同 WSL 版本信息一起更新",
+        "展示当前 WSL 版本、默认发行版和已安装发行版摘要，用于快速确认 WSL 环境",
       copied: "已复制",
       copy: "复制",
       status: {
