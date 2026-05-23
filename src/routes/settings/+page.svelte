@@ -101,7 +101,7 @@
     "flex min-h-[48px] w-full items-center justify-between gap-3 px-4 text-left text-[14px] font-medium text-shell-800 transition duration-150 hover:bg-accent-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200";
 
   function inputClass(invalid = false): string {
-    return `min-h-[42px] rounded-[8px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 hover:border-accent-200 hover:bg-accent-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 disabled:cursor-not-allowed disabled:bg-shell-50 disabled:text-shell-500 disabled:hover:border-shell-200/80 disabled:hover:bg-shell-50 ${invalid ? "border-rose-200" : "border-shell-200/80"}`;
+    return `min-h-[36px] rounded-[8px] border-[0.5px] bg-white px-3 text-[14px] text-shell-900 transition duration-150 hover:border-accent-200 hover:bg-accent-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200 disabled:cursor-not-allowed disabled:bg-shell-50 disabled:text-shell-500 disabled:hover:border-shell-200/80 disabled:hover:bg-shell-50 ${invalid ? "border-rose-200" : "border-shell-200/80"}`;
   }
 
   function clearError(): void {
@@ -348,7 +348,7 @@
               label={commonCopy.chooseDirectory}
               icon={Folder}
               variant="secondary"
-              className="shrink-0 hover:border-accent-200 hover:bg-accent-50/70"
+              className="min-h-[36px] shrink-0 hover:border-accent-200 hover:bg-accent-50/70"
               disabled={loading || saving}
               onclick={() => void chooseDefaultInstallLocation()}
             />
