@@ -173,8 +173,8 @@ mod tests {
     };
 
     use super::{
-        has_vhdx_extension, prepare_vhdx_relocation, validate_vhdx_source,
-        TARGET_DIRECTORY_EXISTS_MESSAGE, VHDX_RELOCATION_FAILED_MESSAGE,
+        prepare_vhdx_relocation, validate_vhdx_source, TARGET_DIRECTORY_EXISTS_MESSAGE,
+        VHDX_RELOCATION_FAILED_MESSAGE,
     };
     use crate::bridge::progress::{
         DistroProgressEvent, ProgressEmitter, TransferProgressPhase, TransferProgressValue,
@@ -213,21 +213,21 @@ mod tests {
     }
 
     #[test]
-    fn vhdx_extension_check_is_case_insensitive() {
-        assert!(has_vhdx_extension(std::path::Path::new("D:/WSL/ext4.VHDX")));
-        assert!(!has_vhdx_extension(std::path::Path::new("D:/WSL/ext4.vhd")));
-    }
-
-    #[test]
     fn vhdx_source_validation_requires_file_and_extension() {
-        let path = unique_temp_path("source").with_extension("vhdx");
-        fs::write(&path, b"vhdx").expect("temp vhdx should be created");
+        let path = unique_temp_path("source").with_extension("VHDX");
+        fs::write(&path, b"vhdx").expect("temp VHDX should be created");
 
         validate_vhdx_source(&path).expect("vhdx file should pass validation");
 
-        fs::remove_file(&path).expect("temp vhdx should be removed");
+        fs::remove_file(&path).expect("temp VHDX should be removed");
 
         let err = validate_vhdx_source(&path).expect_err("missing file should fail");
+        assert_eq!(err, VHDX_RELOCATION_FAILED_MESSAGE);
+
+        let non_vhdx = unique_temp_path("source").with_extension("vhd");
+        fs::write(&non_vhdx, b"vhd").expect("temp vhd should be created");
+        let err = validate_vhdx_source(&non_vhdx).expect_err("vhd extension should fail");
+        fs::remove_file(&non_vhdx).expect("temp vhd should be removed");
         assert_eq!(err, VHDX_RELOCATION_FAILED_MESSAGE);
     }
 

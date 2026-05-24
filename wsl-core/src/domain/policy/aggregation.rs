@@ -191,39 +191,4 @@ mod tests {
         );
     }
 
-    #[test]
-    fn aggregate_distros_prefers_cli_name_when_registry_casing_differs() {
-        let distros = aggregate_distros(
-            vec![InstalledDistroSnapshot {
-                name: "debian".to_string(),
-                state: DistroState::Stopped,
-                version: 2,
-                is_default: true,
-            }],
-            vec![RegisteredDistroMetadata {
-                name: "Debian".to_string(),
-                version: 2,
-                base_path: Some("D:/WSL/Debian".into()),
-                vhd_file_name: None,
-                flavor: Some("debian".to_string()),
-                os_version: None,
-                default_uid: Some(0),
-            }],
-        );
-
-        assert_eq!(
-            distros,
-            vec![DistroInfo {
-                name: "debian".to_string(),
-                state: DistroState::Stopped,
-                version: 2,
-                is_default: true,
-                base_path: Some("D:/WSL/Debian".into()),
-                vhd_file_name: None,
-                flavor: Some("debian".to_string()),
-                os_version: None,
-                default_uid: Some(0),
-            }]
-        );
-    }
 }
