@@ -10,7 +10,7 @@
   };
 
   let { cards, copy }: Props = $props();
-  let headerElements: Array<HTMLElement | null> = [];
+  let headerElements = $state<Array<HTMLElement | null>>([]);
   let syncFrameId: number | null = null;
 
   $effect(() => {
