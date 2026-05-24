@@ -20,7 +20,6 @@
     shellUiState,
     toggleTaskTrayExpanded,
   } from "$lib/shell/state";
-
   const taskTrayPanelId = "task-status-tray-panel";
   let taskTrayElement: HTMLDivElement | undefined;
   const taskStats = $derived(getTaskStats($longTaskState.tasks));
@@ -86,7 +85,7 @@
 
 <div
   bind:this={taskTrayElement}
-  class={`task-tray-surface pointer-events-auto mx-[20px] mb-[8px] text-[14px] text-secondary ${
+  class={`task-tray-surface pointer-events-auto text-[14px] text-secondary ${
     $shellUiState.taskTrayExpanded ? "task-tray-surface-expanded" : ""
   }`}
 >

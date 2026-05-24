@@ -22,6 +22,8 @@
   } from "$lib/shell/state";
 
   let { children }: { children?: Snippet } = $props();
+  let taskTrayInset = $state(0);
+  let taskTrayWrapperElement: HTMLDivElement | undefined;
 
   const resizeHandles = [
     {
@@ -79,6 +81,30 @@
       stopQueryCache();
     };
   });
+
+  $effect(() => {
+    if (typeof ResizeObserver === "undefined" || !taskTrayWrapperElement) {
+      syncTaskTrayInset();
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      syncTaskTrayInset();
+    });
+
+    observer.observe(taskTrayWrapperElement);
+    syncTaskTrayInset();
+
+    return () => {
+      observer.disconnect();
+    };
+  });
+
+  function syncTaskTrayInset(): void {
+    taskTrayInset = taskTrayWrapperElement
+      ? Math.ceil(taskTrayWrapperElement.getBoundingClientRect().height)
+      : 0;
+  }
 </script>
 
 <div class="relative h-screen overflow-hidden p-0 text-shell-900">
@@ -167,11 +193,15 @@
       <main class="relative min-w-0 flex-1 overflow-hidden">
         <div
           class="ui-scrollbar h-full overflow-auto py-[12px] pl-[12px] pr-[2px]"
+          style={`padding-bottom: ${12 + taskTrayInset}px;`}
         >
           {@render children?.()}
         </div>
 
-        <div class="pointer-events-none absolute inset-x-0 bottom-0 z-20">
+        <div
+          bind:this={taskTrayWrapperElement}
+          class="pointer-events-none absolute inset-x-0 bottom-0 z-20 mx-[12px] mb-[8px]"
+        >
           <TaskStatusBar />
         </div>
       </main>
