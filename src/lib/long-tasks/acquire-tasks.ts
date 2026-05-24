@@ -10,7 +10,7 @@ import {
   getQueryErrorMessage,
   queryCache,
   refreshAcquireTaskInBackground as refreshAcquireTaskSideDataInBackground,
-  refreshDistrosAfterAction,
+  syncDistrosAfterMutation,
 } from "$lib/query-cache";
 import { pushToast } from "$lib/feedback/toasts";
 import { createRequestId, toErrorMessage } from "$lib/shared/runtime";
@@ -203,7 +203,7 @@ async function syncAcquireTaskResult(
   displayName: string,
   operation: LongTaskOperation,
 ): Promise<void> {
-  const result = await refreshDistrosAfterAction();
+  const result = await syncDistrosAfterMutation();
   const copy = getCopy();
   const noun = getAcquireTaskNoun(operation, copy);
 

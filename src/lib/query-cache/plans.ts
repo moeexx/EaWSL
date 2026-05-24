@@ -46,6 +46,12 @@ export async function refreshDistroWorkspace(
 export async function refreshDistrosAfterAction(): Promise<
   QueryRefreshResult<DistroInfo[]>
 > {
+  return syncDistrosAfterMutation();
+}
+
+export async function syncDistrosAfterMutation(): Promise<
+  QueryRefreshResult<DistroInfo[]>
+> {
   const results = await refreshQueries({
     foreground: ["distros"],
     background: [],

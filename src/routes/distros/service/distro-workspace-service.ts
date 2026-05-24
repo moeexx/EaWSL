@@ -16,7 +16,7 @@ import {
 import {
   queryCache,
   refreshDistroWorkspace,
-  refreshDistrosAfterAction,
+  syncDistrosAfterMutation,
   type QueryCacheState,
   type QueryRefreshResult,
 } from "$lib/query-cache";
@@ -106,7 +106,7 @@ export function createDistroWorkspaceService(): DistroWorkspaceService {
       return refreshDistroWorkspace("page-enter");
     },
     refreshWorkspace: () => refreshDistroWorkspace("manual"),
-    refreshWorkspaceAfterAction: refreshDistrosAfterAction,
+    refreshWorkspaceAfterAction: syncDistrosAfterMutation,
     loadLiveDistro,
     getVhdSizeEntry,
     probeVhdSize,
