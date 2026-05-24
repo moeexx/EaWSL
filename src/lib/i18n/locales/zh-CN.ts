@@ -375,14 +375,11 @@ export const zhCN = {
       running: "进行中",
     },
     tray: {
+      barTitle: "长任务栏",
       title: "长任务详情",
       totalTasks: "任务",
-      currentTask: "当前任务",
-      recentTask: "最近任务",
-      failedAt: "失败时间：",
       noTasks: "当前没有长任务",
-      startedAt: "开始：",
-      endedAt: "结束：",
+      noRunningTasks: "当前没有正在运行的长任务",
       expandDetails: "展开详情",
       collapseDetails: "折叠详情",
       total: (total: number, label: string) => `${total} 个${label}`,
@@ -397,10 +394,6 @@ export const zhCN = {
       endedAt: "结束时间",
       failedAt: "失败时间",
       logoAlt: (distro: string) => `${distro} logo`,
-    },
-    collapsed: {
-      failed: (operation: string) => `${operation}失败`,
-      completed: (operation: string) => `${operation}完成`,
     },
     acquireTasks: {
       activeTitle: "已有长任务正在进行",

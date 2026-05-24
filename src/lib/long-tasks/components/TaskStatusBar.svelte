@@ -2,52 +2,36 @@
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import ChevronUp from "@lucide/svelte/icons/chevron-up";
 
-  import ShellIcon from "$lib/shell/ShellIcon.svelte";
   import { i18nState } from "$lib/i18n";
   import Button from "$lib/ui/Button.svelte";
   import TaskProgressBar from "./TaskProgressBar.svelte";
   import TaskStatusCard from "./TaskStatusCard.svelte";
   import {
-    getCollapsedTaskMeta,
-    getCollapsedTaskStatus,
+    getCollapsedActiveTaskHeader,
     getDotStyle,
-    getPhaseLabel,
     getProgressPercentLabel,
     getTaskStats,
     getTraySummaryText,
     getTrayTone,
   } from "../task-status";
   import { longTaskState } from "../state";
-  import { shellUiState, toggleTaskTrayExpanded } from "$lib/shell/state";
+  import {
+    setTaskTrayExpanded,
+    shellUiState,
+    toggleTaskTrayExpanded,
+  } from "$lib/shell/state";
 
   const taskTrayPanelId = "task-status-tray-panel";
+  let taskTrayElement: HTMLDivElement | undefined;
   const taskStats = $derived(getTaskStats($longTaskState.tasks));
   const copy = $derived($i18nState.copy.longTasks);
   const activeTask = $derived(taskStats.activeTask);
   const latestTask = $derived(taskStats.latestTask);
   const trayTone = $derived(getTrayTone(activeTask, latestTask));
-  const collapsedStatusTitle = $derived(
-    latestTask
-      ? `${latestTask.distro} · ${getCollapsedTaskStatus(latestTask, copy)}`
-      : copy.tray.noTasks,
-  );
-  const collapsedStatusMeta = $derived(
-    latestTask
-      ? getCollapsedTaskMeta(
-          latestTask,
-          activeTask !== null,
-          $i18nState.language,
-          copy,
-        )
+  const collapsedActiveTaskHeader = $derived(
+    activeTask
+      ? getCollapsedActiveTaskHeader(activeTask, $i18nState.language, copy)
       : null,
-  );
-  const collapsedStatusText = $derived(
-    collapsedStatusMeta
-      ? `${collapsedStatusTitle} · ${collapsedStatusMeta}`
-      : collapsedStatusTitle,
-  );
-  const activePhaseLabel = $derived(
-    activeTask ? getPhaseLabel(activeTask, copy) : null,
   );
   const traySummaryText = $derived(
     getTraySummaryText(
@@ -66,112 +50,165 @@
       ? copy.tray.collapseDetails
       : copy.tray.expandDetails,
   );
+
+  const headerTitleClass =
+    "min-w-0 shrink truncate text-[17px] font-semibold leading-[25px] text-shell-800";
+  const headerMetaClass =
+    "min-w-0 flex-1 truncate text-[14px] font-semibold leading-[25px]";
+
+  $effect(() => {
+    function handleDocumentPointerDown(event: PointerEvent): void {
+      if (!$shellUiState.taskTrayExpanded || !taskTrayElement) {
+        return;
+      }
+
+      if (
+        event.target instanceof Node &&
+        taskTrayElement.contains(event.target)
+      ) {
+        return;
+      }
+
+      setTaskTrayExpanded(false);
+    }
+
+    document.addEventListener("pointerdown", handleDocumentPointerDown, {
+      capture: true,
+    });
+
+    return () => {
+      document.removeEventListener("pointerdown", handleDocumentPointerDown, {
+        capture: true,
+      });
+    };
+  });
 </script>
 
-<section
-  class="pointer-events-none relative z-10 w-full text-[14px] text-secondary"
+<div
+  bind:this={taskTrayElement}
+  class={`task-tray-surface pointer-events-auto mx-[20px] mb-[8px] text-[14px] text-secondary ${
+    $shellUiState.taskTrayExpanded ? "task-tray-surface-expanded" : ""
+  }`}
 >
-  <div
-    class={`task-status-drawer pointer-events-auto rounded-t-[8px] background-secondary text-secondary ${
-      $shellUiState.taskTrayExpanded ? "task-status-drawer-expanded" : ""
+  <footer
+    class={`relative flex h-[42px] min-h-[42px] items-center justify-between gap-3 overflow-hidden px-[18px] text-[15px] text-secondary ${
+      $shellUiState.taskTrayExpanded ? "task-tray-header-expanded" : ""
     }`}
   >
-    <footer
-      class={`relative flex h-[var(--task-tray-collapsed-height)] min-h-[var(--task-tray-collapsed-height)] items-center justify-between gap-3 overflow-hidden rounded-t-[8px] border-t-[0.5px] border-tertiary background-secondary px-[14px] text-[15px] text-secondary ${
-        $shellUiState.taskTrayExpanded ? "task-tray-header-expanded" : ""
-      }`}
-    >
-      <div class="relative min-w-0 flex-1 self-stretch">
-        <div
-          class="task-tray-collapsed-content task-tray-header-content absolute inset-0 flex min-w-0 items-center gap-2.5"
-          aria-hidden={$shellUiState.taskTrayExpanded}
-        >
-          <span
-            aria-hidden="true"
-            class={`h-[7px] w-[7px] shrink-0 rounded-full ${
-              trayTone === "running" ? "animate-pulse" : ""
-            }`}
-            style={getDotStyle(trayTone)}
-          ></span>
-          <div class="min-w-0 flex-1">
+    <div class="relative min-w-0 flex-1 self-stretch">
+      <div
+        class="task-tray-collapsed-content task-tray-header-content absolute inset-x-0 top-1/2 flex min-w-0 items-center gap-3"
+        aria-hidden={$shellUiState.taskTrayExpanded}
+      >
+        <span
+          aria-hidden="true"
+          class={`h-[7px] w-[7px] shrink-0 rounded-full ${
+            trayTone === "running" ? "animate-pulse" : ""
+          }`}
+          style={getDotStyle(trayTone)}
+        ></span>
+        {#if activeTask}
+          <div class="flex min-w-0 flex-1 items-baseline gap-3">
             <strong
-              class="block min-h-[24px] truncate text-[17px] font-semibold leading-[1.4] text-shell-800"
-              title={collapsedStatusText}
+              class={headerTitleClass}
+              title={collapsedActiveTaskHeader?.title}
             >
-              {collapsedStatusTitle}
+              {collapsedActiveTaskHeader?.title}
             </strong>
-            {#if collapsedStatusMeta}
-              <p
-                class="mt-0.5 truncate text-[13px] leading-4 text-secondary"
-                style="opacity: 0.82;"
-                title={collapsedStatusMeta}
+            <p
+              class={`${headerMetaClass} text-shell-500`}
+              title={collapsedActiveTaskHeader?.meta}
+            >
+              {collapsedActiveTaskHeader?.meta}
+            </p>
+          </div>
+
+          {@const progressPercentLabel = getProgressPercentLabel(activeTask)}
+          <div
+            class="flex min-w-[96px] max-w-[230px] flex-[0_1_190px] items-center gap-2"
+          >
+            <TaskProgressBar
+              task={activeTask}
+              className="h-[7px] min-w-0 flex-1"
+            />
+            {#if progressPercentLabel}
+              <span
+                class="w-[48px] shrink-0 whitespace-nowrap text-right text-[13px] font-medium leading-none text-shell-700"
               >
-                {collapsedStatusMeta}
-              </p>
+                {progressPercentLabel}
+              </span>
             {/if}
           </div>
-          {#if activePhaseLabel}
-            <span
-              class="hidden h-[22px] shrink-0 items-center rounded-[6px] border-[0.5px] border-tertiary background-primary px-2 text-[12px] leading-none text-secondary md:inline-flex"
-              style="opacity: 0.86;"
-            >
-              {activePhaseLabel}
-            </span>
-          {/if}
-
-          {#if activeTask}
-            {@const progressPercentLabel = getProgressPercentLabel(activeTask)}
-            <div
-              class="flex min-w-[96px] max-w-[230px] flex-[0_1_190px] items-center gap-2"
-            >
-              <TaskProgressBar
-                task={activeTask}
-                className="h-[7px] min-w-0 flex-1"
-              />
-              {#if progressPercentLabel}
-                <span
-                  class="w-[48px] shrink-0 whitespace-nowrap text-right text-[13px] font-medium leading-none text-shell-700"
-                >
-                  {progressPercentLabel}
-                </span>
-              {/if}
-            </div>
-          {/if}
-        </div>
-
-        <div
-          class="task-tray-expanded-content task-tray-header-content absolute inset-0 flex min-w-0 items-center gap-2.5"
-          aria-hidden={!$shellUiState.taskTrayExpanded}
-        >
-          <span
-            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] border-[0.5px] border-tertiary background-primary text-accent-700"
-          >
-            <ShellIcon name="tasks" size={17} />
-          </span>
-          <div class="min-w-0">
-            <strong
-              class="block truncate text-[14px] font-semibold leading-5 text-shell-800"
-            >
-              {copy.tray.title}
+        {:else}
+          <div class="flex min-w-0 flex-1 items-baseline gap-3">
+            <strong class={headerTitleClass}>
+              {copy.tray.barTitle}
             </strong>
-            <p class="truncate text-[13px] leading-4 text-secondary">
+            <p
+              class={`${headerMetaClass} text-shell-400`}
+              title={copy.tray.noRunningTasks}
+            >
+              {copy.tray.noRunningTasks}
+            </p>
+          </div>
+        {/if}
+      </div>
+
+      <div
+        class="task-tray-expanded-content task-tray-header-content absolute inset-x-0 top-1/2 flex min-w-0 items-center gap-3"
+        aria-hidden={!$shellUiState.taskTrayExpanded}
+      >
+        <span
+          aria-hidden="true"
+          class={`h-[7px] w-[7px] shrink-0 rounded-full ${
+            trayTone === "running" ? "animate-pulse" : ""
+          }`}
+          style={getDotStyle(trayTone)}
+        ></span>
+        {#if activeTask}
+          <div class="flex min-w-0 flex-1 items-baseline gap-3">
+            <strong class={headerTitleClass}>
+              {copy.tray.barTitle}
+            </strong>
+            <p
+              class={`${headerMetaClass} text-shell-500`}
+              title={traySummaryText}
+            >
               {traySummaryText}
             </p>
           </div>
-        </div>
+        {:else}
+          <div class="flex min-w-0 flex-1 items-baseline gap-3">
+            <strong class={headerTitleClass}>
+              {copy.tray.barTitle}
+            </strong>
+            <p
+              class={`${headerMetaClass} text-shell-400`}
+              title={copy.tray.noRunningTasks}
+            >
+              {copy.tray.noRunningTasks}
+            </p>
+          </div>
+        {/if}
       </div>
+    </div>
 
-      <Button
-        ariaControls={taskTrayPanelId}
-        ariaExpanded={$shellUiState.taskTrayExpanded}
-        icon={trayButtonIcon}
-        label={trayButtonLabel}
-        variant="secondary"
-        className="shrink-0 border-tertiary background-primary text-secondary hover:opacity-95 focus-visible:ring-[#bddfff]"
-        onclick={() => toggleTaskTrayExpanded()}
-      />
-    </footer>
+    <Button
+      ariaControls={taskTrayPanelId}
+      ariaExpanded={$shellUiState.taskTrayExpanded}
+      ariaLabel={trayButtonLabel}
+      icon={trayButtonIcon}
+      variant="secondary"
+      className="h-8 w-8 shrink-0 rounded-[8px] !border-transparent !bg-transparent px-0 text-shell-700 shadow-none hover:!border-transparent hover:!bg-white hover:text-accent-700 hover:opacity-100 focus-visible:ring-[#bddfff]"
+      onclick={() => toggleTaskTrayExpanded()}
+    />
+  </footer>
 
+  <div
+    class={`task-tray-panel ${
+      $shellUiState.taskTrayExpanded ? "task-tray-panel-expanded" : ""
+    }`}
+  >
     <div
       id={taskTrayPanelId}
       aria-hidden={!$shellUiState.taskTrayExpanded}
@@ -195,21 +232,9 @@
       {/if}
     </div>
   </div>
-</section>
+</div>
 
 <style>
-  .background-primary {
-    background-color: rgba(255, 255, 255, 0.92);
-  }
-
-  .background-secondary {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.98),
-      rgba(247, 250, 253, 0.98)
-    );
-  }
-
   .border-tertiary {
     border-color: rgba(215, 225, 236, 0.92);
   }
@@ -219,48 +244,74 @@
   }
 
   .task-tray-header-content {
+    --task-tray-header-offset: 0px;
     transition:
       opacity 150ms ease,
       transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(calc(-50% + var(--task-tray-header-offset)));
   }
 
   .task-tray-collapsed-content {
     opacity: 1;
-    transform: translateY(0);
   }
 
   .task-tray-expanded-content {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(5px);
+    --task-tray-header-offset: 5px;
   }
 
   .task-tray-header-expanded .task-tray-collapsed-content {
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-5px);
+    --task-tray-header-offset: -5px;
   }
 
   .task-tray-header-expanded .task-tray-expanded-content {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(0);
+    --task-tray-header-offset: 0px;
   }
 
-  .task-status-drawer {
-    box-shadow: 0 -3px 8px rgba(16, 26, 39, 0.2);
-    transform: translateY(calc(100% - var(--task-tray-collapsed-height)));
-    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform;
+  .task-tray-surface {
+    border: 0.5px solid #c9e5ff;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #fafdff, #eff7ff);
+    box-shadow: 0 5px 5px rgba(16, 26, 39, 0.08);
+    overflow: hidden;
+    transition:
+      border-radius 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 220ms ease,
+      box-shadow 220ms ease;
   }
 
-  .task-status-drawer-expanded {
+  .task-tray-surface-expanded {
+    border-color: #acd8ff;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #f7fcff, #e8f3ff);
+  }
+
+  .task-tray-panel {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(6px);
+    transition:
+      max-height 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 180ms ease,
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .task-tray-panel-expanded {
+    max-height: 44vh;
+    opacity: 1;
     transform: translateY(0);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .task-tray-header-content,
-    .task-status-drawer {
+    .task-tray-surface,
+    .task-tray-panel {
       transition: none;
     }
   }

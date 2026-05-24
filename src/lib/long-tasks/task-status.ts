@@ -5,7 +5,7 @@ import { getPersistedCommandErrorMessage } from "$lib/tauri/errors";
 
 type LongTasksCopy = AppCopy["longTasks"];
 
-export type TrayTone = "idle" | "running" | "completed" | "failed";
+export type TrayTone = "idle" | "running" | "failed";
 
 export interface TaskStats {
   activeTask: LongTask | null;
@@ -198,22 +198,29 @@ export function getTrayTone(
     return "failed";
   }
 
-  return latest === null ? "idle" : "completed";
+  return "idle";
 }
 
 export function getDotStyle(tone: TrayTone): string {
-  if (tone === "idle") {
-    return "background-color: transparent; border: 1.5px solid #888780;";
-  }
-
   const fill =
-    tone === "running" ? "#378ADD" : tone === "failed" ? "#DC2626" : "#3B6D11";
+    tone === "running" ? "#D69B00" : tone === "failed" ? "#DC2626" : "#3B6D11";
   return `background-color: ${fill}; border: 1.5px solid ${fill};`;
+}
+
+export function getCollapsedActiveTaskHeader(
+  task: LongTask,
+  language: AppLanguage,
+  copy: LongTasksCopy,
+): { title: string; meta: string } {
+  return {
+    title: `${task.distro} ${getPhaseLabel(task, copy)}`,
+    meta: formatFullTime(task.startedAt, language),
+  };
 }
 
 export function getStatusBadgeClass(status: LongTask["status"]): string {
   const base =
-    "inline-flex h-[22px] shrink-0 items-center rounded-[6px] border-[0.5px] px-2 text-[12px] font-semibold leading-none";
+    "inline-flex h-[22px] shrink-0 items-center rounded-[8px] border-[0.5px] px-2 text-[12px] font-semibold leading-none";
 
   if (status === "completed") {
     return `${base} border-[#bfd8bc] bg-[#eef8ee] text-[#2f6f2d]`;
@@ -224,51 +231,6 @@ export function getStatusBadgeClass(status: LongTask["status"]): string {
   }
 
   return `${base} border-accent-200 bg-accent-50 text-accent-700`;
-}
-
-export function getCollapsedTaskStatus(
-  task: LongTask,
-  copy: LongTasksCopy,
-): string {
-  const operation = getOperationLabel(task, copy);
-
-  if (task.status === "failed") {
-    return copy.collapsed.failed(operation);
-  }
-
-  if (task.status === "completed") {
-    return copy.collapsed.completed(operation);
-  }
-
-  return getPhaseLabel(task, copy);
-}
-
-export function getCollapsedTaskMeta(
-  task: LongTask,
-  isCurrentTask: boolean,
-  language: AppLanguage,
-  copy: LongTasksCopy,
-): string {
-  const prefix = isCurrentTask ? copy.tray.currentTask : copy.tray.recentTask;
-
-  if (task.status === "failed" && task.endedAt !== null) {
-    return `${prefix} · ${copy.tray.failedAt}${formatFullTime(
-      task.endedAt,
-      language,
-    )}`;
-  }
-
-  if (task.status === "completed" && task.endedAt !== null) {
-    return `${prefix} · ${copy.tray.endedAt}${formatFullTime(
-      task.endedAt,
-      language,
-    )}`;
-  }
-
-  return `${prefix} · ${copy.tray.startedAt}${formatFullTime(
-    task.startedAt,
-    language,
-  )}`;
 }
 
 export function getTraySummaryText(

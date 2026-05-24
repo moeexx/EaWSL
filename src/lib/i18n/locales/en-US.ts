@@ -398,14 +398,11 @@ export const enUS = {
       running: "Running",
     },
     tray: {
+      barTitle: "Long task bar",
       title: "Long task details",
       totalTasks: "tasks",
-      currentTask: "Current task",
-      recentTask: "Recent task",
-      failedAt: "Failed at: ",
       noTasks: "No long tasks",
-      startedAt: "Started: ",
-      endedAt: "Ended: ",
+      noRunningTasks: "No long tasks are running",
       expandDetails: "Expand details",
       collapseDetails: "Collapse details",
       total: (total: number, label: string) => `${total} ${label}`,
@@ -420,10 +417,6 @@ export const enUS = {
       endedAt: "End time",
       failedAt: "Failure time",
       logoAlt: (distro: string) => `${distro} logo`,
-    },
-    collapsed: {
-      failed: (operation: string) => `${operation} failed`,
-      completed: (operation: string) => `${operation} completed`,
     },
     acquireTasks: {
       activeTitle: "A long task is already running",

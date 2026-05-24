@@ -25,18 +25,18 @@
   aria-valuenow={isProgressIndeterminate(task)
     ? undefined
     : getProgressPercent(task)}
-  class={`${className} overflow-hidden rounded-full bg-shell-200/80`}
+  class={`${className} overflow-hidden rounded-[8px] bg-shell-200/80`}
   role="progressbar"
 >
   {#if isProgressIndeterminate(task)}
     <span
       aria-hidden="true"
-      class="task-progress-indeterminate block h-full rounded-full"
+      class="task-progress-indeterminate block h-full rounded-[8px]"
     ></span>
   {:else}
     <span
       aria-hidden="true"
-      class="block h-full rounded-full transition-[width] duration-500 ease-out"
+      class="block h-full rounded-[8px] transition-[width] duration-500 ease-out"
       style={getProgressFillStyle(task)}
     ></span>
   {/if}

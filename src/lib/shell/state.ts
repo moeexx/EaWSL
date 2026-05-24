@@ -131,7 +131,7 @@ export function toggleSidebarCollapsed(): void {
   setSidebarCollapsed(!get(store).sidebarCollapsed);
 }
 
-function setTaskTrayExpanded(value: boolean): void {
+export function setTaskTrayExpanded(value: boolean): void {
   store.update((state) => ({
     ...state,
     taskTrayExpanded: value,

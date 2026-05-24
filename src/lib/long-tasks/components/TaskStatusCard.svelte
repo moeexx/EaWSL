@@ -37,7 +37,7 @@
             {task.distro}
           </strong>
           <span
-            class="inline-flex h-[22px] shrink-0 items-center rounded-[6px] border-[0.5px] border-tertiary bg-shell-50/80 px-2 text-[12px] font-semibold leading-none text-secondary"
+            class="inline-flex h-[22px] shrink-0 items-center rounded-[8px] border-[0.5px] border-tertiary bg-shell-50/80 px-2 text-[12px] font-semibold leading-none text-secondary"
           >
             {getOperationLabel(task, copy)}
           </span>

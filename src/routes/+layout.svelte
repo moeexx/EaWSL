@@ -99,7 +99,9 @@
   {/if}
 
   <div class={shellFrameClass}>
-    <header class="relative z-10 flex h-10 items-stretch justify-between bg-[#F3F3F3]">
+    <header
+      class="relative z-10 flex h-10 items-stretch justify-between bg-[#F3F3F3]"
+    >
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div
         class="flex min-w-0 flex-1 items-center justify-between gap-2.5 px-3 sm:px-3.5"
@@ -169,11 +171,9 @@
       <ShellSidebar />
       <main
         class="relative min-w-0 flex-1 overflow-hidden bg-[#F3F3F3]"
-        style="--task-tray-collapsed-height: 63px;"
       >
         <div
-          class="ui-scrollbar overflow-auto py-[12px] pl-[12px] pr-[2px]"
-          style="height: calc(100% - var(--task-tray-collapsed-height));"
+          class="ui-scrollbar h-full overflow-auto py-[12px] pl-[12px] pr-[2px]"
         >
           {@render children?.()}
         </div>
