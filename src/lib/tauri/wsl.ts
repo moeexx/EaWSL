@@ -146,6 +146,18 @@ export async function unregisterDistro(distro: string): Promise<void> {
   return invokeWsl("unregister_distro", { distro });
 }
 
+export async function openDistroTerminal(distro: string): Promise<void> {
+  return invokeWsl("open_distro_terminal", { distro });
+}
+
+export async function openDistroExplorer(distro: string): Promise<void> {
+  return invokeWsl("open_distro_explorer", { distro });
+}
+
+export async function openDistroVscode(distro: string): Promise<void> {
+  return invokeWsl("open_distro_vscode", { distro });
+}
+
 export async function installDistro(req: InstallDistroRequest): Promise<void> {
   return invokeWsl("install_distro", {
     req: {

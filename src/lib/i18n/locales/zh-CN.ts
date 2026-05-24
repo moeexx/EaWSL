@@ -210,6 +210,9 @@ export const zhCN = {
       protectedMessage: "该发行版仅保留详情查看",
       setDefault: "设置为默认",
       settingDefault: "设置中...",
+      openTerminal: "终端",
+      openExplorer: "资源管理器",
+      openVscode: "VS Code",
       unread: "暂未读取",
       probing: "正在探测中...",
       detailsTitle: "发行版详情",
@@ -308,6 +311,27 @@ export const zhCN = {
       setDefaultUnknownTitle: "默认结果暂未确认",
       setDefaultChangedFallback: (distro: string) =>
         `${distro} 的默认状态已变化，请按当前列表重试`,
+      openTerminalStartedTitle: "终端启动请求已提交",
+      openTerminalStartedMessage: (distro: string) =>
+        `${distro} 的终端启动请求已提交`,
+      openTerminalStartingTitle: "终端正在打开中",
+      openTerminalStartingMessage: (distro: string) =>
+        `${distro} 的终端启动请求已提交，WSL 可能需要几秒启动，请稍后`,
+      openTerminalFailedTitle: "打开终端失败",
+      openExplorerStartedTitle: "资源管理器启动请求已提交",
+      openExplorerStartedMessage: (distro: string) =>
+        `${distro} 的资源管理器启动请求已提交`,
+      openExplorerStartingTitle: "资源管理器正在打开中",
+      openExplorerStartingMessage: (distro: string) =>
+        `${distro} 的资源管理器启动请求已提交，WSL 可能需要几秒启动，请稍后`,
+      openExplorerFailedTitle: "打开资源管理器失败",
+      openVscodeStartedTitle: "VS Code 启动请求已提交",
+      openVscodeStartedMessage: (distro: string) =>
+        `${distro} 的 VS Code 启动请求已提交`,
+      openVscodeStartingTitle: "VS Code 正在打开中",
+      openVscodeStartingMessage: (distro: string) =>
+        `${distro} 的 VS Code 启动请求已提交，WSL 可能需要几秒启动，请稍后`,
+      openVscodeFailedTitle: "打开 VS Code 失败",
     },
     actionSupport: {
       stopSyncFailedTitle: "停止后同步失败",

@@ -23,6 +23,8 @@ import {
 import { getActionOverlayMessage } from "./action-overlay";
 
 const SHUTDOWN_ALL_ACTION_BUTTON_KEY = "shutdown-all";
+const RUNNING_SHORTCUT_REFRESH_DELAY_MS = 3_000;
+const STOPPED_SHORTCUT_REFRESH_DELAY_MS = 10_000;
 
 interface PostRefreshToastOptions {
   success: ToastInput;
@@ -47,6 +49,15 @@ interface ExecuteActionDecision {
   onFinish?: () => void;
 }
 
+interface ShortcutActionConfig {
+  open: (distroName: string) => Promise<void>;
+  failedTitle: string;
+  startedTitle: string;
+  startedMessage: string;
+  startingTitle: string;
+  startingMessage: string;
+}
+
 type WorkspaceActionDecision =
   | {
       kind: "cancel";
@@ -62,6 +73,9 @@ export interface DistroWorkspaceActions {
   shutdownAll: () => Promise<void>;
   terminate: (distroName: string) => Promise<void>;
   setDefault: (distroName: string) => Promise<void>;
+  openTerminal: (distroName: string) => Promise<void>;
+  openExplorer: (distroName: string) => Promise<void>;
+  openVscode: (distroName: string) => Promise<void>;
   unregister: (distroName: string) => Promise<void>;
   chooseExportDirectory: (
     distroName: string,
@@ -420,6 +434,115 @@ export function createDistroWorkspaceActions(
     });
   }
 
+  async function runShortcutAction(
+    distroName: string,
+    config: ShortcutActionConfig,
+  ): Promise<void> {
+    const liveDistro = await loadLiveDistroOrToast();
+    if (!liveDistro) return;
+
+    const snapshot = liveDistro.find(distroName);
+    if (!snapshot) {
+      const result = await flow.refreshWorkspaceAfterAction();
+      if (!runtime.isDisposed()) {
+        flow.resolveOverlaysAfterRefresh("action-sync", result);
+        service.toast(
+          resolvePostRefreshToast(
+            result,
+            buildMissingDistroRefreshToast(
+              distroName,
+              flow.getRecoveringMessage(),
+              runtime.getCopy(),
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
+    const title = snapshot.isRunning
+      ? config.startedTitle
+      : config.startingTitle;
+    const message = snapshot.isRunning
+      ? config.startedMessage
+      : config.startingMessage;
+    const refreshDelayMs = snapshot.isRunning
+      ? RUNNING_SHORTCUT_REFRESH_DELAY_MS
+      : STOPPED_SHORTCUT_REFRESH_DELAY_MS;
+
+    try {
+      await config.open(distroName);
+      service.toast({
+        tone: "success",
+        title,
+        message,
+      });
+      scheduleShortcutRefresh(refreshDelayMs);
+    } catch (error) {
+      service.toast({
+        tone: "error",
+        title: config.failedTitle,
+        message: service.toErrorMessage(error),
+      });
+    }
+  }
+
+  function scheduleShortcutRefresh(delayMs: number): void {
+    void (async () => {
+      await delay(delayMs);
+      if (runtime.isDisposed()) {
+        return;
+      }
+
+      const result = await flow.refreshWorkspaceAfterAction();
+      if (!runtime.isDisposed()) {
+        flow.resolveOverlaysAfterRefresh("action-sync", result);
+      }
+    })();
+  }
+
+  async function openTerminal(distroName: string): Promise<void> {
+    const copy = runtime.getCopy();
+    await runShortcutAction(distroName, {
+      open: service.openDistroTerminal,
+      failedTitle: copy.distros.actions.openTerminalFailedTitle,
+      startedTitle: copy.distros.actions.openTerminalStartedTitle,
+      startedMessage:
+        copy.distros.actions.openTerminalStartedMessage(distroName),
+      startingTitle: copy.distros.actions.openTerminalStartingTitle,
+      startingMessage:
+        copy.distros.actions.openTerminalStartingMessage(distroName),
+    });
+  }
+
+  async function openExplorer(distroName: string): Promise<void> {
+    const copy = runtime.getCopy();
+    await runShortcutAction(distroName, {
+      open: service.openDistroExplorer,
+      failedTitle: copy.distros.actions.openExplorerFailedTitle,
+      startedTitle: copy.distros.actions.openExplorerStartedTitle,
+      startedMessage:
+        copy.distros.actions.openExplorerStartedMessage(distroName),
+      startingTitle: copy.distros.actions.openExplorerStartingTitle,
+      startingMessage:
+        copy.distros.actions.openExplorerStartingMessage(distroName),
+    });
+  }
+
+  async function openVscode(distroName: string): Promise<void> {
+    const copy = runtime.getCopy();
+    await runShortcutAction(distroName, {
+      open: service.openDistroVscode,
+      failedTitle: copy.distros.actions.openVscodeFailedTitle,
+      startedTitle: copy.distros.actions.openVscodeStartedTitle,
+      startedMessage: copy.distros.actions.openVscodeStartedMessage(distroName),
+      startingTitle: copy.distros.actions.openVscodeStartingTitle,
+      startingMessage: copy.distros.actions.openVscodeStartingMessage(
+        distroName,
+      ),
+    });
+  }
+
   async function chooseExportDirectory(
     distroName: string,
     defaultPath?: string,
@@ -472,6 +595,9 @@ export function createDistroWorkspaceActions(
     shutdownAll: handleShutdownAll,
     terminate: handleTerminate,
     setDefault: handleSetDefault,
+    openTerminal,
+    openExplorer,
+    openVscode,
     unregister: handleUnregister,
     chooseExportDirectory,
     submitExport,

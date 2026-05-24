@@ -127,6 +127,9 @@ export interface DistroWorkspaceCallbacks {
   shutdownAll: () => Promise<void>;
   terminate: (distroName: string) => Promise<void>;
   setDefault: (distroName: string) => Promise<void>;
+  openTerminal: (distroName: string) => Promise<void>;
+  openExplorer: (distroName: string) => Promise<void>;
+  openVscode: (distroName: string) => Promise<void>;
   unregister: (distroName: string) => Promise<void>;
   chooseExportDirectory: (
     distroName: string,

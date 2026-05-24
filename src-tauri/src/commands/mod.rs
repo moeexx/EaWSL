@@ -27,4 +27,5 @@ pub use system::{
 pub use wsl::legacy_install::launch_legacy_install_terminal;
 pub use wsl::lifecycle::{set_default_distro, shutdown_wsl, terminate_distro, unregister_distro};
 pub use wsl::query::{get_wsl_version, list_distros, list_online_distros};
+pub use wsl::shortcuts::{open_distro_explorer, open_distro_terminal, open_distro_vscode};
 pub use wsl::transfer::{export_distro, import_distro, import_distro_in_place, install_distro};

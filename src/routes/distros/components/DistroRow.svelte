@@ -2,12 +2,15 @@
   import BadgeCheck from "@lucide/svelte/icons/badge-check";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import ChevronUp from "@lucide/svelte/icons/chevron-up";
+  import Code2 from "@lucide/svelte/icons/code-2";
   import FileOutput from "@lucide/svelte/icons/file-output";
+  import FolderOpen from "@lucide/svelte/icons/folder-open";
   import Layers3 from "@lucide/svelte/icons/layers-3";
   import RefreshCw from "@lucide/svelte/icons/refresh-cw";
   import Square from "@lucide/svelte/icons/square";
   import Star from "@lucide/svelte/icons/star";
   import Tag from "@lucide/svelte/icons/tag";
+  import Terminal from "@lucide/svelte/icons/terminal";
   import Trash2 from "@lucide/svelte/icons/trash-2";
   import { slide } from "svelte/transition";
 
@@ -297,6 +300,30 @@
             className={rowButtonClass}
             onclick={() => void callbacks.setDefault(row.name)}
             disabled={row.actionsDisabled || row.isDefault || hasActiveLongTask}
+          />
+          <Button
+            label={rowCopy.openTerminal}
+            icon={Terminal}
+            variant="secondary"
+            className={rowButtonClass}
+            onclick={() => void callbacks.openTerminal(row.name)}
+            disabled={row.actionsDisabled}
+          />
+          <Button
+            label={rowCopy.openExplorer}
+            icon={FolderOpen}
+            variant="secondary"
+            className={rowButtonClass}
+            onclick={() => void callbacks.openExplorer(row.name)}
+            disabled={row.actionsDisabled}
+          />
+          <Button
+            label={rowCopy.openVscode}
+            icon={Code2}
+            variant="secondary"
+            className={rowButtonClass}
+            onclick={() => void callbacks.openVscode(row.name)}
+            disabled={row.actionsDisabled}
           />
         </div>
       {:else if row.protectedMessage}

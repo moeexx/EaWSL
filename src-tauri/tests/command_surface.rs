@@ -119,6 +119,9 @@ fn command_public_surface_type_checks() {
     let _ = commands::shutdown_wsl;
     let _ = commands::unregister_distro;
     let _ = commands::launch_legacy_install_terminal;
+    let _ = commands::open_distro_terminal;
+    let _ = commands::open_distro_explorer;
+    let _ = commands::open_distro_vscode;
     let _ = commands::install_distro;
     let _ = commands::import_distro;
     let _ = commands::import_distro_in_place;

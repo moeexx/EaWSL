@@ -37,6 +37,9 @@ import {
 } from "$lib/long-tasks/state";
 import {
   exportDistro,
+  openDistroExplorer,
+  openDistroTerminal,
+  openDistroVscode,
   setDefaultDistro,
   shutdownWsl,
   terminateDistro,
@@ -72,6 +75,9 @@ export interface DistroWorkspaceService {
   probeVhdSize: (distro: DistroInfo) => void;
   getInstallLocation: (distro: DistroInfo) => string | null;
   setDefaultDistro: (distro: string) => Promise<void>;
+  openDistroTerminal: (distro: string) => Promise<void>;
+  openDistroExplorer: (distro: string) => Promise<void>;
+  openDistroVscode: (distro: string) => Promise<void>;
   shutdownWsl: (force: boolean) => Promise<void>;
   terminateDistro: (distro: string) => Promise<void>;
   unregisterDistro: (distro: string) => Promise<void>;
@@ -106,6 +112,9 @@ export function createDistroWorkspaceService(): DistroWorkspaceService {
     probeVhdSize,
     getInstallLocation: buildDistroVhdPath,
     setDefaultDistro,
+    openDistroTerminal,
+    openDistroExplorer,
+    openDistroVscode,
     shutdownWsl,
     terminateDistro,
     unregisterDistro,

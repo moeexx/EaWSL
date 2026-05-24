@@ -217,6 +217,9 @@ export const enUS = {
       protectedMessage: "Only details are available for this distro.",
       setDefault: "Set as default",
       settingDefault: "Setting...",
+      openTerminal: "Terminal",
+      openExplorer: "Explorer",
+      openVscode: "VS Code",
       unread: "Not read yet",
       probing: "Probing...",
       detailsTitle: "Distro details",
@@ -326,6 +329,27 @@ export const enUS = {
       setDefaultUnknownTitle: "Default result is not confirmed",
       setDefaultChangedFallback: (distro: string) =>
         `${distro} default state changed. Retry using the current list.`,
+      openTerminalStartedTitle: "Terminal launch submitted",
+      openTerminalStartedMessage: (distro: string) =>
+        `${distro} terminal launch was submitted.`,
+      openTerminalStartingTitle: "Opening terminal",
+      openTerminalStartingMessage: (distro: string) =>
+        `${distro} terminal launch was submitted. WSL may need a few seconds to start.`,
+      openTerminalFailedTitle: "Failed to open terminal",
+      openExplorerStartedTitle: "Explorer launch submitted",
+      openExplorerStartedMessage: (distro: string) =>
+        `${distro} Explorer launch was submitted.`,
+      openExplorerStartingTitle: "Opening Explorer",
+      openExplorerStartingMessage: (distro: string) =>
+        `${distro} Explorer launch was submitted. WSL may need a few seconds to start.`,
+      openExplorerFailedTitle: "Failed to open Explorer",
+      openVscodeStartedTitle: "VS Code launch submitted",
+      openVscodeStartedMessage: (distro: string) =>
+        `${distro} VS Code launch was submitted.`,
+      openVscodeStartingTitle: "Opening VS Code",
+      openVscodeStartingMessage: (distro: string) =>
+        `${distro} VS Code launch was submitted. WSL may need a few seconds to start.`,
+      openVscodeFailedTitle: "Failed to open VS Code",
     },
     actionSupport: {
       stopSyncFailedTitle: "Stop sync failed",
