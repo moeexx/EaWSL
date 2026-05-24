@@ -29,7 +29,7 @@
 
   const sidebarClass = $derived(
     [
-      "relative min-w-0 shrink-0 bg-[#F3F3F3] px-2.5 py-2.5 transition-[width] duration-200",
+      "relative min-w-0 shrink-0 px-2.5 py-2.5 transition-[width] duration-200",
       $shellUiState.sidebarCollapsed ? "w-[70px]" : "w-[70px] md:w-[180px]",
     ].join(" "),
   );

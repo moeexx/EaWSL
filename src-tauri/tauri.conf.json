@@ -19,6 +19,9 @@
         "minHeight": 680,
         "decorations": false,
         "transparent": true,
+        "windowEffects": {
+          "effects": ["tabbed"]
+        },
         "shadow": true,
         "resizable": true,
         "devtools": true

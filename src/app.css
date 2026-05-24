@@ -28,11 +28,11 @@
 
 @layer base {
   html {
-    @apply h-full bg-[#F3F3F3] text-shell-950;
+    @apply h-full bg-transparent text-shell-950;
   }
 
   body {
-    @apply m-0 min-h-screen bg-[#F3F3F3] text-shell-950 antialiased overscroll-none;
+    @apply m-0 min-h-screen bg-transparent text-shell-950 antialiased overscroll-none;
   }
 
   *,
