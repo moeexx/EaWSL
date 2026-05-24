@@ -2,15 +2,13 @@
   import BadgeCheck from "@lucide/svelte/icons/badge-check";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import ChevronUp from "@lucide/svelte/icons/chevron-up";
-  import Code2 from "@lucide/svelte/icons/code-2";
+  import Container from "@lucide/svelte/icons/container";
   import FileOutput from "@lucide/svelte/icons/file-output";
-  import FolderOpen from "@lucide/svelte/icons/folder-open";
   import Layers3 from "@lucide/svelte/icons/layers-3";
   import RefreshCw from "@lucide/svelte/icons/refresh-cw";
   import Square from "@lucide/svelte/icons/square";
   import Star from "@lucide/svelte/icons/star";
   import Tag from "@lucide/svelte/icons/tag";
-  import Terminal from "@lucide/svelte/icons/terminal";
   import Trash2 from "@lucide/svelte/icons/trash-2";
   import { slide } from "svelte/transition";
 
@@ -52,16 +50,18 @@
 
   const rowButtonClass =
     "border-shell-200 bg-white text-shell-700 hover:border-shell-300 hover:bg-shell-50";
+  const launchButtonClass =
+    "inline-flex h-[34px] min-w-[34px] cursor-pointer items-center justify-center gap-2 rounded-[8px] border-[0.5px] border-shell-200 bg-white px-3 text-[13px] font-semibold leading-none text-shell-700 transition duration-150 hover:border-shell-300 hover:bg-shell-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-shell-300 disabled:cursor-not-allowed disabled:opacity-60";
+  const launchIconClass = "h-4 w-4 shrink-0 object-contain";
   const rowExportButtonClass =
     "border-sky-200 bg-sky-50 text-sky-700 hover:border-sky-300 hover:bg-sky-100";
   const rowDangerButtonClass =
     "border-rose-200 bg-rose-50/75 text-rose-700 hover:border-rose-300 hover:bg-rose-100";
   const badgeBaseClass =
-    "inline-flex max-w-full items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-semibold leading-none shadow-[0_1px_2px_rgba(15,23,42,0.04)]";
+    "inline-flex max-w-full items-center gap-1.5 rounded-[8px] border px-3 py-1 text-[12px] font-semibold leading-none shadow-[0_1px_2px_rgba(15,23,42,0.04)]";
   const defaultBadgeClass = `${badgeBaseClass} border-accent-200 bg-accent-50 text-accent-700`;
-  const versionBadgeClass = `${badgeBaseClass} border-shell-200 bg-shell-50 text-shell-700`;
-  const flavorBadgeClass =
-    "inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-full border border-shell-200/80 bg-shell-50/80 px-2.5 py-1 text-[11.5px] font-medium leading-none text-shell-600";
+  const normalBadgeClass = `${badgeBaseClass} border-shell-200 bg-shell-50 text-shell-700`;
+  const specialBadgeClass = `${badgeBaseClass} border-rose-200 bg-rose-50 text-rose-700`;
   const detailValueClass = "text-[13px] leading-5 text-shell-800";
   const detailValueStrongClass =
     "text-[13px] font-medium leading-5 text-shell-900";
@@ -102,6 +102,29 @@
       exportDirectoryError !== null ||
       exportTargetFile === null,
   );
+  const isDockerDesktop = $derived(
+    row.name.trim().toLowerCase() === "docker-desktop",
+  );
+  const launchActions = $derived([
+    {
+      key: "terminal",
+      label: rowCopy.openTerminal,
+      iconSrc: "/action-icons/terminal.png",
+      run: () => callbacks.openTerminal(row.name),
+    },
+    {
+      key: "explorer",
+      label: rowCopy.openExplorer,
+      iconSrc: "/action-icons/explorer.png",
+      run: () => callbacks.openExplorer(row.name),
+    },
+    {
+      key: "vscode",
+      label: rowCopy.openVscode,
+      iconSrc: "/action-icons/vscode.png",
+      run: () => callbacks.openVscode(row.name),
+    },
+  ]);
 
   $effect(() => {
     const unsubscribe = longTaskState.subscribe((state) => {
@@ -203,19 +226,19 @@
 </script>
 
 <li
-  class="rounded-[8px] border border-shell-200/85 bg-white/[0.9] px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
+  class="rounded-[8px] border border-shell-200/85 bg-white/[0.9] px-2.5 py-2 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
 >
   <div class="flex flex-col gap-3">
     <div
-      class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+      class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
     >
       <div class="flex min-w-0 items-center gap-3">
         <DistroLogo src={row.logoSrc} />
 
-        <div class="min-w-0 flex-1">
+        <div class="min-w-0 flex-1 space-y-2">
           <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">
             <strong
-              class="min-w-0 max-w-full truncate text-[18px] font-semibold leading-none tracking-[-0.03em] text-shell-950"
+              class="min-w-0 max-w-full truncate text-[20px] font-semibold leading-tight tracking-[-0.03em] text-shell-950"
             >
               {row.name}
             </strong>
@@ -229,44 +252,72 @@
               {row.state.label}
             </span>
           </div>
+
+          <div class="flex min-w-0 flex-wrap items-center gap-2">
+            {#if row.isDefault}
+              <span class={defaultBadgeClass}>
+                <BadgeCheck size={13} strokeWidth={2.25} />
+                <span>{rowCopy.defaultBadge}</span>
+              </span>
+            {/if}
+
+            {#if row.flavorVersion}
+              <span class={normalBadgeClass} title={row.flavorVersion}>
+                <Tag
+                  aria-hidden="true"
+                  size={13}
+                  strokeWidth={2.1}
+                  class="shrink-0 text-shell-500"
+                />
+                <span
+                  class={`truncate ${
+                    row.flavorVersionCompact ? "max-w-none" : "max-w-[14rem]"
+                  }`}
+                >
+                  {row.flavorVersion}
+                </span>
+              </span>
+            {/if}
+
+            {#if isDockerDesktop}
+              <span class={specialBadgeClass}>
+                <Container size={13} strokeWidth={2.1} />
+                <span>Docker</span>
+              </span>
+            {/if}
+
+            <span class={normalBadgeClass}>
+              <Layers3 size={13} strokeWidth={2.1} />
+              <span>{row.versionLabel}</span>
+            </span>
+          </div>
         </div>
       </div>
 
-      <div class="flex min-w-0 flex-wrap items-center gap-2">
-        {#if row.isDefault}
-          <span class={defaultBadgeClass}>
-            <BadgeCheck size={13} strokeWidth={2.25} />
-            <span>{rowCopy.defaultBadge}</span>
-          </span>
-        {/if}
-
-        {#if row.flavorVersion}
-          <span class={flavorBadgeClass} title={row.flavorVersion}>
-            <Tag
-              aria-hidden="true"
-              size={12}
-              strokeWidth={2}
-              class="shrink-0 text-shell-500"
-            />
-            <span
-              class={`truncate ${
-                row.flavorVersionCompact ? "max-w-none" : "max-w-[14rem]"
-              }`}
+      {#if !row.isProtected}
+        <div class="flex min-w-0 flex-wrap gap-2">
+          {#each launchActions as action (action.key)}
+            <button
+              class={launchButtonClass}
+              onclick={() => void action.run()}
+              disabled={row.actionsDisabled}
+              type="button"
             >
-              {row.flavorVersion}
-            </span>
-          </span>
-        {/if}
-
-        <span class={versionBadgeClass}>
-          <Layers3 size={13} strokeWidth={2.1} />
-          <span>{row.versionLabel}</span>
-        </span>
-      </div>
+              <img
+                alt=""
+                aria-hidden="true"
+                class={launchIconClass}
+                src={action.iconSrc}
+              />
+              <span>{action.label}</span>
+            </button>
+          {/each}
+        </div>
+      {/if}
     </div>
 
     <div
-      class="flex flex-col gap-3 border-t border-shell-150/90 pt-3 sm:flex-row sm:items-center sm:justify-between"
+      class="flex flex-col gap-3 border-t border-shell-150/90 pt-2 sm:flex-row sm:items-center sm:justify-between"
     >
       {#if !row.isProtected}
         <div class="flex min-w-0 flex-wrap gap-2">
@@ -301,33 +352,9 @@
             onclick={() => void callbacks.setDefault(row.name)}
             disabled={row.actionsDisabled || row.isDefault || hasActiveLongTask}
           />
-          <Button
-            label={rowCopy.openTerminal}
-            icon={Terminal}
-            variant="secondary"
-            className={rowButtonClass}
-            onclick={() => void callbacks.openTerminal(row.name)}
-            disabled={row.actionsDisabled}
-          />
-          <Button
-            label={rowCopy.openExplorer}
-            icon={FolderOpen}
-            variant="secondary"
-            className={rowButtonClass}
-            onclick={() => void callbacks.openExplorer(row.name)}
-            disabled={row.actionsDisabled}
-          />
-          <Button
-            label={rowCopy.openVscode}
-            icon={Code2}
-            variant="secondary"
-            className={rowButtonClass}
-            onclick={() => void callbacks.openVscode(row.name)}
-            disabled={row.actionsDisabled}
-          />
         </div>
       {:else if row.protectedMessage}
-        <span class="text-[12px] font-medium text-shell-500">
+        <span class="text-[14px] font-medium text-shell-500">
           {row.protectedMessage}
         </span>
       {/if}

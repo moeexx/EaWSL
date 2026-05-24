@@ -214,7 +214,8 @@ export const enUS = {
       expand: "Expand",
       collapseExportMenu: "Close export",
       moreInfo: "More information",
-      protectedMessage: "Only details are available for this distro.",
+      protectedMessage:
+        "This is the Docker Desktop runtime distro. Special operations are disabled.",
       setDefault: "Set as default",
       settingDefault: "Setting...",
       openTerminal: "Terminal",

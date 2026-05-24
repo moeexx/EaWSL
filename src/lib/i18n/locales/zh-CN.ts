@@ -207,7 +207,8 @@ export const zhCN = {
       expand: "展开",
       collapseExportMenu: "关闭导出",
       moreInfo: "更多信息",
-      protectedMessage: "该发行版仅保留详情查看",
+      protectedMessage:
+        "这是 Docker Desktop 的运行发行版，特殊操作已禁用",
       setDefault: "设置为默认",
       settingDefault: "设置中...",
       openTerminal: "终端",
